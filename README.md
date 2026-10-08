@@ -47,6 +47,20 @@ Cada gestor digita o código uma vez, na primeira abertura, e o navegador o guar
 ## Observações
 
 - **Sem `ACCESS_KEY`**, qualquer pessoa com o link vê e edita a escala, que contém nomes de colaboradores.
-- **Sem o binding `DB`**, o site abre, mas cada navegador guarda os dados só para si (o cabeçalho mostra "Dados salvos apenas neste navegador").
-- Os dados cadastrados em outras versões (claude.ai, Vercel) não vêm junto: recadastre ou use **Cadastro → Importar em lote**. Se o servidor estiver vazio e o navegador já tiver dados locais, o site os envia na primeira abertura.
+- **Sem o binding `DB`**, o site abre, mas cada navegador guarda os dados só para si, e o cabeçalho mostra o motivo (veja a tabela abaixo).
+- Os dados cadastrados em outras versões (claude.ai, Vercel) não vêm junto: recadastre ou use **Cadastro → Importar em lote**. Se o servidor estiver vazio e o navegador já tiver dados locais, o site os envia na primeira abertura. Se o servidor já tiver dados, eles substituem os do navegador; por isso, abra primeiro no computador cujos dados valem.
 - Para testar no seu computador: `npx wrangler pages dev public --d1=DB` (cria um banco local temporário).
+
+## O cabeçalho diz se está sincronizando
+
+Logo abaixo do título, o site mostra o estado da conexão com o servidor. O botão **Sincronizar agora** força uma nova tentativa.
+
+| Mensagem | O que significa | O que fazer |
+| --- | --- | --- |
+| ● Dados compartilhados entre os gestores · sincronizado às HH:MM:SS | Funcionando. | Nada. |
+| ⚠ o banco D1 não está ligado ao projeto | A função existe, mas não encontra o binding `DB`. | Em **Settings → Bindings** confira o D1 com nome `DB` e faça **Retry deployment**. |
+| ⚠ a API /api/state não foi encontrada | A pasta `functions/` não foi publicada. | Confira se `functions/` está na raiz do repositório e se o *Build command* é `exit 0`; faça um novo deploy. |
+| ⚠ código de acesso não informado ou incorreto | O `ACCESS_KEY` está definido e o navegador não tem o código certo. | Clique em **Sincronizar agora** e digite o código. |
+| ⚠ sem conexão com o servidor | Rede fora do ar ou erro no servidor. | Tente de novo; veja os logs em **Deployments → View details → Functions**. |
+
+Você também pode abrir `https://SEU-SITE.pages.dev/api/state` no navegador: `{"error":"storage_not_configured"}` indica binding ausente; `{"error":"unauthorized"}` indica que o banco está ligado e falta só o código; uma página 404 indica que a API não foi publicada.

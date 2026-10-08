@@ -57,12 +57,23 @@ const D=d=>days[d]||{s:[],a:{},m:{}},emp=id=>cfg.employees.find(e=>e.id===id),ma
 function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>e.style.display='none',3200)}
 let ver='',busy=0;
 const hd=()=>({'content-type':'application/json','x-key':ls.get('key')||''});
-async function call(body,q){const r=await fetch('/api/state'+(q||''),body?{method:'POST',headers:hd(),body:JSON.stringify(body)}:{headers:hd(),cache:'no-store'});if(r.status==401){const k=prompt('Código de acesso:');if(k){ls.set('key',k.trim());return call(body,q)}throw 401}if(!r.ok)throw r.status;return r.json()}
+let sync={s:'wait'};
+async function call(body,q,tried){const r=await fetch('/api/state'+(q||''),body?{method:'POST',headers:hd(),body:JSON.stringify(body)}:{headers:hd(),cache:'no-store'});
+ if(r.status==401){if(!call.no){const k=prompt(tried?'Código incorreto. Digite novamente (ou cancele):':'Código de acesso:');if(k){ls.set('key',k.trim());return call(body,q,1)}call.no=true}throw 401}
+ if(!r.ok)throw r.status;return r.json()}
+function syl(){const x=sync,b=' <button class="lk" data-a="sync">Sincronizar agora</button>';
+ if(x.s=='ok')return '● Dados compartilhados entre os gestores · sincronizado às '+x.t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+b;
+ if(x.s=='wait')return 'Conectando ao servidor…';
+ const m={e503:'o banco D1 não está ligado ao projeto (falta o binding DB, ou falta um novo deploy depois de criá-lo)',e404:'a API /api/state não foi encontrada (a pasta functions não foi publicada)',e401:'código de acesso não informado ou incorreto'}[x.s]||'sem conexão com o servidor ('+E(x.c&&x.c.message||x.c)+')';
+ return '<span style="color:var(--er)">⚠ Não sincronizado: '+m+'.</span> Os dados estão sendo salvos só neste navegador.'+b}
+function setSy(){const e=$('#sy');if(e)e.innerHTML=syl()}
 async function saveCfg(){ls.set('cfg',cfg);if(!db)return;busy++;try{await call({t:'cfg',data:cfg})}catch{toast('Não foi possível salvar no servidor')}busy--}
 async function saveDay(d){ls.set('days',days);if(!db)return;busy++;try{await call({t:'day',date:d,data:days[d]})}catch{toast('Não foi possível salvar no servidor')}busy--}
-async function pull(){if(busy)return;try{const r=await call(null,ver?'?v='+encodeURIComponent(ver):''),first=!db;db=true;if(r.same)return;ver=r.v;
+async function pull(manual){if(busy)return;if(manual===true)call.no=false;
+ try{const r=await call(null,ver?'?v='+encodeURIComponent(ver):''),first=!db;db=true;call.no=false;sync={s:'ok',t:new Date()};if(r.same)return setSy();ver=r.v;
  if(first&&!r.cfg&&(cfg.machines.length||cfg.employees.length)){saveCfg();Object.keys(days).forEach(saveDay);return render()}
- cfg=r.cfg||{machines:[],employees:[]};norm();days=r.days||{};rr()}catch{}}
+ cfg=r.cfg||{machines:[],employees:[]};norm();days=r.days||{};rr();setSy()}
+ catch(e){sync={s:e===401?'e401':e===503?'e503':e===404?'e404':'err',c:e};setSy()}}
 function upd(d,fn){const x=JSON.parse(JSON.stringify(D(d)));fn(x);days[d]=x;saveDay(d);render()}
 const shiftDate=n=>{const x=new Date(date+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
 
@@ -156,7 +167,7 @@ function vCal(){
 
 function render(){
  const T=[['escala','Escala'],['cal','Calendário'],['pres','Presença e refeição'],['ind','Indicadores'],['cad','Cadastro']];
- $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu">${db?'Dados compartilhados entre os gestores':'Dados salvos apenas neste navegador'}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main>${({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,cad:vCad})[tab]()}</main>`}
+ $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu" id="sy">${syl()}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main>${({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,cad:vCad})[tab]()}</main>`}
 function rr(){const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest('#app')&&!/date|checkbox/.test(a.type))return;render()}
 
 document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(!b||/INPUT|SELECT/.test(b.tagName))return;const a=b.dataset.a,id=b.dataset.id,v=b.dataset.v,g=i=>($(i).value||'').trim();
@@ -171,6 +182,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='cnav'){if(calMode=='w')calRef=cd(calRef,7*v);else{const r=wd(calRef);r.setDate(1);r.setMonth(r.getMonth()+ +v);calRef=iso(r)}render()}
  else if(a=='dd'){date=shiftDate(+v);render()}
  else if(a=='today'){date=iso(new Date());render()}
+ else if(a=='sync'){sync={s:'wait'};setSy();pull(true)}
  else if(a=='goto'){date=v;tab='escala';render()}
  else if(a=='addm'){if(!g('#mn'))return toast('Informe o nome da máquina');cfg.machines.push({id:uid(),name:g('#mn'),proc:g('#mp')||'Outros',slots:Math.max(1,+$('#ms').value||1)});saveCfg();render()}
  else if(a=='adde'){if(!g('#en'))return toast('Informe o nome do colaborador');cfg.employees.push({id:uid(),name:g('#en'),shift:+$('#es').value,machines:$('#em').value?[$('#em').value]:[]});saveCfg();render()}
