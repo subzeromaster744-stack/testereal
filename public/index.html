@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗓</text></svg>"><title>Escala de Hora Extra</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f7;--card:#fff;--tx:#1d2433;--mu:#667085;--bd:#e1e4ea;--pr:#2457d6;--ok:#17803d;--okb:#e3f5ea;--wa:#b45309;--wab:#fdf0d9;--er:#c0262d;--erb:#fde6e6;--t1:#2457d6;--t2:#0e8f7e;--t3:#8a4fd6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}}
+:root[data-theme=dark]{--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--card);border-bottom:1px solid var(--bd);padding:12px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+h1{font-size:18px;margin:0}h2{font-size:15px;margin:0 0 8px}
+.mu{color:var(--mu);font-size:12px}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+button,input,select,textarea{font:inherit;color:inherit}
+.tab,.btn{border:1px solid var(--bd);background:var(--card);padding:7px 12px;border-radius:8px;cursor:pointer}
+.tab.on,.btn.pr{background:var(--pr);border-color:var(--pr);color:#fff}
+.btn.er{color:var(--er)}.btn.ok{background:var(--okb);color:var(--ok);border-color:var(--ok)}.btn.cf{background:var(--erb);color:var(--er);border-color:var(--er)}
+main{max-width:1200px;margin:0 auto;padding:16px}
+input,select,textarea{border:1px solid var(--bd);background:var(--card);border-radius:8px;padding:7px 9px;max-width:100%}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin-bottom:14px}
+.kpi,.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px 12px}
+.card{margin-bottom:14px}.kpi b{display:block;font-size:22px}.kpi span{color:var(--mu);font-size:12px}
+.kpi.cf b{color:var(--er)}.kpi.vz b{color:var(--wa)}
+.proc{margin-bottom:18px}.proc h2{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.m{background:var(--card);border:1px solid var(--bd);border-top:4px solid var(--bd);border-radius:10px;padding:10px}
+.m.ok{border-top-color:var(--ok)}.m.cf{border-top-color:var(--er);background:var(--erb)}.m.vz{border-top-color:var(--wa)}
+.m h3{font-size:14px;margin:0 0 2px;display:flex;justify-content:space-between;gap:6px}
+.tag{font-size:11px;padding:2px 7px;border-radius:99px;font-weight:600;white-space:nowrap}
+.tag.ok{background:var(--okb);color:var(--ok)}.tag.cf{background:var(--erb);color:var(--er)}.tag.vz{background:var(--wab);color:var(--wa)}
+.chip{display:flex;align-items:center;gap:6px;width:100%;text-align:left;border:1px solid var(--bd);background:var(--card);border-radius:8px;padding:6px 8px;margin-top:4px;cursor:pointer}
+.chip.on{background:var(--pr);border-color:var(--pr);color:#fff}
+.t{font-size:11px;font-weight:700}.t1{color:var(--t1)}.t2{color:var(--t2)}.t3{color:var(--t3)}.chip.on .t{color:#fff}
+.sc{overflow-x:auto}table{width:100%;border-collapse:collapse}
+th,td{padding:7px 8px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap}th{color:var(--mu);font-size:12px}
+td input,td select{width:100%;min-width:90px}
+.bb{height:8px;background:var(--bd);border-radius:4px;overflow:hidden;min-width:80px}.bb i{display:block;height:100%;background:var(--ok)}
+.empty{text-align:center;padding:40px 16px}
+#toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 14px;border-radius:8px;display:none;z-index:9}
+.lk{color:var(--pr);cursor:pointer;text-decoration:underline;background:none;border:0;padding:0}
+.chip.alt{opacity:.65;border-style:dashed}.mc{white-space:normal;min-width:240px}.tag .lk{text-decoration:none;font-weight:700;color:inherit}
+.cal{border-collapse:separate;border-spacing:0;font-size:12px}
+.cal th,.cal td{border-bottom:1px solid var(--bd);border-right:1px solid var(--bd);padding:4px 6px;vertical-align:top;white-space:normal}
+.cal .first{position:sticky;left:0;z-index:2;background:var(--card);min-width:150px;max-width:170px;text-align:left}
+.cal .dh{text-align:center;cursor:pointer;min-width:var(--cw);font-weight:400;background:var(--card)}.cal .dh.fds{background:var(--bg)}.cal .dh.hoje{background:var(--pr);color:#fff}
+.cal .c{cursor:pointer;min-width:var(--cw);max-width:var(--cw)}.cal .c.ok{background:var(--okb)}.cal .c.cf{background:var(--erb)}.cal .c.vz{background:var(--wab)}
+.cal tr.pr .first{background:var(--bg);font-weight:600}.cal .sub{padding-left:22px}.cal tr.tot .first{background:var(--bg)}
+.cn{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cal .lk{font-size:13px;color:var(--tx);text-decoration:none}
+</style></head><body><div id="app"></div><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,8),iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),fmt=k=>k.split('-').reverse().join('/');
+let cfg={machines:[],employees:[]},days={},db=null,tab='escala',date=iso(new Date()),flt=0,per=30;
+const ls={get(k){try{return JSON.parse(localStorage.getItem('escalaHE:'+k))}catch{return null}},set(k,v){try{localStorage.setItem('escalaHE:'+k,JSON.stringify(v))}catch{}}};
+const D=d=>days[d]||{s:[],a:{},m:{}},emp=id=>cfg.employees.find(e=>e.id===id),mac=id=>cfg.machines.find(m=>m.id===id);
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>e.style.display='none',3200)}
+let ver='',busy=0;
+const hd=()=>({'content-type':'application/json','x-key':ls.get('key')||''});
+async function call(body,q){const r=await fetch('/api/state'+(q||''),body?{method:'POST',headers:hd(),body:JSON.stringify(body)}:{headers:hd(),cache:'no-store'});if(r.status==401){const k=prompt('Código de acesso:');if(k){ls.set('key',k.trim());return call(body,q)}throw 401}if(!r.ok)throw r.status;return r.json()}
+async function saveCfg(){ls.set('cfg',cfg);if(!db)return;busy++;try{await call({t:'cfg',data:cfg})}catch{toast('Não foi possível salvar no servidor')}busy--}
+async function saveDay(d){ls.set('days',days);if(!db)return;busy++;try{await call({t:'day',date:d,data:days[d]})}catch{toast('Não foi possível salvar no servidor')}busy--}
+async function pull(){if(busy)return;try{const r=await call(null,ver?'?v='+encodeURIComponent(ver):''),first=!db;db=true;if(r.same)return;ver=r.v;
+ if(first&&!r.cfg&&(cfg.machines.length||cfg.employees.length)){saveCfg();Object.keys(days).forEach(saveDay);return render()}
+ cfg=r.cfg||{machines:[],employees:[]};norm();days=r.days||{};rr()}catch{}}
+function upd(d,fn){const x=JSON.parse(JSON.stringify(D(d)));fn(x);days[d]=x;saveDay(d);render()}
+const shiftDate=n=>{const x=new Date(date+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
+
+function dbar(f){return `<div class="bar"><button class="btn" data-a="dd" data-v="-1">◀</button><input type="date" data-a="date" value="${date}"><button class="btn" data-a="dd" data-v="1">▶</button><button class="btn" data-a="today">Hoje</button><b style="text-transform:capitalize">${new Date(date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long'})}</b>${f?`<span style="flex:1"></span>${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn ${flt==x[0]?'pr':''}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}`:''}</div>`}
+function noData(){return `<div class="card empty"><h2>Comece cadastrando máquinas e colaboradores</h2><p class="mu">Cadastre as máquinas (por grupo de processo) e os operadores de cada turno para montar a escala.</p><button class="btn pr" data-a="tab" data-v="cad">Ir para o Cadastro</button> <button class="btn" data-a="demo">Carregar dados de exemplo</button></div>`}
+
+const wk=(e,d)=>{const w=(d.w||{})[e.id];return e.machines.includes(w)?w:(e.machines[0]||'')};
+const counts=d=>{const c={};cfg.employees.forEach(e=>{if(d.s.includes(e.id)){const w=wk(e,d);c[w]=(c[w]||0)+1}});return c};
+const norm=()=>{cfg.machines=cfg.machines||[];cfg.employees=(cfg.employees||[]).map(e=>{if(!e.machines)e.machines=e.machine?[e.machine]:[];delete e.machine;return e})};
+function vEscala(){
+ if(!cfg.machines.length&&!cfg.employees.length)return dbar()+noData();
+ const d=D(date),S=new Set(d.s),cnt=counts(d);
+ const st=m=>{const n=cnt[m.id]||0;return n>(m.slots||1)?'cf':n?'ok':'vz'};
+ const sh=[1,2,3].map(t=>cfg.employees.filter(e=>S.has(e.id)&&e.shift==t).length);
+ const cf=cfg.machines.filter(m=>st(m)=='cf').length,vz=cfg.machines.filter(m=>st(m)=='vz');
+ const chip=(e,mid)=>{const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return `<button class="chip ${here?'on':''} ${el?'alt':''}" data-a="tog" data-id="${e.id}" data-v="${mid}"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
+ const card=m=>{const s=st(m),es=cfg.employees.filter(e=>e.machines.includes(m.id)&&(!flt||e.shift==flt));return `<div class="m ${s}"><h3><span>${E(m.name)}</span><span class="tag ${s}">${{cf:'Conflito',ok:'Coberta',vz:'Sem operador'}[s]}</span></h3><div class="mu">Vagas: ${cnt[m.id]||0}/${m.slots||1}</div>${es.map(e=>chip(e,m.id)).join('')||'<div class="mu" style="margin-top:6px">Sem operadores neste filtro</div>'}</div>`};
+ const procs=[...new Set(cfg.machines.map(m=>m.proc||'Outros'))];
+ const orphan=cfg.employees.filter(e=>!e.machines.some(i=>mac(i))&&(!flt||e.shift==flt));
+ return dbar(1)+(cfg.employees.some(e=>e.machines.length>1)?`<div class="mu" style="margin-bottom:10px">Quem é treinado em mais de uma máquina aparece em todas elas. Clique na máquina onde a pessoa vai trabalhar; clicar em outra máquina dela troca o posto.</div>`:'')+`<div class="kpis"><div class="kpi"><b>${d.s.length}</b><span>Escalados</span></div>${sh.map((n,i)=>`<div class="kpi"><b>${n}</b><span>Turno ${i+1}</span></div>`).join('')}<div class="kpi ${cf?'cf':''}"><b>${cf}</b><span>Máquinas em conflito</span></div><div class="kpi ${vz.length?'vz':''}"><b>${vz.length}</b><span>Máquinas sem operador</span></div></div>`+
+ (cf?`<div class="card" style="border-color:var(--er);color:var(--er)">⚠ Há mais operadores escalados do que vagas na mesma máquina — alguém ficaria sem máquina. Mude o posto de um deles (se for treinado em outra máquina) ou escale outra pessoa.</div>`:'')+
+ (vz.length?`<div class="card"><b>Ainda sem operador:</b> <span class="mu" style="font-size:13px">${vz.map(m=>E(m.name)).join(', ')}</span></div>`:'')+
+ procs.map(p=>{const ms=cfg.machines.filter(m=>(m.proc||'Outros')==p),ok=ms.filter(m=>st(m)!='vz').length;return `<section class="proc"><h2>${E(p)} <span class="tag ${ok==ms.length?'ok':'vz'}">${ok}/${ms.length} máquinas cobertas</span></h2><div class="grid">${ms.map(card).join('')}</div></section>`}).join('')+
+ (orphan.length?`<section class="proc"><h2>Sem máquina definida</h2><div class="grid"><div class="m">${orphan.map(e=>chip(e,'')).join('')}</div></div></section>`:'')}
+
+function vPres(){
+ const d=D(date),c=counts(d),l=d.s.map(emp).filter(Boolean).sort((a,b)=>a.shift-b.shift||a.name.localeCompare(b.name));
+ const p=l.filter(e=>d.a[e.id]=='p').length,f=l.filter(e=>d.a[e.id]=='f').length,r=l.filter(e=>d.m[e.id]).length;
+ return dbar()+`<div class="kpis"><div class="kpi"><b>${l.length}</b><span>Escalados</span></div><div class="kpi"><b>${p}</b><span>Presentes</span></div><div class="kpi ${f?'cf':''}"><b>${f}</b><span>Faltas</span></div><div class="kpi"><b>${l.length-p-f}</b><span>Pendentes</span></div><div class="kpi"><b>${r}</b><span>Refeições reservadas</span></div></div>`+
+ (l.length?`<div class="card sc"><table><tr><th>Turno</th><th>Colaborador</th><th>Vai trabalhar em</th><th>Refeição</th><th>Check-in</th></tr>${l.map(e=>{const a=d.a[e.id],w=wk(e,d),m=mac(w),cf=m&&c[w]>(m.slots||1);return `<tr><td><span class="t t${e.shift}">T${e.shift}</span></td><td>${E(e.name)}</td><td>${e.machines.length>1?`<select data-a="wk" data-id="${e.id}">${e.machines.map(i=>`<option value="${i}" ${i==w?'selected':''}>${E((mac(i)||{}).name)}</option>`).join('')}</select>`:m?E(m.name):'—'} ${cf?'<span class="tag cf">conflito</span>':''}</td><td><label><input type="checkbox" data-a="meal" data-id="${e.id}" ${d.m[e.id]?'checked':''}> Reservada</label></td><td><button class="btn ${a=='p'?'ok':''}" data-a="att" data-v="p" data-id="${e.id}">Presente</button> <button class="btn ${a=='f'?'cf':''}" data-a="att" data-v="f" data-id="${e.id}">Faltou</button></td></tr>`}).join('')}</table></div>`:`<div class="card empty mu">Ninguém escalado para esta data. Monte a escala na aba "Escala".</div>`)}
+
+function vInd(){
+ const z=()=>({e:0,p:0,f:0}),add=(o,v)=>{o.e++;if(v=='p')o.p++;if(v=='f')o.f++},pc=o=>o.p+o.f?Math.round(o.p/(o.p+o.f)*100)+'%':'—';
+ const lim=per?iso(new Date(Date.now()-per*864e5)):'',T=z(),SH={1:z(),2:z(),3:z()},EM={},DY=[];
+ Object.keys(days).filter(k=>k>=lim).sort().reverse().forEach(k=>{const d=days[k],o=z();(d.s||[]).forEach(id=>{const e=emp(id),v=(d.a||{})[id];add(T,v);add(o,v);if(e&&SH[e.shift])add(SH[e.shift],v);add(EM[id]=EM[id]||z(),v)});DY.push([k,o])});
+ const rows=Object.entries(EM).sort((a,b)=>b[1].f-a[1].f||b[1].e-a[1].e);
+ return `<div class="bar"><b>Período:</b><select data-a="per">${[[7,'Últimos 7 dias'],[30,'Últimos 30 dias'],[90,'Últimos 90 dias'],[0,'Todo o histórico']].map(x=>`<option value="${x[0]}" ${per==x[0]?'selected':''}>${x[1]}</option>`).join('')}</select></div>`+
+ `<div class="kpis"><div class="kpi"><b>${T.e}</b><span>Escalados</span></div><div class="kpi"><b>${T.p}</b><span>Compareceram</span></div><div class="kpi ${T.f?'cf':''}"><b>${T.f}</b><span>Faltas após confirmação</span></div><div class="kpi"><b>${pc(T)}</b><span>% de comparecimento</span></div></div>`+
+ `<div class="card"><h2>Por turno</h2>${[1,2,3].map(t=>{const o=SH[t],w=o.p+o.f?Math.round(o.p/(o.p+o.f)*100):0;return `<div class="bar" style="margin-bottom:6px"><span class="t t${t}" style="width:24px">T${t}</span><div class="bb" style="flex:1"><i style="width:${w}%"></i></div><span style="min-width:190px">${pc(o)} · ${o.e} esc. · ${o.p} pres. · ${o.f} faltas</span></div>`}).join('')}<div class="mu">% = presentes ÷ (presentes + faltas). Pendentes de check-in não entram na conta.</div></div>`+
+ `<div class="card sc"><h2>Histórico por colaborador</h2>${rows.length?`<table><tr><th>Colaborador</th><th>Turno</th><th>Escalado</th><th>Presente</th><th>Faltas</th><th>%</th><th></th></tr>${rows.map(([id,o])=>{const e=emp(id);return `<tr><td>${E(e?e.name:'(removido)')}</td><td>${e?'T'+e.shift:'—'}</td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td>${o.f>=2?'<span class="tag cf">Ausência recorrente</span>':''}</td></tr>`}).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`+
+ `<div class="card sc"><h2>Histórico por dia</h2>${DY.length?`<table><tr><th>Data</th><th>Escalados</th><th>Presentes</th><th>Faltas</th><th>%</th><th></th></tr>${DY.map(([k,o])=>`<tr><td>${fmt(k)}</td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td><button class="lk a" data-a="goto" data-v="${k}">abrir</button></td></tr>`).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`}
+
+let imp=null,bk='',bp='Outros';
+const nmx=n=>cfg.machines.some(m=>m.name.toLowerCase()==n.toLowerCase());
+function parse(){
+ const ex=new Map(cfg.employees.map(e=>[e.name.toLowerCase(),e])),seen=new Set(),rows=[];
+ bk.split(/\r?\n/).forEach(l=>{l=l.trim();if(!l)return;
+  const c=l.split(l.includes('\t')?'\t':l.includes(';')?';':',').map(x=>x.trim());
+  if(/^(nome|colaborador|funcion)/i.test(c[0])&&!/[1-3]/.test(c[1]||''))return;
+  const sh=(c[1]||'').match(/[1-3]/),ms=[...new Set(c.slice(2).join(',').split(/[,|/]/).map(x=>x.trim()).filter(Boolean))],k=c[0].toLowerCase();
+  const r={n:c[0],sh:sh?+sh[0]:0,ms,old:ex.get(k),err:''};
+  if(!sh)r.err='Turno inválido (1, 2 ou 3)';else if(seen.has(k))r.err='Nome repetido na lista';
+  seen.add(k);rows.push(r)});
+ imp=rows}
+function prevHtml(){
+ if(!imp.length)return '<div class="mu" style="margin-top:10px">Nenhuma linha encontrada.</div>';
+ const ok=imp.filter(r=>!r.err),nm=new Set();ok.forEach(r=>r.ms.forEach(n=>{if(!nmx(n))nm.add(n.toLowerCase())}));
+ return `<div style="margin-top:12px"><b>${ok.filter(r=>!r.old).length} novos · ${ok.filter(r=>r.old).length} atualizações · ${imp.length-ok.length} com erro · ${nm.size} máquina(s) nova(s)</b><div class="sc"><table><tr><th>Nome</th><th>Turno</th><th>Máquinas</th><th>Ação</th></tr>${imp.map(r=>`<tr><td>${E(r.n)}</td><td>${r.sh?'T'+r.sh:'—'}</td><td class="mc">${r.ms.map(n=>E(n)+(nmx(n)?'':' <span class="tag vz">nova</span>')).join(', ')||'—'}</td><td>${r.err?`<span class="tag cf">${r.err}</span>`:r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>'}</td></tr>`).join('')}</table></div><div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="apply" ${ok.length?'':'disabled'}>Importar ${ok.length} linha(s)</button><button class="btn" data-a="cancel">Cancelar</button></div></div>`}
+function vCad(){
+ const ms=cfg.machines,ps=[...new Set(ms.map(m=>m.proc))];
+ const mo=s=>`<option value="">— sem máquina —</option>`+ms.map(m=>`<option value="${m.id}" ${m.id===s?'selected':''}>${E(m.proc)} · ${E(m.name)}</option>`).join('');
+ const so=v=>[1,2,3].map(t=>`<option value="${t}" ${t==v?'selected':''}>Turno ${t}</option>`).join('');
+ const mcell=e=>e.machines.map(i=>mac(i)?`<span class="tag ok" style="display:inline-block;margin:0 4px 4px 0">${E(mac(i).name)} <button class="lk" data-a="rm" data-id="${e.id}" data-v="${i}" title="Remover">×</button></span>`:'').join('')+`<select data-a="am" data-id="${e.id}"><option value="">+ adicionar máquina</option>${ms.filter(m=>!e.machines.includes(m.id)).map(m=>`<option value="${m.id}">${E(m.proc)} · ${E(m.name)}</option>`).join('')}</select>`;
+ return `<div class="card"><h2>Máquinas</h2><div class="bar"><input id="mn" placeholder="Máquina (ex.: Ret 01)"><input id="mp" list="pl" placeholder="Grupo de processo (ex.: Retificadora)"><datalist id="pl">${ps.map(p=>`<option value="${E(p)}">`).join('')}</datalist><input id="ms" type="number" min="1" value="1" style="width:80px" title="Vagas por máquina"><button class="btn pr" data-a="addm">Adicionar</button></div>
+ <div class="sc"><table><tr><th>Máquina</th><th>Processo</th><th>Vagas</th><th></th></tr>${ms.map(m=>`<tr><td><input data-a="mf" data-f="name" data-id="${m.id}" value="${E(m.name)}"></td><td><input data-a="mf" data-f="proc" data-id="${m.id}" value="${E(m.proc)}"></td><td><input type="number" min="1" style="width:70px" data-a="mf" data-f="slots" data-id="${m.id}" value="${m.slots||1}"></td><td><button class="btn er" data-a="delm" data-id="${m.id}">Remover</button></td></tr>`).join('')}</table></div></div>
+ <div class="card"><h2>Colaboradores</h2><div class="bar"><input id="en" placeholder="Nome do colaborador"><select id="es">${so(1)}</select><select id="em">${mo('')}</select><button class="btn pr" data-a="adde">Adicionar</button></div><div class="mu" style="margin-bottom:8px">Para treinar o colaborador em mais máquinas, use "+ adicionar máquina" na tabela. A primeira é o posto padrão na escala.</div>
+ <div class="sc"><table><tr><th>Nome</th><th>Turno</th><th>Máquinas em que é treinado</th><th></th></tr>${[...cfg.employees].sort((a,b)=>a.name.localeCompare(b.name)).map(e=>`<tr><td><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"></td><td><select data-a="ef" data-f="shift" data-id="${e.id}">${so(e.shift)}</select></td><td class="mc">${mcell(e)}</td><td><button class="btn er" data-a="dele" data-id="${e.id}">Remover</button></td></tr>`).join('')}</table></div></div>
+ <div class="card"><h2>Importar em lote</h2><div class="mu">Uma linha por colaborador: <b>Nome;Turno;Máquina 1/Máquina 2</b>. Separe os campos com ponto e vírgula, tabulação (colar do Excel) ou vírgula, e várias máquinas com / ou |. O turno pode ser 1, T1 ou "Turno 1". Quem já existe é atualizado (as máquinas são somadas) e máquinas novas são criadas.</div>
+ <div class="bar" style="margin-top:8px"><label>Grupo das máquinas novas: <input id="bp" list="pl" value="${E(bp)}"></label><label class="btn">Abrir arquivo .csv/.txt <input type="file" accept=".csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Inserir exemplo</button></div>
+ <textarea id="bk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Ana Souza;1;Ret 01/Ret 02">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}</div>`}
+
+let calRef=iso(new Date()),calMode='w',opn=ls.get('open')||{};
+const cd=(k,n)=>{const x=new Date(k+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
+const wd=k=>new Date(k+'T12:00'),short=n=>{const p=n.trim().split(/\s+/);return p.length>1?p[0]+' '+p[p.length-1][0]+'.':p[0]};
+function calDays(){const r=wd(calRef);if(calMode=='m'){const y=r.getFullYear(),mo=r.getMonth(),n=new Date(y,mo+1,0).getDate();return Array.from({length:n},(_,i)=>iso(new Date(y,mo,i+1,12)))}const mon=cd(calRef,-((r.getDay()+6)%7));return Array.from({length:7},(_,i)=>cd(mon,i))}
+function vCal(){
+ if(!cfg.machines.length)return noData();
+ const ds=calDays(),td=iso(new Date());
+ const info=ds.map(k=>{const d=days[k]||{s:[],a:{},w:{}},by={};d.s.forEach(id=>{const e=emp(id);if(e){const w=wk(e,d);(by[w]=by[w]||[]).push(e)}});return {k,d,by,tot:Object.values(by).reduce((a,l)=>a+l.length,0)}});
+ const procs=[...new Set(cfg.machines.map(m=>m.proc||'Outros'))],st=(m,I)=>{const n=(I.by[m.id]||[]).length;return n>(m.slots||1)?'cf':n?'ok':'vz'};
+ const lbl=calMode=='m'?wd(calRef).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}):fmt(ds[0]).slice(0,5)+' – '+fmt(ds[6]);
+ const head=`<tr><th class="first"></th>${info.map(I=>{const x=wd(I.k);return `<th class="dh ${I.k==td?'hoje':''} ${x.getDay()%6==0?'fds':''}" data-a="goto" data-v="${I.k}" title="Abrir a escala deste dia">${x.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','')}<br><b>${x.getDate()}</b></th>`}).join('')}</tr>`;
+ const tot=`<tr class="tot"><td class="first"><b>Total escalados</b></td>${info.map(I=>{const cf=cfg.machines.filter(m=>st(m,I)=='cf').length;return `<td class="c" data-a="goto" data-v="${I.k}"><b>${I.tot||'·'}</b>${cf?` <span class="tag cf">⚠ ${cf}</span>`:''}</td>`}).join('')}</tr>`;
+ const body=procs.map(p=>{const ms=cfg.machines.filter(m=>(m.proc||'Outros')==p),o=!!opn[p];
+  const prow=`<tr class="pr"><td class="first"><button class="lk" data-a="opn" data-v="${E(p)}">${o?'▾':'▸'} ${E(p)}</button><div class="mu" style="font-weight:400">${ms.length} máquina(s)</div></td>${info.map(I=>{const sts=ms.map(m=>st(m,I)),n=ms.reduce((a,m)=>a+(I.by[m.id]||[]).length,0),cov=sts.filter(x=>x!='vz').length,cls=sts.includes('cf')?'cf':n?(cov==ms.length?'ok':'vz'):'';return `<td class="c ${cls}" data-a="goto" data-v="${I.k}"><b>${n||'·'}</b>${n?`<div class="mu">${cov}/${ms.length} máq.</div>`:''}</td>`}).join('')}</tr>`;
+  const mrows=o?ms.map(m=>`<tr><td class="first sub">${E(m.name)}<span class="mu"> · ${m.slots||1} vaga(s)</span></td>${info.map(I=>{const l=(I.by[m.id]||[]).sort((a,b)=>a.shift-b.shift),s=st(m,I);return `<td class="c ${s=='vz'?'':s}" data-a="goto" data-v="${I.k}">${l.map(e=>`<div class="cn" title="${E(e.name)}"><i class="t t${e.shift}">T${e.shift}</i> ${I.d.a[e.id]=='p'?'✓ ':I.d.a[e.id]=='f'?'✗ ':''}${E(short(e.name))}</div>`).join('')}</td>`}).join('')}</tr>`).join(''):'';
+  return prow+mrows}).join('');
+ return `<div class="bar"><button class="btn" data-a="cnav" data-v="-1">◀</button><button class="btn" data-a="cnav" data-v="1">▶</button><button class="btn" data-a="ctoday">Hoje</button><b style="text-transform:capitalize;min-width:150px">${lbl}</b><button class="btn ${calMode=='w'?'pr':''}" data-a="cmode" data-v="w">Semana</button><button class="btn ${calMode=='m'?'pr':''}" data-a="cmode" data-v="m">Mês</button><span style="flex:1"></span><button class="btn" data-a="openall">Expandir tudo</button><button class="btn" data-a="closeall">Recolher tudo</button></div>
+ <div class="card sc" style="padding:0"><table class="cal" style="--cw:${calMode=='m'?'66px':'118px'}">${head}${tot}${body}</table></div>
+ <div class="mu"><span class="tag ok">verde</span> todas as máquinas do processo cobertas &nbsp;<span class="tag vz">âmbar</span> parte das máquinas cobertas &nbsp;<span class="tag cf">vermelho</span> conflito (mais gente que vagas) &nbsp;·&nbsp; ✓ presente &nbsp;✗ faltou &nbsp;·&nbsp; clique em um dia para abrir a escala dele. Use ▸ para ver as máquinas de cada processo.</div>`}
+
+function render(){
+ const T=[['escala','Escala'],['cal','Calendário'],['pres','Presença e refeição'],['ind','Indicadores'],['cad','Cadastro']];
+ $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu">${db?'Dados compartilhados entre os gestores':'Dados salvos apenas neste navegador'}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main>${({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,cad:vCad})[tab]()}</main>`}
+function rr(){const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest('#app')&&!/date|checkbox/.test(a.type))return;render()}
+
+document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(!b||/INPUT|SELECT/.test(b.tagName))return;const a=b.dataset.a,id=b.dataset.id,v=b.dataset.v,g=i=>($(i).value||'').trim();
+ if(a=='tab'){tab=v;render()}
+ else if(a=='tog')upd(date,x=>{x.w=x.w||{};const cur=wk(emp(id),x);if(!x.s.includes(id)){x.s.push(id);x.w[id]=v}else if(cur==v){x.s=x.s.filter(i=>i!=id);delete x.a[id];delete x.m[id];delete x.w[id]}else x.w[id]=v})
+ else if(a=='att')upd(date,x=>{if(x.a[id]==v)delete x.a[id];else x.a[id]=v})
+ else if(a=='flt'){flt=+v;render()}
+ else if(a=='opn'){opn[v]=!opn[v];ls.set('open',opn);render()}
+ else if(a=='openall'||a=='closeall'){cfg.machines.forEach(m=>opn[m.proc||'Outros']=a=='openall');ls.set('open',opn);render()}
+ else if(a=='cmode'){calMode=v;render()}
+ else if(a=='ctoday'){calRef=iso(new Date());render()}
+ else if(a=='cnav'){if(calMode=='w')calRef=cd(calRef,7*v);else{const r=wd(calRef);r.setDate(1);r.setMonth(r.getMonth()+ +v);calRef=iso(r)}render()}
+ else if(a=='dd'){date=shiftDate(+v);render()}
+ else if(a=='today'){date=iso(new Date());render()}
+ else if(a=='goto'){date=v;tab='escala';render()}
+ else if(a=='addm'){if(!g('#mn'))return toast('Informe o nome da máquina');cfg.machines.push({id:uid(),name:g('#mn'),proc:g('#mp')||'Outros',slots:Math.max(1,+$('#ms').value||1)});saveCfg();render()}
+ else if(a=='adde'){if(!g('#en'))return toast('Informe o nome do colaborador');cfg.employees.push({id:uid(),name:g('#en'),shift:+$('#es').value,machines:$('#em').value?[$('#em').value]:[]});saveCfg();render()}
+ else if(a=='delm'){cfg.machines=cfg.machines.filter(m=>m.id!==id);cfg.employees.forEach(e=>e.machines=e.machines.filter(i=>i!==id));saveCfg();render()}
+ else if(a=='dele'){cfg.employees=cfg.employees.filter(e=>e.id!==id);saveCfg();render()}
+ else if(a=='rm'){const e=emp(id);e.machines=e.machines.filter(i=>i!==v);saveCfg();render()}
+ else if(a=='ex'){bk='Nome;Turno;Máquinas\nAna Souza;1;Ret 01/Ret 02\nBruno Lima;T2;Estria 01\nCarlos Dias;Turno 3;Fres 01|Fres 02|Estria 01';parse();render()}
+ else if(a=='prev'){bk=$('#bk').value;bp=g('#bp')||'Outros';parse();render()}
+ else if(a=='cancel'){imp=null;render()}
+ else if(a=='apply'){let n=0,u=0;imp.filter(r=>!r.err).forEach(r=>{const ids=r.ms.map(nm=>{let m=cfg.machines.find(m=>m.name.toLowerCase()==nm.toLowerCase());if(!m){m={id:uid(),name:nm,proc:bp||'Outros',slots:1};cfg.machines.push(m)}return m.id});const e=cfg.employees.find(e=>e.name.toLowerCase()==r.n.toLowerCase());if(e){e.shift=r.sh;e.machines=[...new Set([...e.machines,...ids])];u++}else{cfg.employees.push({id:uid(),name:r.n,shift:r.sh,machines:ids});n++}});saveCfg();imp=null;bk='';render();toast(n+' novo(s), '+u+' atualizado(s)')}
+ else if(a=='demo'){const G=[['Retificadora','Ret 01','Ret 02','Ret 03'],['Estria','Estria 01','Estria 02'],['Fresadora','Fres 01','Fres 02']];G.forEach(g=>g.slice(1).forEach(n=>cfg.machines.push({id:uid(),name:n,proc:g[0],slots:1})));const M=cfg.machines,L=M.length;
+  'Ana Souza,Bruno Lima,Carlos Dias,Daniela Rocha,Eduardo Alves,Fernanda Reis,Gustavo Melo,Helena Costa,Igor Santos,Julia Prado,Kleber Nunes,Larissa Moura,Marcos Pinto,Nadia Freitas,Otávio Ramos,Paula Vieira'.split(',').forEach((n,i)=>cfg.employees.push({id:uid(),name:n,shift:i%3+1,machines:[M[i%L].id,...(i%3==0?[M[(i+1)%L].id]:[])]}));saveCfg();render()}
+});
+document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dataset.id,f=t.dataset.f;
+ if(a=='date'){date=t.value||iso(new Date());render()}
+ else if(a=='per'){per=+t.value;render()}
+ else if(a=='meal')upd(date,x=>{t.checked?x.m[id]=1:delete x.m[id]})
+ else if(a=='wk')upd(date,x=>{x.w=x.w||{};x.w[id]=t.value})
+ else if(a=='ef'){const e=emp(id);if(e){e[f]=f=='shift'?+t.value:t.value.trim()||e[f];saveCfg();render()}}
+ else if(a=='am'){const e=emp(id);if(e&&t.value){e.machines.push(t.value);saveCfg();render()}}
+ else if(a=='mf'){const m=mac(id);if(m){m[f]=f=='slots'?Math.max(1,+t.value||1):t.value.trim()||m[f];saveCfg();render()}}
+ else if(a=='file'&&t.files[0])t.files[0].arrayBuffer().then(buf=>{let x;try{x=new TextDecoder('utf-8',{fatal:true}).decode(buf)}catch{x=new TextDecoder('windows-1252').decode(buf)}bk=x;bp=($('#bp')||{}).value||bp;parse();render()})
+});
+document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='bk')bk=t.value;if(t.id=='bp')bp=t.value});
+
+cfg=ls.get('cfg')||cfg;norm();days=ls.get('days')||{};render();
+pull();setInterval(pull,8000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
+</script></body></html>
