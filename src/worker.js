@@ -1,5 +1,5 @@
-// Cloudflare Pages Function: /api/state
-// Guarda a escala num banco D1 (binding "DB"). Código de acesso opcional em ACCESS_KEY.
+// Cloudflare Worker: serve o site (pasta public/) e a API /api/state, que guarda
+// a escala num banco D1 (binding "DB"). Código de acesso opcional em ACCESS_KEY (Secret).
 //
 // Tabela única: kv(k, v)
 //   k = 'cfg'            -> máquinas e colaboradores (JSON)
@@ -35,12 +35,11 @@ const put = (db, k, v) =>
   db.prepare('INSERT INTO kv (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v').bind(k, v);
 
 const bump = (db) =>
-  db
-    .prepare(
-      "INSERT INTO kv (k, v) VALUES ('ver', '1') ON CONFLICT(k) DO UPDATE SET v = CAST(CAST(v AS INTEGER) + 1 AS TEXT)"
-    );
+  db.prepare(
+    "INSERT INTO kv (k, v) VALUES ('ver', '1') ON CONFLICT(k) DO UPDATE SET v = CAST(CAST(v AS INTEGER) + 1 AS TEXT)"
+  );
 
-export async function onRequest({ request, env }) {
+async function state(request, env) {
   if (!env.DB) return json({ error: 'storage_not_configured' }, 503);
 
   if (env.ACCESS_KEY && !same(request.headers.get('x-key') || '', String(env.ACCESS_KEY))) {
@@ -93,3 +92,13 @@ export async function onRequest({ request, env }) {
     return json({ error: 'server_error' }, 500);
   }
 }
+
+export default {
+  async fetch(request, env) {
+    const { pathname } = new URL(request.url);
+    if (pathname === '/api/state' || pathname === '/api/state/') return state(request, env);
+    if (pathname.startsWith('/api/')) return json({ error: 'not_found' }, 404);
+    // Fora de /api/ quem responde são os arquivos de public/ (run_worker_first só chama o Worker em /api/*).
+    return env.ASSETS ? env.ASSETS.fetch(request) : new Response('Not found', { status: 404 });
+  },
+};

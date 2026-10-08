@@ -64,7 +64,7 @@ async function call(body,q,tried){const r=await fetch('/api/state'+(q||''),body?
 function syl(){const x=sync,b=' <button class="lk" data-a="sync">Sincronizar agora</button>';
  if(x.s=='ok')return '● Dados compartilhados entre os gestores · sincronizado às '+x.t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+b;
  if(x.s=='wait')return 'Conectando ao servidor…';
- const m={e503:'o banco D1 não está ligado ao projeto (falta o binding DB, ou falta um novo deploy depois de criá-lo)',e404:'a API /api/state não foi encontrada (a pasta functions não foi publicada)',e401:'código de acesso não informado ou incorreto'}[x.s]||'sem conexão com o servidor ('+E(x.c&&x.c.message||x.c)+')';
+ const m={e503:'o banco D1 não está ligado ao Worker (confira o binding DB e o ID do banco em d1_databases no wrangler.jsonc)',e404:'a API /api/state não foi encontrada (o código da API não foi publicado; confira o wrangler.jsonc e o nome do Worker)',e401:'código de acesso não informado ou incorreto'}[x.s]||'sem conexão com o servidor ('+E(x.c&&x.c.message||x.c)+')';
  return '<span style="color:var(--er)">⚠ Não sincronizado: '+m+'.</span> Os dados estão sendo salvos só neste navegador.'+b}
 function setSy(){const e=$('#sy');if(e)e.innerHTML=syl()}
 async function saveCfg(){ls.set('cfg',cfg);if(!db)return;busy++;try{await call({t:'cfg',data:cfg})}catch{toast('Não foi possível salvar no servidor')}busy--}

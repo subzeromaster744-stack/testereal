@@ -1,0 +1,24 @@
+{
+  // O nome precisa ser igual ao do Worker no Cloudflare (testereal.SEU-SUBDOMINIO.workers.dev).
+  "name": "testereal",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-10-01",
+
+  // O site fica em public/; o Worker só roda nas rotas /api/*.
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+
+  // Banco D1. Pegue o nome e o ID no painel: Storage & databases > D1 SQL database > seu banco.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "COLE_AQUI_O_NOME_DO_BANCO",
+      "database_id": "COLE_AQUI_O_ID_DO_BANCO"
+    }
+  ],
+
+  "observability": { "enabled": true }
+}
