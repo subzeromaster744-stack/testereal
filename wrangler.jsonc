@@ -15,8 +15,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "COLE_AQUI_O_NOME_DO_BANCO",
-      "database_id": "COLE_AQUI_O_ID_DO_BANCO"
+      "database_name": "escala-hora-extra",
+      "database_id": "079e112a-b82c-47b0-95ab-d7496e2352b6"
     }
   ],
 
