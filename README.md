@@ -42,6 +42,26 @@ A cada `git push` no branch `main` o Cloudflare publica de novo.
 
 No projeto, abra **Settings → Variables and Secrets → Add**: nome `ACCESS_KEY`, tipo **Secret**, valor com um código que só os gestores conheçam. Secrets não são apagados pelos deploys. Cada gestor digita o código uma vez, na primeira abertura, e o navegador o guarda.
 
+## Cadastrar os CTs (planilha) e filtrar por seção
+
+Cada máquina é um **CT** (centro de trabalho) e pertence a uma **Seção** e a um **Grupo de Máq**. Em **Cadastro → Importar CTs (planilha)**, escolha um arquivo `.xlsx` ou `.csv`, ou cole as linhas do Excel, com estas colunas:
+
+```
+Seção     CT          Grupo de Máq
+Eixos D   01061031    CHOQUE TÉRMICO
+Eixos A   01061008    CHOQUE TÉRMICO
+```
+
+- A primeira linha pode ser o cabeçalho; as colunas são achadas pelo título (em qualquer ordem). Sem cabeçalho, vale a ordem Seção, CT, Grupo.
+- Os zeros à esquerda do CT são mantidos, inclusive quando o Excel guarda o CT como número com formato `00000000`.
+- Antes de importar, a pré-visualização mostra o que é novo, o que será atualizado e as linhas com erro (CT vazio ou repetido na planilha).
+- CTs que já existem são **atualizados** (seção e grupo); o nome e as vagas que você ajustou ficam. Seção em branco na planilha não apaga a seção já cadastrada. CTs novos entram com 1 vaga e com o CT como nome.
+- Arquivos `.xls` antigos não são lidos: salve como `.xlsx` ou `.csv`.
+- Também dá para cadastrar um CT por vez, e a seção, o CT, o nome e o grupo podem ser editados na tabela.
+- Na importação de colaboradores em lote, as máquinas podem ser indicadas pelo CT ou pelo nome.
+
+O seletor **Seção** (nas telas Escala, Calendário, Presença e Cadastro) mostra só as máquinas da seção e as pessoas treinadas nelas, e os contadores passam a valer só para a seção. A seção da pessoa vem das máquinas em que ela é treinada. A escolha fica lembrada no navegador. **(sem seção)** mostra as máquinas sem seção e as pessoas sem máquina. Se nenhuma máquina tiver seção, o seletor não aparece.
+
 ## Observações
 
 - **Sem `ACCESS_KEY`**, qualquer pessoa com o link vê e edita a escala, que contém nomes de colaboradores.

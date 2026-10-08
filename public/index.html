@@ -77,33 +77,45 @@ async function pull(manual){if(busy)return;if(manual===true)call.no=false;
 function upd(d,fn){const x=JSON.parse(JSON.stringify(D(d)));fn(x);days[d]=x;saveDay(d);render()}
 const shiftDate=n=>{const x=new Date(date+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
 
-function dbar(f){return `<div class="bar"><button class="btn" data-a="dd" data-v="-1">◀</button><input type="date" data-a="date" value="${date}"><button class="btn" data-a="dd" data-v="1">▶</button><button class="btn" data-a="today">Hoje</button><b style="text-transform:capitalize">${new Date(date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long'})}</b>${f?`<span style="flex:1"></span>${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn ${flt==x[0]?'pr':''}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}`:''}</div>`}
+function dbar(f){return `<div class="bar"><button class="btn" data-a="dd" data-v="-1">◀</button><input type="date" data-a="date" value="${date}"><button class="btn" data-a="dd" data-v="1">▶</button><button class="btn" data-a="today">Hoje</button><b style="text-transform:capitalize">${new Date(date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long'})}</b>${secSel()}${f?`<span style="flex:1"></span>${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn ${flt==x[0]?'pr':''}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}`:''}</div>`}
 function noData(){return `<div class="card empty"><h2>Comece cadastrando máquinas e colaboradores</h2><p class="mu">Cadastre as máquinas (por grupo de processo) e os operadores de cada turno para montar a escala.</p><button class="btn pr" data-a="tab" data-v="cad">Ir para o Cadastro</button> <button class="btn" data-a="demo">Carregar dados de exemplo</button></div>`}
 
 const wk=(e,d)=>{const w=(d.w||{})[e.id];return e.machines.includes(w)?w:(e.machines[0]||'')};
 const counts=d=>{const c={};cfg.employees.forEach(e=>{if(d.s.includes(e.id)){const w=wk(e,d);c[w]=(c[w]||0)+1}});return c};
-const norm=()=>{cfg.machines=cfg.machines||[];cfg.employees=(cfg.employees||[]).map(e=>{if(!e.machines)e.machines=e.machine?[e.machine]:[];delete e.machine;return e})};
+const norm=()=>{cfg.machines=(cfg.machines||[]).map(m=>{m.sec=m.sec||'';m.ct=m.ct||'';m.proc=m.proc||'Outros';return m});cfg.employees=(cfg.employees||[]).map(e=>{if(!e.machines)e.machines=e.machine?[e.machine]:[];delete e.machine;return e})};
+// Seção: a máquina guarda a seção; a pessoa fica nas seções das máquinas em que é treinada. O filtro vale para Escala, Calendário, Presença e Cadastro.
+const SN='__none';let secF=ls.get('sec')||'';
+const secList=()=>[...new Set(cfg.machines.map(m=>m.sec).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+const sf=()=>{const l=secList();return secF&&(secF==SN?(l.length&&cfg.machines.some(m=>!m.sec)):l.includes(secF))?secF:''};
+const mIn=m=>{const s=sf();return !s||(s==SN?!m.sec:m.sec===s)};
+const eMs=e=>e.machines.map(mac).filter(Boolean);
+const eIn=e=>{const s=sf();if(!s)return true;const ms=eMs(e);return ms.length?ms.some(mIn):s==SN};
+const gk=m=>(m.sec||'')+'|'+(m.proc||'Outros');
+const bySec=gs=>gs.sort((a,b)=>a.split('|')[0].localeCompare(b.split('|')[0],'pt-BR'));
+const mlb=m=>(m.sec?m.sec+' · ':'')+(m.proc||'Outros')+' · '+m.name;
+function secSel(){const l=secList();if(!l.length)return '';const s=sf();return `<label class="mu">Seção: <select data-a="sec"><option value="">Todas</option>${l.map(x=>`<option value="${E(x)}" ${s===x?'selected':''}>${E(x)}</option>`).join('')}${cfg.machines.some(m=>!m.sec)?`<option value="${SN}" ${s==SN?'selected':''}>(sem seção)</option>`:''}</select></label>`}
 function vEscala(){
  if(!cfg.machines.length&&!cfg.employees.length)return dbar()+noData();
- const d=D(date),S=new Set(d.s),cnt=counts(d);
+ const d=D(date),S=new Set(d.s),cnt=counts(d),s0=sf(),ms0=cfg.machines.filter(mIn),ids=new Set(ms0.map(m=>m.id));
  const st=m=>{const n=cnt[m.id]||0;return n>(m.slots||1)?'cf':n?'ok':'vz'};
- const sh=[1,2,3].map(t=>cfg.employees.filter(e=>S.has(e.id)&&e.shift==t).length);
- const cf=cfg.machines.filter(m=>st(m)=='cf').length,vz=cfg.machines.filter(m=>st(m)=='vz');
+ const sc=cfg.employees.filter(e=>S.has(e.id)&&(!s0||(wk(e,d)?ids.has(wk(e,d)):s0==SN)));
+ const sh=[1,2,3].map(t=>sc.filter(e=>e.shift==t).length);
+ const cf=ms0.filter(m=>st(m)=='cf').length,vz=ms0.filter(m=>st(m)=='vz');
  const chip=(e,mid)=>{const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return `<button class="chip ${here?'on':''} ${el?'alt':''}" data-a="tog" data-id="${e.id}" data-v="${mid}"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
- const card=m=>{const s=st(m),es=cfg.employees.filter(e=>e.machines.includes(m.id)&&(!flt||e.shift==flt));return `<div class="m ${s}"><h3><span>${E(m.name)}</span><span class="tag ${s}">${{cf:'Conflito',ok:'Coberta',vz:'Sem operador'}[s]}</span></h3><div class="mu">Vagas: ${cnt[m.id]||0}/${m.slots||1}</div>${es.map(e=>chip(e,m.id)).join('')||'<div class="mu" style="margin-top:6px">Sem operadores neste filtro</div>'}</div>`};
- const procs=[...new Set(cfg.machines.map(m=>m.proc||'Outros'))];
+ const card=m=>{const s=st(m),es=cfg.employees.filter(e=>e.machines.includes(m.id)&&(!flt||e.shift==flt));return `<div class="m ${s}"><h3><span>${E(m.name)}${m.ct&&m.ct!==m.name?` <span class="mu">CT ${E(m.ct)}</span>`:''}</span><span class="tag ${s}">${{cf:'Conflito',ok:'Coberta',vz:'Sem operador'}[s]}</span></h3><div class="mu">Vagas: ${cnt[m.id]||0}/${m.slots||1}</div>${es.map(e=>chip(e,m.id)).join('')||'<div class="mu" style="margin-top:6px">Sem operadores neste filtro</div>'}</div>`};
+ const gs=bySec([...new Set(ms0.map(gk))]);
  const orphan=cfg.employees.filter(e=>!e.machines.some(i=>mac(i))&&(!flt||e.shift==flt));
- return dbar(1)+(cfg.employees.some(e=>e.machines.length>1)?`<div class="mu" style="margin-bottom:10px">Quem é treinado em mais de uma máquina aparece em todas elas. Clique na máquina onde a pessoa vai trabalhar; clicar em outra máquina dela troca o posto.</div>`:'')+`<div class="kpis"><div class="kpi"><b>${d.s.length}</b><span>Escalados</span></div>${sh.map((n,i)=>`<div class="kpi"><b>${n}</b><span>Turno ${i+1}</span></div>`).join('')}<div class="kpi ${cf?'cf':''}"><b>${cf}</b><span>Máquinas em conflito</span></div><div class="kpi ${vz.length?'vz':''}"><b>${vz.length}</b><span>Máquinas sem operador</span></div></div>`+
+ return dbar(1)+(s0?`<div class="mu" style="margin-bottom:10px">Mostrando ${s0==SN?'as máquinas sem seção':'a seção <b>'+E(s0)+'</b>'}: ${ms0.length} máquina(s) e ${cfg.employees.filter(eIn).length} pessoa(s) treinada(s) nelas.</div>`:'')+(cfg.employees.some(e=>e.machines.length>1)?`<div class="mu" style="margin-bottom:10px">Quem é treinado em mais de uma máquina aparece em todas elas. Clique na máquina onde a pessoa vai trabalhar; clicar em outra máquina dela troca o posto.</div>`:'')+`<div class="kpis"><div class="kpi"><b>${sc.length}</b><span>Escalados</span></div>${sh.map((n,i)=>`<div class="kpi"><b>${n}</b><span>Turno ${i+1}</span></div>`).join('')}<div class="kpi ${cf?'cf':''}"><b>${cf}</b><span>Máquinas em conflito</span></div><div class="kpi ${vz.length?'vz':''}"><b>${vz.length}</b><span>Máquinas sem operador</span></div></div>`+
  (cf?`<div class="card" style="border-color:var(--er);color:var(--er)">⚠ Há mais operadores escalados do que vagas na mesma máquina — alguém ficaria sem máquina. Mude o posto de um deles (se for treinado em outra máquina) ou escale outra pessoa.</div>`:'')+
  (vz.length?`<div class="card"><b>Ainda sem operador:</b> <span class="mu" style="font-size:13px">${vz.map(m=>E(m.name)).join(', ')}</span></div>`:'')+
- procs.map(p=>{const ms=cfg.machines.filter(m=>(m.proc||'Outros')==p),ok=ms.filter(m=>st(m)!='vz').length;return `<section class="proc"><h2>${E(p)} <span class="tag ${ok==ms.length?'ok':'vz'}">${ok}/${ms.length} máquinas cobertas</span></h2><div class="grid">${ms.map(card).join('')}</div></section>`}).join('')+
- (orphan.length?`<section class="proc"><h2>Sem máquina definida</h2><div class="grid"><div class="m">${orphan.map(e=>chip(e,'')).join('')}</div></div></section>`:'')}
+ gs.map(g=>{const ms=ms0.filter(m=>gk(m)==g),ok=ms.filter(m=>st(m)!='vz').length,m0=ms[0],t=(!s0&&m0.sec?E(m0.sec)+' · ':'')+E(m0.proc||'Outros');return `<section class="proc"><h2>${t} <span class="tag ${ok==ms.length?'ok':'vz'}">${ok}/${ms.length} máquinas cobertas</span></h2><div class="grid">${ms.map(card).join('')}</div></section>`}).join('')+
+ ((!s0||s0==SN)&&orphan.length?`<section class="proc"><h2>Sem máquina definida</h2><div class="grid"><div class="m">${orphan.map(e=>chip(e,'')).join('')}</div></div></section>`:'')}
 
 function vPres(){
- const d=D(date),c=counts(d),l=d.s.map(emp).filter(Boolean).sort((a,b)=>a.shift-b.shift||a.name.localeCompare(b.name));
+ const d=D(date),c=counts(d),s0=sf(),ids=new Set(cfg.machines.filter(mIn).map(m=>m.id)),l=d.s.map(emp).filter(Boolean).filter(e=>!s0||(wk(e,d)?ids.has(wk(e,d)):s0==SN)).sort((a,b)=>a.shift-b.shift||a.name.localeCompare(b.name));
  const p=l.filter(e=>d.a[e.id]=='p').length,f=l.filter(e=>d.a[e.id]=='f').length,r=l.filter(e=>d.m[e.id]).length;
  return dbar()+`<div class="kpis"><div class="kpi"><b>${l.length}</b><span>Escalados</span></div><div class="kpi"><b>${p}</b><span>Presentes</span></div><div class="kpi ${f?'cf':''}"><b>${f}</b><span>Faltas</span></div><div class="kpi"><b>${l.length-p-f}</b><span>Pendentes</span></div><div class="kpi"><b>${r}</b><span>Refeições reservadas</span></div></div>`+
- (l.length?`<div class="card sc"><table><tr><th>Turno</th><th>Colaborador</th><th>Vai trabalhar em</th><th>Refeição</th><th>Check-in</th></tr>${l.map(e=>{const a=d.a[e.id],w=wk(e,d),m=mac(w),cf=m&&c[w]>(m.slots||1);return `<tr><td><span class="t t${e.shift}">T${e.shift}</span></td><td>${E(e.name)}</td><td>${e.machines.length>1?`<select data-a="wk" data-id="${e.id}">${e.machines.map(i=>`<option value="${i}" ${i==w?'selected':''}>${E((mac(i)||{}).name)}</option>`).join('')}</select>`:m?E(m.name):'—'} ${cf?'<span class="tag cf">conflito</span>':''}</td><td><label><input type="checkbox" data-a="meal" data-id="${e.id}" ${d.m[e.id]?'checked':''}> Reservada</label></td><td><button class="btn ${a=='p'?'ok':''}" data-a="att" data-v="p" data-id="${e.id}">Presente</button> <button class="btn ${a=='f'?'cf':''}" data-a="att" data-v="f" data-id="${e.id}">Faltou</button></td></tr>`}).join('')}</table></div>`:`<div class="card empty mu">Ninguém escalado para esta data. Monte a escala na aba "Escala".</div>`)}
+ (l.length?`<div class="card sc"><table><tr><th>Turno</th><th>Colaborador</th><th>Vai trabalhar em</th><th>Refeição</th><th>Check-in</th></tr>${l.map(e=>{const a=d.a[e.id],w=wk(e,d),m=mac(w),cf=m&&c[w]>(m.slots||1);return `<tr><td><span class="t t${e.shift}">T${e.shift}</span></td><td>${E(e.name)}</td><td>${e.machines.length>1?`<select data-a="wk" data-id="${e.id}">${e.machines.map(i=>`<option value="${i}" ${i==w?'selected':''}>${E((mac(i)||{}).name)}</option>`).join('')}</select>`:m?E(m.name):'—'} ${cf?'<span class="tag cf">conflito</span>':''}</td><td><label><input type="checkbox" data-a="meal" data-id="${e.id}" ${d.m[e.id]?'checked':''}> Reservada</label></td><td><button class="btn ${a=='p'?'ok':''}" data-a="att" data-v="p" data-id="${e.id}">Presente</button> <button class="btn ${a=='f'?'cf':''}" data-a="att" data-v="f" data-id="${e.id}">Faltou</button></td></tr>`}).join('')}</table></div>`:`<div class="card empty mu">Ninguém escalado para esta data${s0?' nesta seção':''}. Monte a escala na aba "Escala".</div>`)}
 
 function vInd(){
  const z=()=>({e:0,p:0,f:0}),add=(o,v)=>{o.e++;if(v=='p')o.p++;if(v=='f')o.f++},pc=o=>o.p+o.f?Math.round(o.p/(o.p+o.f)*100)+'%':'—';
@@ -117,7 +129,8 @@ function vInd(){
  `<div class="card sc"><h2>Histórico por dia</h2>${DY.length?`<table><tr><th>Data</th><th>Escalados</th><th>Presentes</th><th>Faltas</th><th>%</th><th></th></tr>${DY.map(([k,o])=>`<tr><td>${fmt(k)}</td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td><button class="lk a" data-a="goto" data-v="${k}">abrir</button></td></tr>`).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`}
 
 let imp=null,bk='',bp='Outros';
-const nmx=n=>cfg.machines.some(m=>m.name.toLowerCase()==n.toLowerCase());
+const findM=n=>{n=String(n).trim().toLowerCase();return cfg.machines.find(m=>m.name.toLowerCase()==n||(m.ct&&m.ct.toLowerCase()==n))};
+const nmx=n=>!!findM(n);
 function parse(){
  const ex=new Map(cfg.employees.map(e=>[e.name.toLowerCase(),e])),seen=new Set(),rows=[];
  bk.split(/\r?\n/).forEach(l=>{l=l.trim();if(!l)return;
@@ -132,18 +145,76 @@ function prevHtml(){
  if(!imp.length)return '<div class="mu" style="margin-top:10px">Nenhuma linha encontrada.</div>';
  const ok=imp.filter(r=>!r.err),nm=new Set();ok.forEach(r=>r.ms.forEach(n=>{if(!nmx(n))nm.add(n.toLowerCase())}));
  return `<div style="margin-top:12px"><b>${ok.filter(r=>!r.old).length} novos · ${ok.filter(r=>r.old).length} atualizações · ${imp.length-ok.length} com erro · ${nm.size} máquina(s) nova(s)</b><div class="sc"><table><tr><th>Nome</th><th>Turno</th><th>Máquinas</th><th>Ação</th></tr>${imp.map(r=>`<tr><td>${E(r.n)}</td><td>${r.sh?'T'+r.sh:'—'}</td><td class="mc">${r.ms.map(n=>E(n)+(nmx(n)?'':' <span class="tag vz">nova</span>')).join(', ')||'—'}</td><td>${r.err?`<span class="tag cf">${r.err}</span>`:r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>'}</td></tr>`).join('')}</table></div><div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="apply" ${ok.length?'':'disabled'}>Importar ${ok.length} linha(s)</button><button class="btn" data-a="cancel">Cancelar</button></div></div>`}
+
+// ---- Importar CTs (Seção, CT, Grupo de Máq) de .xlsx, .csv ou texto colado
+const decX=s=>String(s).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&#x([0-9a-f]+);/gi,(_,h)=>String.fromCodePoint(parseInt(h,16))).replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(+n)).replace(/&amp;/g,'&');
+async function xlsxRows(buf){ // leitor mínimo de .xlsx (zip + XML), 1ª planilha; sem biblioteca externa
+ const u=new Uint8Array(buf),dv=new DataView(buf);let e=u.length-22;
+ while(e>=0&&dv.getUint32(e,true)!=0x06054b50)e--;
+ if(e<0)throw Error('não é um arquivo .xlsx válido');
+ const n=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);const ents={};
+ for(let i=0;i<n&&dv.getUint32(p,true)==0x02014b50;i++){const nl=dv.getUint16(p+28,true),xl=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true);
+  ents[new TextDecoder().decode(u.subarray(p+46,p+46+nl))]={meth:dv.getUint16(p+10,true),csz:dv.getUint32(p+20,true),off:dv.getUint32(p+42,true)};p+=46+nl+xl+cl}
+ const get=async nm=>{const en=ents[nm];if(!en)return null;const nl=dv.getUint16(en.off+26,true),xl=dv.getUint16(en.off+28,true),st=en.off+30+nl+xl,data=u.subarray(st,st+en.csz);
+  if(en.meth==0)return new TextDecoder().decode(data);
+  if(en.meth!=8)throw Error('compactação do .xlsx não suportada');
+  return new TextDecoder().decode(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer())};
+ const wb=await get('xl/workbook.xml'),rel=await get('xl/_rels/workbook.xml.rels');
+ if(!wb)throw Error('não é um arquivo .xlsx válido');
+ const rid=(wb.match(/<sheet\b[^>]*\br:id="([^"]+)"/)||[])[1],tag=rid&&rel?(rel.match(new RegExp('<Relationship\\b[^>]*\\bId="'+rid+'"[^>]*>'))||[''])[0]:'',tg=tag.match(/\bTarget="([^"]+)"/);
+ const path='xl/'+(tg?tg[1]:'worksheets/sheet1.xml').replace(/^\/?(xl\/)?/,'');
+ const ss=await get('xl/sharedStrings.xml'),sst=[];
+ if(ss)for(const m of ss.matchAll(/<si\b[^>]*?(?:\/>|>([\s\S]*?)<\/si>)/g))sst.push(decX([...(m[1]||'').replace(/<rPh\b[\s\S]*?<\/rPh>/g,'').matchAll(/<t\b[^>]*>([\s\S]*?)<\/t>/g)].map(x=>x[1]).join('')));
+ // formatos numéricos só de zeros (ex.: 00000000): o valor bruto é 1061031 mas a célula mostra 01061031
+ const stl=await get('xl/styles.xml'),nf={},xf=[];
+ if(stl){for(const m of stl.matchAll(/<numFmt\b([^>]*?)\/?>/g)){const id=(m[1].match(/\bnumFmtId="(\d+)"/)||[])[1],fc=(m[1].match(/\bformatCode="([^"]*)"/)||[])[1];if(id&&fc)nf[id]=decX(fc)}
+  for(const m of ((stl.match(/<cellXfs\b[^>]*>([\s\S]*?)<\/cellXfs>/)||[])[1]||'').matchAll(/<xf\b([^>]*?)\/?>/g))xf.push((m[1].match(/\bnumFmtId="(\d+)"/)||[])[1]||'0')}
+ const sh=await get(path);if(!sh)throw Error('planilha não encontrada dentro do arquivo');
+ const rows=[];
+ for(const rm of sh.matchAll(/<row\b[^>]*?(?:\/>|>([\s\S]*?)<\/row>)/g)){const row=[];
+  for(const cm of (rm[1]||'').matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)){
+   const at=cm[1],body=cm[2]||'',ref=(at.match(/\br="([A-Z]+)\d+"/)||[])[1],t=(at.match(/\bt="(\w+)"/)||[])[1];
+   let col=0;if(ref)for(const ch of ref)col=col*26+ch.charCodeAt(0)-64;col=col?col-1:row.length;
+   const v=(body.match(/<v>([\s\S]*?)<\/v>/)||[])[1],code=nf[xf[+((at.match(/\bs="(\d+)"/)||[])[1]||0)]]||'';
+   row[col]=t=='s'?(sst[+v]||''):t=='inlineStr'?decX([...body.matchAll(/<t\b[^>]*>([\s\S]*?)<\/t>/g)].map(x=>x[1]).join('')):/^0+$/.test(code)&&/^\d+$/.test(v||'')?v.padStart(code.length,'0'):decX(v||'')}
+  rows.push(Array.from(row,x=>x??''))}
+ return rows}
+let ctt='',ctr=null;
+function ctRows(rows){
+ rows=rows.map(r=>r.map(x=>String(x??'').trim())).filter(r=>r.some(Boolean));
+ const ix={sec:0,ct:1,grp:2},h=rows[0]||[];
+ if(h.some(x=>/^(se[cç][aã]o|setor|ct|centro|c[oó]digo|grupo)/i.test(x))){
+  const f=re=>h.findIndex(x=>re.test(x)),a=f(/^(se[cç][aã]o|setor)$/i),b=f(/^(ct|centro|c[oó]digo)/i),c=f(/^grupo/i);
+  if(a>=0)ix.sec=a;if(b>=0)ix.ct=b;if(c>=0)ix.grp=c;rows=rows.slice(1)}
+ const out=rows.map(r=>({sec:r[ix.sec]||'',ct:r[ix.ct]||'',grp:r[ix.grp]||'',err:'',note:'',old:null}));
+ const seen=new Set();
+ out.forEach(o=>{const k=o.ct.toLowerCase();
+  if(!o.ct)o.err='CT vazio';else if(seen.has(k))o.err='CT repetido na planilha';
+  if(o.ct)seen.add(k);
+  if(!o.err){o.grp=o.grp||'Outros';o.old=cfg.machines.find(m=>(m.ct&&m.ct.toLowerCase()==k)||m.name.toLowerCase()==k)||null}});
+ return out}
+const ctText=t=>t.split(/\r?\n/).filter(l=>l.trim()).map(l=>l.split(l.includes('\t')?'\t':l.includes(';')?';':',').map(x=>x.trim().replace(/^"(.*)"$/,'$1')));
+function ctPrev(){
+ if(!ctr.length)return '<div class="mu" style="margin-top:10px">Nenhuma linha encontrada.</div>';
+ const ok=ctr.filter(r=>!r.err),nw=ok.filter(r=>!r.old).length,secs=[...new Set(ok.map(r=>r.sec||'(sem seção)'))],grp=new Set(ok.map(r=>r.sec+'|'+r.grp));
+ return `<div style="margin-top:12px"><b>${nw} novo(s) · ${ok.length-nw} atualização(ões) · ${ctr.length-ok.length} com erro</b> <span class="mu">· ${secs.length} seção(ões): ${secs.map(E).join(', ')} · ${grp.size} grupo(s) de máquinas</span><div class="sc" style="max-height:340px;overflow:auto"><table><tr><th>Seção</th><th>CT</th><th>Grupo de Máq</th><th>Ação</th></tr>${ctr.slice(0,300).map(r=>`<tr><td>${E(r.sec)||'—'}</td><td>${E(r.ct)||'—'}</td><td>${E(r.grp)||'—'}</td><td>${r.err?`<span class="tag cf">${r.err}</span>`:(r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>')+(r.note?` <span class="mu">${E(r.note)}</span>`:'')}</td></tr>`).join('')}</table></div>${ctr.length>300?`<div class="mu">Mostrando as 300 primeiras de ${ctr.length} linhas; todas as válidas serão importadas.</div>`:''}<div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="ctapply" ${ok.length?'':'disabled'}>Importar ${ok.length} CT(s)</button><button class="btn" data-a="ctcancel">Cancelar</button></div></div>`}
 function vCad(){
- const ms=cfg.machines,ps=[...new Set(ms.map(m=>m.proc))];
- const mo=s=>`<option value="">— sem máquina —</option>`+ms.map(m=>`<option value="${m.id}" ${m.id===s?'selected':''}>${E(m.proc)} · ${E(m.name)}</option>`).join('');
+ const ms=cfg.machines,ps=[...new Set(ms.map(m=>m.proc))],vm=ms.filter(mIn),ve=[...cfg.employees].filter(eIn).sort((a,b)=>a.name.localeCompare(b.name));
+ const mo=s=>`<option value="">— sem máquina —</option>`+ms.map(m=>`<option value="${m.id}" ${m.id===s?'selected':''}>${E(mlb(m))}</option>`).join('');
  const so=v=>[1,2,3].map(t=>`<option value="${t}" ${t==v?'selected':''}>Turno ${t}</option>`).join('');
- const mcell=e=>e.machines.map(i=>mac(i)?`<span class="tag ok" style="display:inline-block;margin:0 4px 4px 0">${E(mac(i).name)} <button class="lk" data-a="rm" data-id="${e.id}" data-v="${i}" title="Remover">×</button></span>`:'').join('')+`<select data-a="am" data-id="${e.id}"><option value="">+ adicionar máquina</option>${ms.filter(m=>!e.machines.includes(m.id)).map(m=>`<option value="${m.id}">${E(m.proc)} · ${E(m.name)}</option>`).join('')}</select>`;
- return `<div class="card"><h2>Máquinas</h2><div class="bar"><input id="mn" placeholder="Máquina (ex.: Ret 01)"><input id="mp" list="pl" placeholder="Grupo de processo (ex.: Retificadora)"><datalist id="pl">${ps.map(p=>`<option value="${E(p)}">`).join('')}</datalist><input id="ms" type="number" min="1" value="1" style="width:80px" title="Vagas por máquina"><button class="btn pr" data-a="addm">Adicionar</button></div>
- <div class="sc"><table><tr><th>Máquina</th><th>Processo</th><th>Vagas</th><th></th></tr>${ms.map(m=>`<tr><td><input data-a="mf" data-f="name" data-id="${m.id}" value="${E(m.name)}"></td><td><input data-a="mf" data-f="proc" data-id="${m.id}" value="${E(m.proc)}"></td><td><input type="number" min="1" style="width:70px" data-a="mf" data-f="slots" data-id="${m.id}" value="${m.slots||1}"></td><td><button class="btn er" data-a="delm" data-id="${m.id}">Remover</button></td></tr>`).join('')}</table></div></div>
- <div class="card"><h2>Colaboradores</h2><div class="bar"><input id="en" placeholder="Nome do colaborador"><select id="es">${so(1)}</select><select id="em">${mo('')}</select><button class="btn pr" data-a="adde">Adicionar</button></div><div class="mu" style="margin-bottom:8px">Para treinar o colaborador em mais máquinas, use "+ adicionar máquina" na tabela. A primeira é o posto padrão na escala.</div>
- <div class="sc"><table><tr><th>Nome</th><th>Turno</th><th>Máquinas em que é treinado</th><th></th></tr>${[...cfg.employees].sort((a,b)=>a.name.localeCompare(b.name)).map(e=>`<tr><td><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"></td><td><select data-a="ef" data-f="shift" data-id="${e.id}">${so(e.shift)}</select></td><td class="mc">${mcell(e)}</td><td><button class="btn er" data-a="dele" data-id="${e.id}">Remover</button></td></tr>`).join('')}</table></div></div>
- <div class="card"><h2>Importar em lote</h2><div class="mu">Uma linha por colaborador: <b>Nome;Turno;Máquina 1/Máquina 2</b>. Separe os campos com ponto e vírgula, tabulação (colar do Excel) ou vírgula, e várias máquinas com / ou |. O turno pode ser 1, T1 ou "Turno 1". Quem já existe é atualizado (as máquinas são somadas) e máquinas novas são criadas.</div>
+ const mcell=e=>e.machines.map(i=>mac(i)?`<span class="tag ok" style="display:inline-block;margin:0 4px 4px 0">${E(mac(i).name)} <button class="lk" data-a="rm" data-id="${e.id}" data-v="${i}" title="Remover">×</button></span>`:'').join('')+`<select data-a="am" data-id="${e.id}"><option value="">+ adicionar máquina</option>${ms.filter(m=>!e.machines.includes(m.id)).map(m=>`<option value="${m.id}">${E(mlb(m))}</option>`).join('')}</select>`;
+ const esec=e=>[...new Set(eMs(e).map(m=>m.sec).filter(Boolean))].join(', ')||'—';
+ return `<div class="bar">${secSel()||'<span class="mu">Cadastre ou importe CTs com seção para poder filtrar por seção.</span>'}</div>
+ <div class="card"><h2>Máquinas (CTs) <span class="mu">${vm.length}${vm.length!=ms.length?' de '+ms.length:''}</span></h2><div class="bar"><input id="msec" list="sl" placeholder="Seção (ex.: Eixos D)"><input id="mc" placeholder="CT (ex.: 01061031)"><input id="mn" placeholder="Nome (opcional)"><input id="mp" list="pl" placeholder="Grupo de Máq (ex.: CHOQUE TÉRMICO)"><datalist id="pl">${ps.map(p=>`<option value="${E(p)}">`).join('')}</datalist><datalist id="sl">${secList().map(p=>`<option value="${E(p)}">`).join('')}</datalist><input id="ms" type="number" min="1" value="1" style="width:80px" title="Vagas por máquina"><button class="btn pr" data-a="addm">Adicionar</button></div>
+ <div class="sc" style="max-height:480px;overflow:auto"><table><tr><th>Seção</th><th>CT</th><th>Nome</th><th>Grupo de Máq</th><th>Vagas</th><th></th></tr>${vm.map(m=>`<tr><td><input list="sl" data-a="mf" data-f="sec" data-id="${m.id}" value="${E(m.sec)}"></td><td><input data-a="mf" data-f="ct" data-id="${m.id}" value="${E(m.ct)}"></td><td><input data-a="mf" data-f="name" data-id="${m.id}" value="${E(m.name)}"></td><td><input list="pl" data-a="mf" data-f="proc" data-id="${m.id}" value="${E(m.proc)}"></td><td><input type="number" min="1" style="width:70px" data-a="mf" data-f="slots" data-id="${m.id}" value="${m.slots||1}"></td><td><button class="btn er" data-a="delm" data-id="${m.id}">Remover</button></td></tr>`).join('')}</table></div></div>
+ <div class="card"><h2>Importar CTs (planilha)</h2><div class="mu">Colunas: <b>Seção</b>, <b>CT</b> e <b>Grupo de Máq</b>. A primeira linha pode ser o cabeçalho (as colunas são achadas pelo título). Aceita arquivo .xlsx ou .csv, ou linhas coladas do Excel. CTs que já existem são atualizados (seção e grupo, o nome e as vagas ficam); os outros são criados com 1 vaga.</div>
+ <div class="bar" style="margin-top:8px"><label class="btn">Escolher planilha (.xlsx, .csv)<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="ctfile" hidden></label><button class="btn" data-a="ctex">Inserir exemplo</button></div>
+ <textarea id="ctk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Seção&#9;CT&#9;Grupo de Máq&#10;Eixos D&#9;01061031&#9;CHOQUE TÉRMICO">${E(ctt)}</textarea><button class="btn pr" data-a="ctprev">Pré-visualizar</button>${ctr?ctPrev():''}</div>
+ <div class="card"><h2>Colaboradores <span class="mu">${ve.length}${ve.length!=cfg.employees.length?' de '+cfg.employees.length:''}</span></h2><div class="bar"><input id="en" placeholder="Nome do colaborador"><select id="es">${so(1)}</select><select id="em">${mo('')}</select><button class="btn pr" data-a="adde">Adicionar</button></div><div class="mu" style="margin-bottom:8px">A seção da pessoa vem das máquinas em que ela é treinada. Para treinar em mais máquinas, use "+ adicionar máquina" na tabela. A primeira é o posto padrão na escala.</div>
+ <div class="sc"><table><tr><th>Nome</th><th>Turno</th><th>Seção</th><th>Máquinas em que é treinado</th><th></th></tr>${ve.map(e=>`<tr><td><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"></td><td><select data-a="ef" data-f="shift" data-id="${e.id}">${so(e.shift)}</select></td><td class="mc">${E(esec(e))}</td><td class="mc">${mcell(e)}</td><td><button class="btn er" data-a="dele" data-id="${e.id}">Remover</button></td></tr>`).join('')}</table></div></div>
+ <div class="card"><h2>Importar colaboradores em lote</h2><div class="mu">Uma linha por colaborador: <b>Nome;Turno;CT ou máquina 1/CT ou máquina 2</b>. Separe os campos com ponto e vírgula, tabulação (colar do Excel) ou vírgula, e várias máquinas com / ou |. As máquinas podem ser indicadas pelo CT ou pelo nome. O turno pode ser 1, T1 ou "Turno 1". Quem já existe é atualizado (as máquinas são somadas) e máquinas novas são criadas.</div>
  <div class="bar" style="margin-top:8px"><label>Grupo das máquinas novas: <input id="bp" list="pl" value="${E(bp)}"></label><label class="btn">Abrir arquivo .csv/.txt <input type="file" accept=".csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Inserir exemplo</button></div>
- <textarea id="bk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Ana Souza;1;Ret 01/Ret 02">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}</div>`}
+ <textarea id="bk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Ana Souza;1;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}</div>`}
 
 let calRef=iso(new Date()),calMode='w',opn=ls.get('open')||{};
 const cd=(k,n)=>{const x=new Date(k+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
@@ -151,19 +222,20 @@ const wd=k=>new Date(k+'T12:00'),short=n=>{const p=n.trim().split(/\s+/);return 
 function calDays(){const r=wd(calRef);if(calMode=='m'){const y=r.getFullYear(),mo=r.getMonth(),n=new Date(y,mo+1,0).getDate();return Array.from({length:n},(_,i)=>iso(new Date(y,mo,i+1,12)))}const mon=cd(calRef,-((r.getDay()+6)%7));return Array.from({length:7},(_,i)=>cd(mon,i))}
 function vCal(){
  if(!cfg.machines.length)return noData();
- const ds=calDays(),td=iso(new Date());
- const info=ds.map(k=>{const d=days[k]||{s:[],a:{},w:{}},by={};d.s.forEach(id=>{const e=emp(id);if(e){const w=wk(e,d);(by[w]=by[w]||[]).push(e)}});return {k,d,by,tot:Object.values(by).reduce((a,l)=>a+l.length,0)}});
- const procs=[...new Set(cfg.machines.map(m=>m.proc||'Outros'))],st=(m,I)=>{const n=(I.by[m.id]||[]).length;return n>(m.slots||1)?'cf':n?'ok':'vz'};
+ const ds=calDays(),td=iso(new Date()),s0=sf(),MS=cfg.machines.filter(mIn);
+ const info=ds.map(k=>{const d=days[k]||{s:[],a:{},w:{}},by={};d.s.forEach(id=>{const e=emp(id);if(e){const w=wk(e,d);(by[w]=by[w]||[]).push(e)}});
+  const tot=s0?MS.reduce((a,m)=>a+(by[m.id]||[]).length,0)+(s0==SN?(by['']||[]).length:0):Object.values(by).reduce((a,l)=>a+l.length,0);return {k,d,by,tot}});
+ const gs=bySec([...new Set(MS.map(gk))]),st=(m,I)=>{const n=(I.by[m.id]||[]).length;return n>(m.slots||1)?'cf':n?'ok':'vz'};
  const lbl=calMode=='m'?wd(calRef).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}):fmt(ds[0]).slice(0,5)+' – '+fmt(ds[6]);
  const head=`<tr><th class="first"></th>${info.map(I=>{const x=wd(I.k);return `<th class="dh ${I.k==td?'hoje':''} ${x.getDay()%6==0?'fds':''}" data-a="goto" data-v="${I.k}" title="Abrir a escala deste dia">${x.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','')}<br><b>${x.getDate()}</b></th>`}).join('')}</tr>`;
- const tot=`<tr class="tot"><td class="first"><b>Total escalados</b></td>${info.map(I=>{const cf=cfg.machines.filter(m=>st(m,I)=='cf').length;return `<td class="c" data-a="goto" data-v="${I.k}"><b>${I.tot||'·'}</b>${cf?` <span class="tag cf">⚠ ${cf}</span>`:''}</td>`}).join('')}</tr>`;
- const body=procs.map(p=>{const ms=cfg.machines.filter(m=>(m.proc||'Outros')==p),o=!!opn[p];
-  const prow=`<tr class="pr"><td class="first"><button class="lk" data-a="opn" data-v="${E(p)}">${o?'▾':'▸'} ${E(p)}</button><div class="mu" style="font-weight:400">${ms.length} máquina(s)</div></td>${info.map(I=>{const sts=ms.map(m=>st(m,I)),n=ms.reduce((a,m)=>a+(I.by[m.id]||[]).length,0),cov=sts.filter(x=>x!='vz').length,cls=sts.includes('cf')?'cf':n?(cov==ms.length?'ok':'vz'):'';return `<td class="c ${cls}" data-a="goto" data-v="${I.k}"><b>${n||'·'}</b>${n?`<div class="mu">${cov}/${ms.length} máq.</div>`:''}</td>`}).join('')}</tr>`;
+ const tot=`<tr class="tot"><td class="first"><b>Total escalados</b>${s0?`<div class="mu" style="font-weight:400">${s0==SN?'sem seção':E(s0)}</div>`:''}</td>${info.map(I=>{const cf=MS.filter(m=>st(m,I)=='cf').length;return `<td class="c" data-a="goto" data-v="${I.k}"><b>${I.tot||'·'}</b>${cf?` <span class="tag cf">⚠ ${cf}</span>`:''}</td>`}).join('')}</tr>`;
+ const body=gs.map(g=>{const ms=MS.filter(m=>gk(m)==g),m0=ms[0],o=!!opn[g],t=(!s0&&m0.sec?E(m0.sec)+' · ':'')+E(m0.proc||'Outros');
+  const prow=`<tr class="pr"><td class="first"><button class="lk" data-a="opn" data-v="${E(g)}">${o?'▾':'▸'} ${t}</button><div class="mu" style="font-weight:400">${ms.length} máquina(s)</div></td>${info.map(I=>{const sts=ms.map(m=>st(m,I)),n=ms.reduce((a,m)=>a+(I.by[m.id]||[]).length,0),cov=sts.filter(x=>x!='vz').length,cls=sts.includes('cf')?'cf':n?(cov==ms.length?'ok':'vz'):'';return `<td class="c ${cls}" data-a="goto" data-v="${I.k}"><b>${n||'·'}</b>${n?`<div class="mu">${cov}/${ms.length} máq.</div>`:''}</td>`}).join('')}</tr>`;
   const mrows=o?ms.map(m=>`<tr><td class="first sub">${E(m.name)}<span class="mu"> · ${m.slots||1} vaga(s)</span></td>${info.map(I=>{const l=(I.by[m.id]||[]).sort((a,b)=>a.shift-b.shift),s=st(m,I);return `<td class="c ${s=='vz'?'':s}" data-a="goto" data-v="${I.k}">${l.map(e=>`<div class="cn" title="${E(e.name)}"><i class="t t${e.shift}">T${e.shift}</i> ${I.d.a[e.id]=='p'?'✓ ':I.d.a[e.id]=='f'?'✗ ':''}${E(short(e.name))}</div>`).join('')}</td>`}).join('')}</tr>`).join(''):'';
   return prow+mrows}).join('');
- return `<div class="bar"><button class="btn" data-a="cnav" data-v="-1">◀</button><button class="btn" data-a="cnav" data-v="1">▶</button><button class="btn" data-a="ctoday">Hoje</button><b style="text-transform:capitalize;min-width:150px">${lbl}</b><button class="btn ${calMode=='w'?'pr':''}" data-a="cmode" data-v="w">Semana</button><button class="btn ${calMode=='m'?'pr':''}" data-a="cmode" data-v="m">Mês</button><span style="flex:1"></span><button class="btn" data-a="openall">Expandir tudo</button><button class="btn" data-a="closeall">Recolher tudo</button></div>
+ return `<div class="bar"><button class="btn" data-a="cnav" data-v="-1">◀</button><button class="btn" data-a="cnav" data-v="1">▶</button><button class="btn" data-a="ctoday">Hoje</button><b style="text-transform:capitalize;min-width:150px">${lbl}</b>${secSel()}<button class="btn ${calMode=='w'?'pr':''}" data-a="cmode" data-v="w">Semana</button><button class="btn ${calMode=='m'?'pr':''}" data-a="cmode" data-v="m">Mês</button><span style="flex:1"></span><button class="btn" data-a="openall">Expandir tudo</button><button class="btn" data-a="closeall">Recolher tudo</button></div>
  <div class="card sc" style="padding:0"><table class="cal" style="--cw:${calMode=='m'?'66px':'118px'}">${head}${tot}${body}</table></div>
- <div class="mu"><span class="tag ok">verde</span> todas as máquinas do processo cobertas &nbsp;<span class="tag vz">âmbar</span> parte das máquinas cobertas &nbsp;<span class="tag cf">vermelho</span> conflito (mais gente que vagas) &nbsp;·&nbsp; ✓ presente &nbsp;✗ faltou &nbsp;·&nbsp; clique em um dia para abrir a escala dele. Use ▸ para ver as máquinas de cada processo.</div>`}
+ <div class="mu"><span class="tag ok">verde</span> todas as máquinas do grupo cobertas &nbsp;<span class="tag vz">âmbar</span> parte das máquinas cobertas &nbsp;<span class="tag cf">vermelho</span> conflito (mais gente que vagas) &nbsp;·&nbsp; ✓ presente &nbsp;✗ faltou &nbsp;·&nbsp; clique em um dia para abrir a escala dele. Use ▸ para ver as máquinas de cada grupo.</div>`}
 
 function render(){
  const T=[['escala','Escala'],['cal','Calendário'],['pres','Presença e refeição'],['ind','Indicadores'],['cad','Cadastro']];
@@ -176,7 +248,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='att')upd(date,x=>{if(x.a[id]==v)delete x.a[id];else x.a[id]=v})
  else if(a=='flt'){flt=+v;render()}
  else if(a=='opn'){opn[v]=!opn[v];ls.set('open',opn);render()}
- else if(a=='openall'||a=='closeall'){cfg.machines.forEach(m=>opn[m.proc||'Outros']=a=='openall');ls.set('open',opn);render()}
+ else if(a=='openall'||a=='closeall'){cfg.machines.forEach(m=>opn[gk(m)]=a=='openall');ls.set('open',opn);render()}
  else if(a=='cmode'){calMode=v;render()}
  else if(a=='ctoday'){calRef=iso(new Date());render()}
  else if(a=='cnav'){if(calMode=='w')calRef=cd(calRef,7*v);else{const r=wd(calRef);r.setDate(1);r.setMonth(r.getMonth()+ +v);calRef=iso(r)}render()}
@@ -184,7 +256,11 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='today'){date=iso(new Date());render()}
  else if(a=='sync'){sync={s:'wait'};setSy();pull(true)}
  else if(a=='goto'){date=v;tab='escala';render()}
- else if(a=='addm'){if(!g('#mn'))return toast('Informe o nome da máquina');cfg.machines.push({id:uid(),name:g('#mn'),proc:g('#mp')||'Outros',slots:Math.max(1,+$('#ms').value||1)});saveCfg();render()}
+ else if(a=='addm'){const ct=g('#mc'),nm=g('#mn')||ct;if(!nm)return toast('Informe o CT ou o nome da máquina');cfg.machines.push({id:uid(),name:nm,ct,sec:g('#msec'),proc:g('#mp')||'Outros',slots:Math.max(1,+$('#ms').value||1)});saveCfg();render()}
+ else if(a=='ctex'){ctt='Seção\tCT\tGrupo de Máq\nEixos D\t01061031\tCHOQUE TÉRMICO\nEixos A\t01061008\tCHOQUE TÉRMICO';ctr=ctRows(ctText(ctt));render()}
+ else if(a=='ctprev'){ctt=$('#ctk').value;ctr=ctRows(ctText(ctt));render()}
+ else if(a=='ctcancel'){ctr=null;render()}
+ else if(a=='ctapply'){let n=0,u=0;ctr.filter(r=>!r.err).forEach(r=>{const k=r.ct.toLowerCase(),m=cfg.machines.find(m=>(m.ct&&m.ct.toLowerCase()==k)||m.name.toLowerCase()==k);if(m){m.ct=r.ct;if(r.sec)m.sec=r.sec;m.proc=r.grp||m.proc;u++}else{cfg.machines.push({id:uid(),name:r.ct,ct:r.ct,sec:r.sec,proc:r.grp||'Outros',slots:1});n++}});saveCfg();ctr=null;ctt='';render();toast(n+' CT(s) novo(s), '+u+' atualizado(s)')}
  else if(a=='adde'){if(!g('#en'))return toast('Informe o nome do colaborador');cfg.employees.push({id:uid(),name:g('#en'),shift:+$('#es').value,machines:$('#em').value?[$('#em').value]:[]});saveCfg();render()}
  else if(a=='delm'){cfg.machines=cfg.machines.filter(m=>m.id!==id);cfg.employees.forEach(e=>e.machines=e.machines.filter(i=>i!==id));saveCfg();render()}
  else if(a=='dele'){cfg.employees=cfg.employees.filter(e=>e.id!==id);saveCfg();render()}
@@ -192,8 +268,8 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='ex'){bk='Nome;Turno;Máquinas\nAna Souza;1;Ret 01/Ret 02\nBruno Lima;T2;Estria 01\nCarlos Dias;Turno 3;Fres 01|Fres 02|Estria 01';parse();render()}
  else if(a=='prev'){bk=$('#bk').value;bp=g('#bp')||'Outros';parse();render()}
  else if(a=='cancel'){imp=null;render()}
- else if(a=='apply'){let n=0,u=0;imp.filter(r=>!r.err).forEach(r=>{const ids=r.ms.map(nm=>{let m=cfg.machines.find(m=>m.name.toLowerCase()==nm.toLowerCase());if(!m){m={id:uid(),name:nm,proc:bp||'Outros',slots:1};cfg.machines.push(m)}return m.id});const e=cfg.employees.find(e=>e.name.toLowerCase()==r.n.toLowerCase());if(e){e.shift=r.sh;e.machines=[...new Set([...e.machines,...ids])];u++}else{cfg.employees.push({id:uid(),name:r.n,shift:r.sh,machines:ids});n++}});saveCfg();imp=null;bk='';render();toast(n+' novo(s), '+u+' atualizado(s)')}
- else if(a=='demo'){const G=[['Retificadora','Ret 01','Ret 02','Ret 03'],['Estria','Estria 01','Estria 02'],['Fresadora','Fres 01','Fres 02']];G.forEach(g=>g.slice(1).forEach(n=>cfg.machines.push({id:uid(),name:n,proc:g[0],slots:1})));const M=cfg.machines,L=M.length;
+ else if(a=='apply'){let n=0,u=0;imp.filter(r=>!r.err).forEach(r=>{const ids=r.ms.map(nm=>{let m=findM(nm);if(!m){m={id:uid(),name:nm,ct:'',sec:'',proc:bp||'Outros',slots:1};cfg.machines.push(m)}return m.id});const e=cfg.employees.find(e=>e.name.toLowerCase()==r.n.toLowerCase());if(e){e.shift=r.sh;e.machines=[...new Set([...e.machines,...ids])];u++}else{cfg.employees.push({id:uid(),name:r.n,shift:r.sh,machines:ids});n++}});saveCfg();imp=null;bk='';render();toast(n+' novo(s), '+u+' atualizado(s)')}
+ else if(a=='demo'){const G=[['Retificadora','Eixos A','Ret 01','Ret 02','Ret 03'],['Estria','Eixos D','Estria 01','Estria 02'],['Fresadora','Eixos D','Fres 01','Fres 02']];G.forEach(g=>g.slice(2).forEach(n=>cfg.machines.push({id:uid(),name:n,ct:'',sec:g[1],proc:g[0],slots:1})));const M=cfg.machines,L=M.length;
   'Ana Souza,Bruno Lima,Carlos Dias,Daniela Rocha,Eduardo Alves,Fernanda Reis,Gustavo Melo,Helena Costa,Igor Santos,Julia Prado,Kleber Nunes,Larissa Moura,Marcos Pinto,Nadia Freitas,Otávio Ramos,Paula Vieira'.split(',').forEach((n,i)=>cfg.employees.push({id:uid(),name:n,shift:i%3+1,machines:[M[i%L].id,...(i%3==0?[M[(i+1)%L].id]:[])]}));saveCfg();render()}
 });
 document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dataset.id,f=t.dataset.f;
@@ -203,10 +279,16 @@ document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dat
  else if(a=='wk')upd(date,x=>{x.w=x.w||{};x.w[id]=t.value})
  else if(a=='ef'){const e=emp(id);if(e){e[f]=f=='shift'?+t.value:t.value.trim()||e[f];saveCfg();render()}}
  else if(a=='am'){const e=emp(id);if(e&&t.value){e.machines.push(t.value);saveCfg();render()}}
- else if(a=='mf'){const m=mac(id);if(m){m[f]=f=='slots'?Math.max(1,+t.value||1):t.value.trim()||m[f];saveCfg();render()}}
+ else if(a=='mf'){const m=mac(id);if(m){m[f]=f=='slots'?Math.max(1,+t.value||1):(f=='sec'||f=='ct')?t.value.trim():t.value.trim()||m[f];saveCfg();render()}}
+ else if(a=='sec'){secF=t.value;ls.set('sec',secF);render()}
+ else if(a=='ctfile'&&t.files[0]){const fl=t.files[0];fl.arrayBuffer().then(async buf=>{try{const u8=new Uint8Array(buf);let tx;
+  if(u8[0]==0x50&&u8[1]==0x4b)tx=(await xlsxRows(buf)).map(r=>r.join('\t')).join('\n');
+  else if(u8[0]==0xD0&&u8[1]==0xCF)throw Error('formato .xls antigo: salve como .xlsx ou .csv');
+  else{try{tx=new TextDecoder('utf-8',{fatal:true}).decode(buf)}catch{tx=new TextDecoder('windows-1252').decode(buf)}}
+  ctt=tx;ctr=ctRows(ctText(ctt));render()}catch(e){toast('Não consegui ler o arquivo: '+(e.message||e))}});t.value=''}
  else if(a=='file'&&t.files[0])t.files[0].arrayBuffer().then(buf=>{let x;try{x=new TextDecoder('utf-8',{fatal:true}).decode(buf)}catch{x=new TextDecoder('windows-1252').decode(buf)}bk=x;bp=($('#bp')||{}).value||bp;parse();render()})
 });
-document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='bk')bk=t.value;if(t.id=='bp')bp=t.value});
+document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='bk')bk=t.value;if(t.id=='ctk')ctt=t.value;if(t.id=='bp')bp=t.value});
 
 cfg=ls.get('cfg')||cfg;norm();days=ls.get('days')||{};render();
 pull();setInterval(pull,8000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
