@@ -52,6 +52,7 @@ td input,td select{width:100%;min-width:90px}
 /* Escala em níveis (seção > grupo > máquinas) e Cadastro em colunas */
 .tag.n{background:var(--bg);color:var(--mu);border:1px solid var(--bd);font-weight:500}
 .sec{margin-bottom:6px}.sh{font-size:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:2px solid var(--bd);padding-bottom:6px;margin:20px 0 10px}
+.sec.in>.proc{margin-left:12px;padding-left:16px;border-left:2px solid var(--bd)}.sec>.proc .grid{margin-left:16px}
 .gh{font-size:15px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 8px}
 .lk.gt{color:var(--tx);text-decoration:none;font:inherit;font-weight:700;text-align:left}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}.col{min-width:0}
@@ -113,6 +114,7 @@ td input[type=checkbox]{width:auto;min-width:0}
 .rt.re input,.rt.re select{width:100%;min-width:0!important}.rt.re td.mc{min-width:0}
 @media(max-width:640px){
  main{padding:12px}
+ .sec.in>.proc{margin-left:4px;padding-left:10px}.sec>.proc .grid{margin-left:8px}
  .cal.wk{--cw:88px}
  .cal .s1{position:static;min-width:76px;max-width:76px}.cal .s2,.cal.ns .s2{left:0;min-width:112px;max-width:120px}
  .sr .sv{width:auto;flex-basis:100%}
@@ -236,7 +238,7 @@ function vEscala(){
  const body=secs.map(sec=>{const sm=ms0.filter(m=>(m.sec||'')==sec),key=sec||SN,open=!hasS||soE(key)||PR,gs=[...new Set(sm.map(gk))];
   const head=hasS?`<h2 class="sh"><button class="lk gt" data-a="opse" data-v="${E(key)}" aria-expanded="${open}" title="${open?'Recolher':'Expandir'} a seção">${open?'▾':'▸'} ${sec?E(sec):'(sem seção)'}</button> ${sum(sm)}</h2>`:'';
   const groups=open?gs.map(g=>{const ms=sm.filter(m=>gk(m)==g),o=(sp()?opnE[g]!==false:!!opnE[g])||PR;return `<section class="proc"><h3 class="gh"><button class="lk gt" data-a="opne" data-v="${E(g)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} as máquinas">${o?'▾':'▸'} ${E(ms[0].proc||'Outros')}</button> ${sum(ms)}</h3>${o?`<div class="grid">${ms.map(card).join('')}</div>`:''}</section>`}).join(''):'';
-  return `<div class="sec">${head}${groups}</div>`}).join('');
+  return `<div class="sec ${hasS?'in':''}">${head}${groups}</div>`}).join('');
  const orphan=cfg.employees.filter(e=>!e.machines.some(i=>mac(i))&&(!flt||e.shift==flt)).sort(bysh);
  return dbar(1)+`<div class="bar"><span class="mu">Abra a seção e o grupo para escolher a máquina de cada pessoa.</span><span style="flex:1"></span><button class="btn" data-a="opene">Expandir tudo</button><button class="btn" data-a="closee">Recolher tudo</button></div>`+(s0?`<div class="mu" style="margin-bottom:10px">Mostrando ${s0=='*'?'o filtro':s0==SN?'as máquinas sem seção':'a seção <b>'+E(s0)+'</b>'}${fg()?' › grupo <b>'+E(fg())+'</b>':''}${fc()?' › CT <b>'+E(mname(mac(fc())))+'</b>':''}: ${ms0.length} máquina(s) e ${cfg.employees.filter(eIn).length} pessoa(s) treinada(s) nelas.</div>`:'')+(cfg.employees.some(e=>e.machines.length>1)?`<div class="mu" style="margin-bottom:10px">Quem é treinado em mais de uma máquina aparece em todas elas. Clique na máquina onde a pessoa vai trabalhar; clicar em outra máquina dela troca o posto.</div>`:'')+`<div class="kpis"><div class="kpi"><b>${sc.length}</b><span>Escalados</span></div>${sh.map((n,i)=>`<div class="kpi"><b>${n}</b><span>Turno ${i+1}</span></div>`).join('')}<div class="kpi"><b>${use}</b><span>Máquinas com operador</span></div><div class="kpi ${cf?'cf':''}"><b>${cf}</b><span>Máquinas em conflito</span></div></div>`+
  (cf?`<div class="card" style="border-color:var(--er);color:var(--er)">⚠ Há mais operadores escalados do que vagas na mesma máquina — alguém ficaria sem máquina. Mude o posto de um deles (se for treinado em outra máquina) ou escale outra pessoa.</div>`:'')+
@@ -253,8 +255,9 @@ function vInd(){
  const z=()=>({e:0,p:0,f:0}),add=(o,v)=>{o.e++;if(v=='p')o.p++;if(v=='f')o.f++},pc=o=>o.p+o.f?Math.round(o.p/(o.p+o.f)*100)+'%':'—',pe=o=>o.e-o.p-o.f;
  const lim=per?iso(new Date(Date.now()-per*864e5)):'',T=z(),SH={1:z(),2:z(),3:z()},EM={},SC={},GR={},WD=Array.from({length:7},()=>({...z(),n:0})),DA=[];let ML=0;
  Object.keys(days).filter(k=>k>=lim).sort().forEach(k=>{const d=days[k],o=z();let ml=0;
-  (d.s||[]).forEach(id=>{const e=emp(id),v=(d.a||{})[id];add(T,v);add(o,v);add(EM[id]=EM[id]||z(),v);
-   if(e){if(SH[e.shift])add(SH[e.shift],v);const m=mac(wk(e,d)),sc=m?m.sec||'(sem seção)':'Sem máquina',gr=m?m.proc||'Outros':'Sem máquina';add(SC[sc]=SC[sc]||z(),v);add(GR[gr]=GR[gr]||z(),v)}
+  (d.s||[]).forEach(id=>{const e=emp(id),v=(d.a||{})[id];if(!e)return; // colaborador removido do cadastro não entra nos indicadores
+   add(T,v);add(o,v);add(EM[id]=EM[id]||z(),v);
+   {if(SH[e.shift])add(SH[e.shift],v);const m=mac(wk(e,d)),sc=m?m.sec||'(sem seção)':'Sem máquina',gr=m?m.proc||'Outros':'Sem máquina';add(SC[sc]=SC[sc]||z(),v);add(GR[gr]=GR[gr]||z(),v)}
    if((d.m||{})[id])ml++});
   if(!o.e)return;ML+=ml;const w=WD[new Date(k+'T12:00').getDay()];w.e+=o.e;w.p+=o.p;w.f+=o.f;w.n++;DA.push([k,o,ml])});
  const DY=DA.slice().reverse(),CD=DA.slice(-120),N=CD.length,rows=Object.entries(EM).sort((a,b)=>b[1].f-a[1].f||b[1].e-a[1].e);
@@ -285,7 +288,7 @@ function vInd(){
  const wdc=`<div class="cw"><div class="ya"><span>${n1(mA)}</span><span>${n1(mA/2)}</span><span>0</span></div><div class="sc"><div class="dw"><div class="dc" style="--n:7" role="img" aria-label="Média de escalados por dia da semana">${WO.map(i=>{const w=WD[i],n=w.n||1,a={e:w.e/n,p:w.p/n,f:w.f/n};return `<div class="dcc" title="${E(WN[i]+': média de '+n1(avg(w))+' escalado(s) por dia ('+w.n+' dia(s)) · '+w.p+' presente(s) · '+w.f+' falta(s) no total')}">${w.n?stk(a,avg(w)/mA*100):''}</div>`}).join('')}</div><div class="dl" style="--n:7">${WO.map(i=>`<span class="${i%6==0?'fd':''}">${WN[i]}<br>${WD[i].n?n1(avg(WD[i])):'—'}</span>`).join('')}</div></div></div></div>`;
  // ranking de faltas
  const rk=rows.filter(x=>x[1].f>0).slice(0,10),mF=Math.max(1,...rk.map(x=>x[1].f));
- const rkh=rk.length?'<div class="hbs">'+rk.map(([id,o])=>{const e=emp(id),nm=e?E(e.name):'(removido)';return `<div class="hb"><span class="nm" title="${nm}">${e?`<span class="t t${e.shift}">T${e.shift}</span> `:''}${nm}</span><div class="tr"><div style="width:${o.f/mF*100}%"><i class="k-f" style="flex:1"></i></div></div><span class="mu">${o.f} ${o.f==1?'falta':'faltas'} de ${o.e}</span></div>`}).join('')+'</div>':'<div class="mu">Nenhuma falta registrada no período.</div>';
+ const rkh=rk.length?'<div class="hbs">'+rk.map(([id,o])=>{const e=emp(id),nm=E(e.name);return `<div class="hb"><span class="nm" title="${nm}"><span class="t t${e.shift}">T${e.shift}</span> ${nm}</span><div class="tr"><div style="width:${o.f/mF*100}%"><i class="k-f" style="flex:1"></i></div></div><span class="mu">${o.f} ${o.f==1?'falta':'faltas'} de ${o.e}</span></div>`}).join('')+'</div>':'<div class="mu">Nenhuma falta registrada no período.</div>';
  const has=DA.length>0;
  return `<div class="bar"><label><b>Período:</b> <select data-a="per">${[[7,'Últimos 7 dias'],[30,'Últimos 30 dias'],[90,'Últimos 90 dias'],[0,'Todo o histórico']].map(x=>`<option value="${x[0]}" ${per==x[0]?'selected':''}>${x[1]}</option>`).join('')}</select></label></div>`+
  `<div class="kpis">${kp(T.e,'Escalados')}${kp(T.p,'Compareceram')}${kp(T.f,'Faltas após confirmação',T.f?'cf':'')}${kp(pc(T),'% de comparecimento')}${kp(pe(T),'Pendentes de check-in',pe(T)?'vz':'')}${kp(ML,'Refeições reservadas')}${kp(DA.length,'Dias com hora extra')}${kp(Object.keys(EM).length,'Pessoas diferentes')}</div>`+
@@ -296,7 +299,7 @@ function vInd(){
  `<div class="g2">${hasS?`<div class="card"><h2>Por seção</h2>${hbs(SC)}${LG}</div>`:''}<div class="card"><h2>Por grupo de máquinas</h2>${hbs(GR)}${LG}</div></div>`+
  `<div class="g2"><div class="card"><h2>Por dia da semana</h2>${wdc}<div class="mu">O número sob cada dia é a média de pessoas escaladas nos dias com hora extra; sábado e domingo em destaque.</div>${LG}</div><div class="card"><h2>Mais faltas</h2>${rkh}</div></div>`
  :'<div class="card"><h2>Gráficos</h2><div class="mu">Sem escalas no período escolhido. Escolha outro período ou monte uma escala.</div></div>')+
- `<div class="card sc"><h2>Histórico por colaborador</h2>${rows.length?`<table><tr><th>Colaborador</th><th>Turno</th><th>Escalado</th><th>Presente</th><th>Faltas</th><th>%</th><th></th></tr>${rows.map(([id,o])=>{const e=emp(id);return `<tr><td>${E(e?e.name:'(removido)')}</td><td>${e?`<span class="t t${e.shift}">T${e.shift}</span>`:'—'}</td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td>${o.f>=2?'<span class="tag cf">Ausência recorrente</span>':''}</td></tr>`}).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`+
+ `<div class="card sc"><h2>Histórico por colaborador</h2>${rows.length?`<table><tr><th>Colaborador</th><th>Turno</th><th>Escalado</th><th>Presente</th><th>Faltas</th><th>%</th><th></th></tr>${rows.map(([id,o])=>{const e=emp(id);return `<tr><td>${E(e.name)}</td><td><span class="t t${e.shift}">T${e.shift}</span></td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td>${o.f>=2?'<span class="tag cf">Ausência recorrente</span>':''}</td></tr>`}).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`+
  `<div class="card sc"><h2>Histórico por dia</h2>${DY.length?`<table><tr><th>Data</th><th>Escalados</th><th>Presentes</th><th>Faltas</th><th>%</th><th>Refeições</th><th></th></tr>${DY.map(([k,o,ml])=>`<tr><td>${fmt(k)} <span class="mu">${wdn(k)}</span></td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td>${ml}</td><td><button class="lk a" data-a="goto" data-v="${k}">abrir</button></td></tr>`).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`}
 
 let imp=null,bk='',bp='Outros';
@@ -546,7 +549,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='clrf'){grpF='';ctF='';ls.set('grp',grpF);ls.set('ct',ctF);render()}
  else if(a=='rmg'){const e=emp(id);if(!e)return;const ms=eMs(e).filter(m=>gk(m)==v);if(!ms.length||!confirm('Remover '+ms.length+' máquina(s) do grupo "'+(ms[0].proc||'Outros')+'" de '+e.name+'?'))return;e.machines=e.machines.filter(i=>!ms.some(m=>m.id==i));saveCfg();render();if(orph(e))toast(e.name+' ficou sem máquina: passou para o Cadastro')}
  else if(a=='delm'){const m=mac(id);if(m&&!confirm('Remover "'+(m.ct||m.name)+'"? As pessoas treinadas nesta máquina deixam de ter esse treinamento. A mudança vale para todos os gestores.'))return;cfg.machines=cfg.machines.filter(m=>m.id!==id);cfg.employees.forEach(e=>e.machines=e.machines.filter(i=>i!==id));saveCfg();render()}
- else if(a=='dele'){const e=emp(id);if(e&&!confirm('Remover '+e.name+' do cadastro? O histórico de presença continua nos indicadores como "(removido)". A mudança vale para todos os gestores.'))return;cfg.employees=cfg.employees.filter(e=>e.id!==id);saveCfg();render()}
+ else if(a=='dele'){const e=emp(id);if(e&&!confirm('Remover '+e.name+' do cadastro? Ele(a) também deixa de aparecer na escala e nos indicadores (histórico e totais). A mudança vale para todos os gestores.'))return;cfg.employees=cfg.employees.filter(e=>e.id!==id);saveCfg();render()}
  else if(a=='rm'){const e=emp(id);if(!e)return;e.machines=e.machines.filter(i=>i!==v);saveCfg();render();if(orph(e))toast(e.name+' ficou sem máquina: passou para o Cadastro')}
  else if(a=='ex'){bk='Nome\tTurno\tCT\nAna Souza\t1\t01061031/01061008\nBruno Lima\tT2\t01061031\nCarlos Dias\tTurno 3\t01061008|01061009';parse();render()}
  else if(a=='prev'){bk=$('#bk').value;bp=g('#bp')||'Outros';parse();render()}

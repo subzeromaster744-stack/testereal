@@ -100,7 +100,7 @@ A tela de escalar segue o mesmo desenho do calendário, para continuar curta mes
 2. **Grupo de máquinas** (por exemplo, CHOQUE TÉRMICO), dentro da seção. Começa **fechado**; a linha dele resume os escalados e as máquinas com operador, e mostra ⚠ se houver conflito dentro dele.
 3. **Máquinas**: ao abrir o grupo, aparece um cartão por CT, com as pessoas treinadas nela. Clique na pessoa para escalá-la naquela máquina (quem tem mais de uma máquina aparece em todas; clicar em outra troca o posto).
 
-**Expandir tudo** e **Recolher tudo** abrem e fecham tudo de uma vez. O que está aberto fica lembrado só no navegador de cada pessoa e é independente do calendário. O filtro **Seção** e os botões **Todos / T1 / T2 / T3** continuam valendo.
+Cada nível aparece **recuado para a direita** do anterior (o grupo sob a seção, e os cartões sob o grupo, com uma linha-guia ao lado), para ver de relance o que pertence a quê. **Expandir tudo** e **Recolher tudo** abrem e fecham tudo de uma vez. O que está aberto fica lembrado só no navegador de cada pessoa e é independente do calendário. O filtro **Seção** e os botões **Todos / T1 / T2 / T3** continuam valendo.
 
 **Nem toda máquina precisa de operador.** Não existe lista de pendências "sem operador": uma máquina parada fica neutra, uma com gente escalada fica verde ("Com operador") e só o **conflito** (mais gente que vagas) aparece em vermelho e é contado no alto da tela. O indicador "Máquinas com operador" mostra quantas têm alguém, sem cobrar as demais.
 
@@ -148,6 +148,8 @@ A tela tem o seletor de período (7, 30, 90 dias ou todo o histórico) e, sobre 
 - As tabelas **Histórico por colaborador** (com "Ausência recorrente" a partir de 2 faltas) e **Histórico por dia** (agora com refeições) continuam abaixo.
 
 Os gráficos se ajustam à largura da tela e, no celular, ficam em uma coluna.
+
+**Colaboradores removidos** do cadastro não aparecem nos Indicadores (nem nas tabelas, nem nos totais e gráficos), então os números batem com a Escala e o Calendário. Os registros de presença em si continuam guardados no banco; só deixam de ser mostrados.
 
 ## No celular e na impressão
 
