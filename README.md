@@ -86,7 +86,7 @@ Em todo lugar onde se escolhe máquina há a mesma **janela de busca**: um campo
 - **Adicionar máquinas a uma pessoa** (Cadastro → Colaboradores → **+ adicionar máquinas**): marque uma **seção inteira**, um **grupo inteiro** ou só os **CTs** que quiser; com a busca ativa, marcar uma seção ou grupo escolhe só o que está aparecendo. O que a pessoa já tem aparece como "já tem". A seleção continua ao mudar a busca, e o botão do rodapé confirma ("Adicionar N máquina(s)"). As máquinas novas entram em ordem de seção, grupo e CT, depois das que a pessoa já tinha (a primeira, com ★, é o posto padrão na escala).
 - **Novo colaborador**: o botão **+ Máquinas (opcional)** do formulário abre a mesma janela. O nome e o turno digitados ficam enquanto você escolhe.
 - **Tabela de colaboradores**: as máquinas de cada pessoa aparecem agrupadas por seção › grupo, com **remover grupo** para tirar um grupo inteiro de uma vez (pede confirmação). Cada pessoa ocupa uma linha larga; no celular os campos empilham.
-- **Filtrar as telas**: ao lado do seletor **Seção** (Escala, Calendário, Presença e Cadastro) há o botão **Buscar máquina…**. Clique em uma seção, em um grupo ou em um CT e a tela mostra só ele (e as pessoas treinadas nele); uma etiqueta "Grupo …" ou "CT …" com **×** limpa o filtro. Com grupo ou CT filtrado, os grupos aparecem abertos (dá para recolher). A escolha fica lembrada no navegador. Trocar a seção no seletor limpa o grupo e o CT.
+- **Filtrar as telas**: ao lado do seletor **Seção** (Escala, Calendário, Presença, Colaboradores e Cadastro) há o botão **Buscar máquina…**. Clique em uma seção, em um grupo ou em um CT e a tela mostra só ele (e as pessoas treinadas nele); uma etiqueta "Grupo …" ou "CT …" com **×** limpa o filtro. Com grupo ou CT filtrado, os grupos aparecem abertos (dá para recolher). A escolha fica lembrada no navegador. Trocar a seção no seletor limpa o grupo e o CT.
 - **Presença**: quando a pessoa tem máquinas em mais de um grupo, a lista "Vai trabalhar em" vem agrupada por seção › grupo.
 - A janela fecha com **Esc**, com o **×**, em **Cancelar** ou clicando fora. No celular ela sobe como uma folha na parte de baixo da tela.
 
@@ -118,9 +118,21 @@ O calendário (semana ou mês) tem duas colunas fixas à esquerda: **Seção** e
 
 **Expandir tudo** abre seções e grupos; **Recolher tudo** deixa só as linhas das seções. Cores: verde = tem operador escalado, vermelho = conflito; máquina sem ninguém fica sem cor. Se nenhuma máquina tiver seção, a coluna Seção não aparece.
 
+## Colaboradores: lista enxuta que abre e fecha
+
+A aba **Colaboradores** mostra só quem **já tem máquina**, em uma linha por pessoa: nome, turno (T1/T2/T3), seção(ões) e quantas máquinas. Tudo começa **fechado**; clique no nome (▸) para abrir e ver/editar:
+
+- **Nome** e **turno** (a linha se atualiza na hora);
+- as **máquinas em que a pessoa é treinada**, agrupadas por seção › grupo, com **×** para tirar uma máquina, "remover grupo" e **+ adicionar máquinas** (a mesma busca por seção, grupo ou CT; o ★ é o posto padrão na escala);
+- **Remover colaborador**.
+
+No alto da aba: busca por **nome, seção ou CT** (digite um CT e veja quem é treinado nele), botões **Todos / T1 / T2 / T3**, o seletor **Seção** com **Buscar máquina…** e, acima da lista, **Expandir tudo** e **Recolher tudo**. As linhas que você deixou abertas ficam lembradas neste navegador. A lista mostra até 200 pessoas por vez (use a busca para achar as demais); na impressão todas as linhas saem abertas.
+
+**Quem está cadastrado mas ainda sem máquina não vai para esta aba**: continua no **Cadastro**, em "Sem máquina definida" (com **+ adicionar máquinas**), e na **Escala**, no bloco "Sem máquina definida". Assim que a pessoa ganha a primeira máquina ela passa para a aba Colaboradores, e se perder a última volta para o Cadastro (o site avisa).
+
 ## Cadastro: máquinas à esquerda, colaboradores à direita
 
-No computador o Cadastro tem **duas colunas**: **Máquinas** (cadastro e importação de CTs) na esquerda e **Colaboradores** (cadastro e importação em lote) na direita. No celular vira **uma coluna** só, com cada máquina e cada colaborador em um cartão com os campos legíveis.
+No computador o Cadastro tem **duas colunas**: **Máquinas** (cadastro e importação de CTs) na esquerda e **Colaboradores** (novo colaborador, quem está sem máquina e importação em lote) na direita. Os colaboradores que já têm máquina **não ficam em destaque aqui**: aparece só um resumo com o atalho para a aba Colaboradores. No celular vira **uma coluna** só, com cada máquina e cada colaborador sem máquina em um cartão com os campos legíveis.
 
 ## Indicadores
 
