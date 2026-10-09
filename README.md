@@ -62,6 +62,13 @@ Eixos A   01061008    CHOQUE TÉRMICO
 
 O seletor **Seção** (nas telas Escala, Calendário, Presença e Cadastro) mostra só as máquinas da seção e as pessoas treinadas nelas, e os contadores passam a valer só para a seção. A seção da pessoa vem das máquinas em que ela é treinada. A escolha fica lembrada no navegador. **(sem seção)** mostra as máquinas sem seção e as pessoas sem máquina. Se nenhuma máquina tiver seção, o seletor não aparece.
 
+## Turnos: sábado e domingo são turno único
+
+Cada pessoa tem o turno dela no cadastro (T1, T2 ou T3), e esse turno continua aparecendo ao lado do nome. Mas na Escala, **no sábado e no domingo só um turno trabalha**, então nesses dias aparecem juntas, em cada máquina, as pessoas de todos os turnos (em ordem de T1, T2, T3). Os botões T1/T2/T3 e os indicadores por turno somem, e uma vaga conta para qualquer turno: duas pessoas de turnos diferentes na mesma máquina de 1 vaga dão conflito.
+
+- Em dias úteis nada muda: continuam os botões **Todos / T1 / T2 / T3** para filtrar.
+- A chave **Turno único** (dia útil) e **Filtrar por turno** (sábado/domingo) muda o modo só naquele dia, por exemplo para um feriado. A escolha é gravada junto com a escala do dia e vale para todos os gestores.
+
 ## Observações
 
 - **Sem `ACCESS_KEY`**, qualquer pessoa com o link vê e edita a escala, que contém nomes de colaboradores.
