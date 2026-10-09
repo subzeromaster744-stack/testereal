@@ -62,6 +62,16 @@ Eixos A   01061008    CHOQUE TÉRMICO
 
 O seletor **Seção** (nas telas Escala, Calendário, Presença e Cadastro) mostra só as máquinas da seção e as pessoas treinadas nelas, e os contadores passam a valer só para a seção. A seção da pessoa vem das máquinas em que ela é treinada. A escolha fica lembrada no navegador. **(sem seção)** mostra as máquinas sem seção e as pessoas sem máquina. Se nenhuma máquina tiver seção, o seletor não aparece.
 
+## Calendário: seção, grupo de máquinas e CTs
+
+O calendário (semana ou mês) tem duas colunas fixas à esquerda: **Seção** e **Grupo de Máq · CT**. A estrutura abre em três níveis:
+
+1. **Seção** (por exemplo, Eixos D): uma linha com o total de pessoas de cada dia e quantas máquinas estão cobertas. Clique em ▾/▸ para recolher ou abrir a seção. As seções começam abertas; "(sem seção)" fica por último.
+2. **Grupo de máquinas** (por exemplo, CHOQUE TÉRMICO), dentro da seção. Começa fechado. O mesmo grupo em duas seções aparece separado em cada uma.
+3. **CT**: ao abrir o grupo, aparece uma linha por CT, com o código em destaque, o nome (se for diferente), as vagas e as pessoas escaladas em cada dia, com turno e presença.
+
+**Expandir tudo** abre seções e grupos e mostra todos os CTs; **Recolher tudo** deixa só as linhas das seções. O filtro **Seção** da barra continua valendo. Se nenhuma máquina tiver seção, a coluna Seção não aparece. O que está aberto fica lembrado só no navegador de cada pessoa.
+
 ## Turnos: sábado e domingo são turno único
 
 Cada pessoa tem o turno dela no cadastro (T1, T2 ou T3), e esse turno continua aparecendo ao lado do nome. Mas na Escala, **no sábado e no domingo só um turno trabalha**, então nesses dias aparecem juntas, em cada máquina, as pessoas de todos os turnos (em ordem de T1, T2, T3). Os botões T1/T2/T3 e os indicadores por turno somem, e uma vaga conta para qualquer turno: duas pessoas de turnos diferentes na mesma máquina de 1 vaga dão conflito.

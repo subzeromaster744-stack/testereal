@@ -45,8 +45,10 @@ td input,td select{width:100%;min-width:90px}
 .cal .first{position:sticky;left:0;z-index:2;background:var(--card);min-width:150px;max-width:170px;text-align:left}
 .cal .dh{text-align:center;cursor:pointer;min-width:var(--cw);font-weight:400;background:var(--card)}.cal .dh.fds{background:var(--bg)}.cal .dh.hoje{background:var(--pr);color:#fff}
 .cal .c{cursor:pointer;min-width:var(--cw);max-width:var(--cw)}.cal .c.ok{background:var(--okb)}.cal .c.cf{background:var(--erb)}.cal .c.vz{background:var(--wab)}
+.cal .s1{left:0;min-width:104px;max-width:104px}.cal .s2{left:104px;min-width:190px;max-width:220px}.cal.ns .s2{left:0}
+.cal tr.se .first{background:var(--bg);font-weight:700}.cal tr.se td{border-top:2px solid var(--bd)}.cal tr.se .c b{font-weight:700}
 .cal tr.pr .first{background:var(--bg);font-weight:600}.cal .sub{padding-left:22px}.cal tr.tot .first{background:var(--bg)}
-.cn{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cal .lk{font-size:13px;color:var(--tx);text-decoration:none}
+.cn{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cal .lk{text-align:left;font-size:13px;color:var(--tx);text-decoration:none}
 </style></head><body><div id="app"></div><div id="toast"></div>
 <script>
 const $=s=>document.querySelector(s),E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -218,26 +220,37 @@ function vCad(){
  <div class="bar" style="margin-top:8px"><label>Grupo das máquinas novas: <input id="bp" list="pl" value="${E(bp)}"></label><label class="btn">Abrir arquivo .csv/.txt <input type="file" accept=".csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Inserir exemplo</button></div>
  <textarea id="bk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Ana Souza;1;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}</div>`}
 
-let calRef=iso(new Date()),calMode='w',opn=ls.get('open')||{};
+let calRef=iso(new Date()),calMode='w',opn=ls.get('open')||{},opnS=ls.get('openS')||{};
+const so=k=>opnS[k]!==false;
 const cd=(k,n)=>{const x=new Date(k+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
 const wd=k=>new Date(k+'T12:00'),short=n=>{const p=n.trim().split(/\s+/);return p.length>1?p[0]+' '+p[p.length-1][0]+'.':p[0]};
 function calDays(){const r=wd(calRef);if(calMode=='m'){const y=r.getFullYear(),mo=r.getMonth(),n=new Date(y,mo+1,0).getDate();return Array.from({length:n},(_,i)=>iso(new Date(y,mo,i+1,12)))}const mon=cd(calRef,-((r.getDay()+6)%7));return Array.from({length:7},(_,i)=>cd(mon,i))}
 function vCal(){
  if(!cfg.machines.length)return noData();
- const ds=calDays(),td=iso(new Date()),s0=sf(),MS=cfg.machines.filter(mIn);
+ const ds=calDays(),td=iso(new Date()),s0=sf(),MS=cfg.machines.filter(mIn),hasS=secList().length>0;
  const info=ds.map(k=>{const d=days[k]||{s:[],a:{},w:{}},by={};d.s.forEach(id=>{const e=emp(id);if(e){const w=wk(e,d);(by[w]=by[w]||[]).push(e)}});
   const tot=s0?MS.reduce((a,m)=>a+(by[m.id]||[]).length,0)+(s0==SN?(by['']||[]).length:0):Object.values(by).reduce((a,l)=>a+l.length,0);return {k,d,by,tot}});
- const gs=bySec([...new Set(MS.map(gk))]),st=(m,I)=>{const n=(I.by[m.id]||[]).length;return n>(m.slots||1)?'cf':n?'ok':'vz'};
+ const st=(m,I)=>{const n=(I.by[m.id]||[]).length;return n>(m.slots||1)?'cf':n?'ok':'vz'};
+ // resumo de um conjunto de máquinas (seção ou grupo) em um dia
+ const sum=(ms,I)=>{const sts=ms.map(m=>st(m,I)),n=ms.reduce((a,m)=>a+(I.by[m.id]||[]).length,0),cov=sts.filter(x=>x!='vz').length,cls=sts.includes('cf')?'cf':n?(cov==ms.length?'ok':'vz'):'';return `<td class="c ${cls}" data-a="goto" data-v="${I.k}"><b>${n||'·'}</b>${n?`<div class="mu">${cov}/${ms.length} máq.</div>`:''}</td>`};
  const lbl=calMode=='m'?wd(calRef).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}):fmt(ds[0]).slice(0,5)+' – '+fmt(ds[6]);
- const head=`<tr><th class="first"></th>${info.map(I=>{const x=wd(I.k);return `<th class="dh ${I.k==td?'hoje':''} ${x.getDay()%6==0?'fds':''}" data-a="goto" data-v="${I.k}" title="Abrir a escala deste dia">${x.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','')}<br><b>${x.getDate()}</b></th>`}).join('')}</tr>`;
- const tot=`<tr class="tot"><td class="first"><b>Total escalados</b>${s0?`<div class="mu" style="font-weight:400">${s0==SN?'sem seção':E(s0)}</div>`:''}</td>${info.map(I=>{const cf=MS.filter(m=>st(m,I)=='cf').length;return `<td class="c" data-a="goto" data-v="${I.k}"><b>${I.tot||'·'}</b>${cf?` <span class="tag cf">⚠ ${cf}</span>`:''}</td>`}).join('')}</tr>`;
- const body=gs.map(g=>{const ms=MS.filter(m=>gk(m)==g),m0=ms[0],o=!!opn[g],t=(!s0&&m0.sec?E(m0.sec)+' · ':'')+E(m0.proc||'Outros');
-  const prow=`<tr class="pr"><td class="first"><button class="lk" data-a="opn" data-v="${E(g)}">${o?'▾':'▸'} ${t}</button><div class="mu" style="font-weight:400">${ms.length} máquina(s)</div></td>${info.map(I=>{const sts=ms.map(m=>st(m,I)),n=ms.reduce((a,m)=>a+(I.by[m.id]||[]).length,0),cov=sts.filter(x=>x!='vz').length,cls=sts.includes('cf')?'cf':n?(cov==ms.length?'ok':'vz'):'';return `<td class="c ${cls}" data-a="goto" data-v="${I.k}"><b>${n||'·'}</b>${n?`<div class="mu">${cov}/${ms.length} máq.</div>`:''}</td>`}).join('')}</tr>`;
-  const mrows=o?ms.map(m=>`<tr><td class="first sub">${E(m.name)}<span class="mu"> · ${m.slots||1} vaga(s)</span></td>${info.map(I=>{const l=(I.by[m.id]||[]).sort((a,b)=>a.shift-b.shift),s=st(m,I);return `<td class="c ${s=='vz'?'':s}" data-a="goto" data-v="${I.k}">${l.map(e=>`<div class="cn" title="${E(e.name)}"><i class="t t${e.shift}">T${e.shift}</i> ${I.d.a[e.id]=='p'?'✓ ':I.d.a[e.id]=='f'?'✗ ':''}${E(short(e.name))}</div>`).join('')}</td>`}).join('')}</tr>`).join(''):'';
-  return prow+mrows}).join('');
+ const c1=hasS?'<td class="first s1"></td>':'';
+ const head=`<tr>${hasS?'<th class="first s1">Seção</th>':''}<th class="first s2">Grupo de Máq${hasS?' · CT':''}</th>${info.map(I=>{const x=wd(I.k);return `<th class="dh ${I.k==td?'hoje':''} ${x.getDay()%6==0?'fds':''}" data-a="goto" data-v="${I.k}" title="Abrir a escala deste dia">${x.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','')}<br><b>${x.getDate()}</b></th>`}).join('')}</tr>`;
+ const tot=`<tr class="tot">${hasS?'<td class="first s1"><b>Total escalados</b></td>':''}<td class="first s2">${hasS?`<span class="mu">${s0?(s0==SN?'sem seção':E(s0)):'todas as seções'}</span>`:'<b>Total escalados</b>'}</td>${info.map(I=>{const cf=MS.filter(m=>st(m,I)=='cf').length;return `<td class="c" data-a="goto" data-v="${I.k}"><b>${I.tot||'·'}</b>${cf?` <span class="tag cf">⚠ ${cf}</span>`:''}</td>`}).join('')}</tr>`;
+ // seção > grupo de máquinas > CT
+ const secs=hasS?[...new Set(MS.map(m=>m.sec||''))].sort((a,b)=>!a?1:!b?-1:a.localeCompare(b,'pt-BR')):[''];
+ const ctl=m=>m.ct?`<b>${E(m.ct)}</b>${m.name&&m.name!==m.ct?` <span class="mu">${E(m.name)}</span>`:''}`:E(m.name);
+ const body=secs.map(sc=>{
+  const sm=MS.filter(m=>(m.sec||'')==sc),key=sc||SN,gs=[...new Set(sm.map(gk))],open=!hasS||so(key);
+  const srow=hasS?`<tr class="se"><td class="first s1"><button class="lk" data-a="ops" data-v="${E(key)}" title="${open?'Recolher':'Expandir'} a seção">${open?'▾':'▸'} ${sc?E(sc):'(sem seção)'}</button></td><td class="first s2 mu" style="font-weight:400">${gs.length} grupo(s) · ${sm.length} CT(s)</td>${info.map(I=>sum(sm,I)).join('')}</tr>`:'';
+  const grows=open?gs.map(g=>{const ms=sm.filter(m=>gk(m)==g),o=!!opn[g];
+   const prow=`<tr class="pr">${c1}<td class="first s2"><button class="lk" data-a="opn" data-v="${E(g)}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} os CTs">${o?'▾':'▸'} ${E(ms[0].proc||'Outros')}</button><div class="mu" style="font-weight:400">${ms.length} CT(s)</div></td>${info.map(I=>sum(ms,I)).join('')}</tr>`;
+   const mrows=o?ms.map(m=>`<tr>${c1}<td class="first s2 sub">${ctl(m)}<span class="mu"> · ${m.slots||1} vaga(s)</span></td>${info.map(I=>{const l=(I.by[m.id]||[]).sort((a,b)=>a.shift-b.shift),s=st(m,I);return `<td class="c ${s=='vz'?'':s}" data-a="goto" data-v="${I.k}">${l.map(e=>`<div class="cn" title="${E(e.name)}"><i class="t t${e.shift}">T${e.shift}</i> ${I.d.a[e.id]=='p'?'✓ ':I.d.a[e.id]=='f'?'✗ ':''}${E(short(e.name))}</div>`).join('')}</td>`}).join('')}</tr>`).join(''):'';
+   return prow+mrows}).join(''):'';
+  return srow+grows}).join('');
  return `<div class="bar"><button class="btn" data-a="cnav" data-v="-1">◀</button><button class="btn" data-a="cnav" data-v="1">▶</button><button class="btn" data-a="ctoday">Hoje</button><b style="text-transform:capitalize;min-width:150px">${lbl}</b>${secSel()}<button class="btn ${calMode=='w'?'pr':''}" data-a="cmode" data-v="w">Semana</button><button class="btn ${calMode=='m'?'pr':''}" data-a="cmode" data-v="m">Mês</button><span style="flex:1"></span><button class="btn" data-a="openall">Expandir tudo</button><button class="btn" data-a="closeall">Recolher tudo</button></div>
- <div class="card sc" style="padding:0"><table class="cal" style="--cw:${calMode=='m'?'66px':'118px'}">${head}${tot}${body}</table></div>
- <div class="mu"><span class="tag ok">verde</span> todas as máquinas do grupo cobertas &nbsp;<span class="tag vz">âmbar</span> parte das máquinas cobertas &nbsp;<span class="tag cf">vermelho</span> conflito (mais gente que vagas) &nbsp;·&nbsp; ✓ presente &nbsp;✗ faltou &nbsp;·&nbsp; clique em um dia para abrir a escala dele. Use ▸ para ver as máquinas de cada grupo.</div>`}
+ <div class="card sc" style="padding:0"><table class="cal ${hasS?'':'ns'}" style="--cw:${calMode=='m'?'66px':'118px'}">${head}${tot}${body}</table></div>
+ <div class="mu"><span class="tag ok">verde</span> todas as máquinas cobertas &nbsp;<span class="tag vz">âmbar</span> parte das máquinas cobertas &nbsp;<span class="tag cf">vermelho</span> conflito (mais gente que vagas) &nbsp;·&nbsp; ✓ presente &nbsp;✗ faltou &nbsp;·&nbsp; clique em um dia para abrir a escala dele. Use ▸ para abrir a seção, o grupo de máquinas e ver os CTs.</div>`}
 
 function render(){
  const T=[['escala','Escala'],['cal','Calendário'],['pres','Presença e refeição'],['ind','Indicadores'],['cad','Cadastro']];
@@ -251,7 +264,8 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='flt'){flt=+v;render()}
  else if(a=='uni')upd(date,x=>{if((v=='1')==wend(date))delete x.u;else x.u=v=='1'?1:0})
  else if(a=='opn'){opn[v]=!opn[v];ls.set('open',opn);render()}
- else if(a=='openall'||a=='closeall'){cfg.machines.forEach(m=>opn[gk(m)]=a=='openall');ls.set('open',opn);render()}
+ else if(a=='ops'){opnS[v]=!so(v);ls.set('openS',opnS);render()}
+ else if(a=='openall'||a=='closeall'){const o=a=='openall';cfg.machines.forEach(m=>{opn[gk(m)]=o;opnS[m.sec||SN]=o});ls.set('open',opn);ls.set('openS',opnS);render()}
  else if(a=='cmode'){calMode=v;render()}
  else if(a=='ctoday'){calRef=iso(new Date());render()}
  else if(a=='cnav'){if(calMode=='w')calRef=cd(calRef,7*v);else{const r=wd(calRef);r.setDate(1);r.setMonth(r.getMonth()+ +v);calRef=iso(r)}render()}
