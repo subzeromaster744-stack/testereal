@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗓</text></svg>"><title>Escala de Hora Extra</title>
 <style>
-:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f7;--card:#fff;--tx:#1d2433;--mu:#667085;--bd:#e1e4ea;--pr:#2457d6;--ok:#17803d;--okb:#e3f5ea;--wa:#b45309;--wab:#fdf0d9;--er:#c0262d;--erb:#fde6e6;--t1:#2457d6;--t2:#0e8f7e;--t3:#8a4fd6}
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f7;--card:#fff;--tx:#1d2433;--mu:#667085;--bd:#e1e4ea;--pn:#aab2c0;--pr:#2457d6;--ok:#17803d;--okb:#e3f5ea;--wa:#b45309;--wab:#fdf0d9;--er:#c0262d;--erb:#fde6e6;--t1:#2457d6;--t2:#0e8f7e;--t3:#8a4fd6}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}}
-:root[data-theme=dark]{color-scheme:dark;--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pn:#5b6578;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pn:#5b6578;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 header{background:var(--card);border-bottom:1px solid var(--bd);padding:12px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
@@ -71,6 +71,23 @@ td input[type=checkbox]{width:auto;min-width:0}
 .tall th{position:sticky;top:0;z-index:1;background:var(--card)}
 .sr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}.sr .bb{flex:1;min-width:120px}.sr .sv{width:260px}
 .cal.wk{--cw:118px}.cal.mo{--cw:66px}
+/* indicadores: gráficos feitos com HTML/SVG, sem biblioteca */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;margin-bottom:14px}.g2>.card{margin-bottom:0;min-width:0}
+.k-p{background:var(--ok)}.k-f{background:var(--er)}.k-n{background:var(--pn)}
+.lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--mu);margin:4px 0 8px}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.cw{display:flex;gap:6px;align-items:flex-start}.cw>.sc{flex:1;min-width:0}.ya{display:flex;flex-direction:column;justify-content:space-between;height:170px;font-size:11px;color:var(--mu);text-align:right;min-width:26px;font-variant-numeric:tabular-nums}
+.dc{display:grid;grid-template-columns:repeat(var(--n),minmax(12px,1fr));height:170px;border-bottom:1px solid var(--bd);background:linear-gradient(var(--bd),var(--bd)) 0 0/100% 1px no-repeat,linear-gradient(var(--bd),var(--bd)) 0 50%/100% 1px no-repeat}
+.dcc{display:flex;align-items:flex-end;justify-content:center;height:100%}.dcc:hover{background:var(--bg)}
+.bs{display:flex;flex-direction:column;width:72%;max-width:36px;min-height:2px;border-radius:3px 3px 0 0;overflow:hidden}.bs i{display:block;min-height:0}
+.dl{display:grid;grid-template-columns:repeat(var(--n),minmax(12px,1fr));font-size:11px;color:var(--mu);text-align:center;margin-top:4px;line-height:1.25;white-space:nowrap}.dl span{overflow:visible}.dl .fd{color:var(--wa);font-weight:600}
+.lc{position:relative;height:110px;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);background:linear-gradient(var(--bd),var(--bd)) 0 50%/100% 1px no-repeat}.lc svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--pr);border:2px solid var(--card);box-sizing:content-box;transform:translate(-50%,-50%)}
+.ov{position:absolute;inset:0;display:grid;grid-template-columns:repeat(var(--n),1fr)}.ov span:hover{background:rgba(120,130,150,.14)}
+.hbs{display:grid;grid-template-columns:minmax(70px,150px) 1fr auto;gap:10px 10px;align-items:center;font-size:13px;margin:6px 0}.hb{display:contents}.hb .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb .tr{height:14px;background:var(--bg);border-radius:4px;overflow:hidden}.hb .tr>div{display:flex;height:100%;min-width:2px}.hb .tr i{display:block;min-width:0}
+.dn{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:8px}.dg>div{margin:4px 0;font-size:13px}.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+@media(max-width:900px){.g2{grid-template-columns:1fr}}
+@media(max-width:640px){.hbs{grid-template-columns:minmax(60px,110px) 1fr}.hb>.mu{grid-column:1/-1;margin-top:-6px}}
 @media(max-width:640px){
  main{padding:12px}
  .cal.wk{--cw:88px}
@@ -91,6 +108,9 @@ td input[type=checkbox]{width:auto;min-width:0}
  .rt.rm td input[type=number]{width:100%!important}
  .rt.re td:nth-child(1),.rt.re td:nth-child(4){grid-column:1/-1}.rt.re td:nth-child(5){grid-column:1/-1}
  .rt .btn{width:100%}
+ .rt.rv .mc{min-width:0}.rt.rv tr{align-items:start}
+ .rt.rv.ve td:nth-child(3){grid-column:1;grid-row:2}.rt.rv.ve td:nth-child(5){grid-column:2;grid-row:2}.rt.rv.ve td:nth-child(4){grid-column:1/-1;grid-row:3}
+ .rt.rv.vc td:nth-child(3){grid-column:1;grid-row:2}.rt.rv.vc td:nth-child(4){grid-column:2;grid-row:2}
 }
 @media(pointer:coarse){.btn,.tab,.chip{min-height:42px}}
 @media print{
@@ -182,33 +202,87 @@ function vPres(){
  (l.length?`<div class="card sc"><table class="pt"><tr class="h"><th>Turno</th><th>Colaborador</th><th>Vai trabalhar em</th><th>Refeição</th><th>Check-in</th></tr>${l.map(e=>{const a=d.a[e.id],w=wk(e,d),m=mac(w),cf=m&&c[w]>(m.slots||1);return `<tr><td><span class="t t${e.shift}">T${e.shift}</span></td><td>${E(e.name)}</td><td>${e.machines.length>1?`<select data-a="wk" data-id="${e.id}" aria-label="Máquina de ${E(e.name)}">${e.machines.map(i=>`<option value="${i}" ${i==w?'selected':''}>${E((mac(i)||{}).name)}</option>`).join('')}</select>`:m?E(m.name):'—'} ${cf?'<span class="tag cf">conflito</span>':''}</td><td><label><input type="checkbox" data-a="meal" data-id="${e.id}" ${d.m[e.id]?'checked':''}> Reservada</label></td><td><button class="btn ${a=='p'?'ok':''}" aria-pressed="${a=='p'}" data-a="att" data-v="p" data-id="${e.id}">Presente</button> <button class="btn ${a=='f'?'cf':''}" aria-pressed="${a=='f'}" data-a="att" data-v="f" data-id="${e.id}">Faltou</button></td></tr>`}).join('')}</table></div>`:`<div class="card empty mu">Ninguém escalado para esta data${s0?' nesta seção':''}. Monte a escala na aba "Escala".</div>`)}
 
 function vInd(){
- const z=()=>({e:0,p:0,f:0}),add=(o,v)=>{o.e++;if(v=='p')o.p++;if(v=='f')o.f++},pc=o=>o.p+o.f?Math.round(o.p/(o.p+o.f)*100)+'%':'—';
- const lim=per?iso(new Date(Date.now()-per*864e5)):'',T=z(),SH={1:z(),2:z(),3:z()},EM={},DY=[];
- Object.keys(days).filter(k=>k>=lim).sort().reverse().forEach(k=>{const d=days[k],o=z();(d.s||[]).forEach(id=>{const e=emp(id),v=(d.a||{})[id];add(T,v);add(o,v);if(e&&SH[e.shift])add(SH[e.shift],v);add(EM[id]=EM[id]||z(),v)});DY.push([k,o])});
- const rows=Object.entries(EM).sort((a,b)=>b[1].f-a[1].f||b[1].e-a[1].e);
+ const z=()=>({e:0,p:0,f:0}),add=(o,v)=>{o.e++;if(v=='p')o.p++;if(v=='f')o.f++},pc=o=>o.p+o.f?Math.round(o.p/(o.p+o.f)*100)+'%':'—',pe=o=>o.e-o.p-o.f;
+ const lim=per?iso(new Date(Date.now()-per*864e5)):'',T=z(),SH={1:z(),2:z(),3:z()},EM={},SC={},GR={},WD=Array.from({length:7},()=>({...z(),n:0})),DA=[];let ML=0;
+ Object.keys(days).filter(k=>k>=lim).sort().forEach(k=>{const d=days[k],o=z();let ml=0;
+  (d.s||[]).forEach(id=>{const e=emp(id),v=(d.a||{})[id];add(T,v);add(o,v);add(EM[id]=EM[id]||z(),v);
+   if(e){if(SH[e.shift])add(SH[e.shift],v);const m=mac(wk(e,d)),sc=m?m.sec||'(sem seção)':'Sem máquina',gr=m?m.proc||'Outros':'Sem máquina';add(SC[sc]=SC[sc]||z(),v);add(GR[gr]=GR[gr]||z(),v)}
+   if((d.m||{})[id])ml++});
+  if(!o.e)return;ML+=ml;const w=WD[new Date(k+'T12:00').getDay()];w.e+=o.e;w.p+=o.p;w.f+=o.f;w.n++;DA.push([k,o,ml])});
+ const DY=DA.slice().reverse(),CD=DA.slice(-120),N=CD.length,rows=Object.entries(EM).sort((a,b)=>b[1].f-a[1].f||b[1].e-a[1].e);
+ const wdn=k=>['dom','seg','ter','qua','qui','sex','sáb'][new Date(k+'T12:00').getDay()],fd=k=>[0,6].includes(new Date(k+'T12:00').getDay()),dm=k=>k.slice(8)+'/'+k.slice(5,7),n1=x=>(Math.round(x*10)/10).toString().replace('.',',');
+ const kp=(b,s,c)=>`<div class="kpi ${c||''}"><b>${b}</b><span>${s}</span></div>`;
+ const lg=l=>`<div class="lg">${l.map(([c,t])=>`<span><i class="${c}"></i>${t}</span>`).join('')}</div>`;
+ const LG=lg([['k-p','Presentes'],['k-f','Faltas'],['k-n','Pendentes de check-in']]);
+ const stk=(o,h)=>`<div class="bs" style="height:${h}%"><i class="k-n" style="flex:${pe(o)}"></i><i class="k-f" style="flex:${o.f}"></i><i class="k-p" style="flex:${o.p}"></i></div>`;
+ const tip=(l,o)=>`${l}: ${o.e} escalado(s) · ${o.p} presente(s) · ${o.f} falta(s) · ${pe(o)} pendente(s)`;
+ // coluna por dia (barras empilhadas): presentes, faltas e pendentes de check-in
+ const cols=(items,mx,lab,step,aria)=>{const n=items.length,W=`style="--n:${n}"`;
+  return `<div class="cw"><div class="ya"><span>${n1(mx)}</span><span>${n1(mx/2)}</span><span>0</span></div><div class="sc"><div class="dw" style="min-width:${n*13}px"><div class="dc" ${W} role="img" aria-label="${E(aria)}">${items.map(([t,o,v])=>`<div class="dcc" title="${E(t)}">${stk(o,v/mx*100)}</div>`).join('')}</div><div class="dl" ${W}>${items.map((x,i)=>`<span class="${x[3]?'fd':''}">${i%step==0?lab(x,i):''}</span>`).join('')}</div></div></div></div>`};
+ const avail=Math.max(260,Math.min(typeof innerWidth=='number'?innerWidth:1000,1200)-90),step=Math.max(1,Math.ceil(40/Math.max(13,avail/Math.max(N,1)))),mx=Math.max(2,Math.ceil(Math.max(0,...CD.map(r=>r[1].e))/2)*2); // rótulos do eixo espaçados conforme a largura; máximo par para o eixo ter números inteiros
+ const daily=cols(CD.map(([k,o])=>[wdn(k)+' '+fmt(k)+' — '+tip('dia',o).slice(5),o,o.e,fd(k)]),mx,(x,i)=>{const k=CD[i][0];return dm(k)+(N<=14?'<br>'+wdn(k):'')},step,'Escalados por dia, de '+(N?fmt(CD[0][0])+' a '+fmt(CD[N-1][0]):'—'));
+ // linha do % de comparecimento por dia
+ const pts=CD.map(([k,o],i)=>o.p+o.f?[i,Math.round(o.p/(o.p+o.f)*100),k,o]:null).filter(Boolean),X=i=>((i+.5)/N*100).toFixed(2),Y=v=>(100-v).toFixed(1);
+ const pct=pts.length?`<div class="cw"><div class="ya" style="height:110px"><span>100%</span><span>50%</span><span>0%</span></div><div class="sc"><div class="dw" style="min-width:${N*13}px"><div class="lc"><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Percentual de comparecimento por dia"><polyline points="${pts.map(p=>X(p[0])+','+Y(p[1])).join(' ')}" fill="none" stroke="var(--pr)" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>${N<=45?pts.map(p=>`<b class="dot" style="left:${X(p[0])}%;top:${Y(p[1])}%"></b>`).join(''):''}<div class="ov" style="--n:${N}">${CD.map(([k,o])=>`<span title="${E(wdn(k)+' '+fmt(k)+': '+(o.p+o.f?Math.round(o.p/(o.p+o.f)*100)+'% ('+o.p+' de '+(o.p+o.f)+')':'sem check-in'))}"></span>`).join('')}</div></div><div class="dl" style="--n:${N}">${CD.map((x,i)=>`<span class="${fd(x[0])?'fd':''}">${i%step==0?dm(x[0]):''}</span>`).join('')}</div></div></div></div><div class="mu">% = presentes ÷ (presentes + faltas). Dias ainda sem check-in não aparecem na linha.</div>`:'<div class="mu">Nenhum check-in registrado no período.</div>';
+ // rosca
+ const donut=(parts,tot,lbl)=>{const R=46,C=2*Math.PI*R;let off=0;return `<svg viewBox="0 0 120 120" width="132" height="132" role="img" aria-label="${E(lbl+': '+parts.map(p=>p[2]+' '+p[0]).join(', '))}"><circle cx="60" cy="60" r="${R}" fill="none" stroke="var(--bg)" stroke-width="16"/>${tot?parts.filter(p=>p[0]>0).map(([v,c])=>{const l=v/tot*C,s=`<circle cx="60" cy="60" r="${R}" fill="none" stroke="${c}" stroke-width="16" stroke-dasharray="${l.toFixed(2)} ${(C-l).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 60 60)"/>`;off+=l;return s}).join(''):''}<text x="60" y="60" text-anchor="middle" font-size="22" font-weight="700" fill="var(--tx)">${tot}</text><text x="60" y="76" text-anchor="middle" font-size="10" fill="var(--mu)">${lbl}</text></svg>`};
+ const dleg=(parts,tot)=>`<div class="dg">${parts.map(([v,c,t])=>`<div><i class="sw" style="background:${c}"></i>${t} <b>${v}</b> <span class="mu">${tot?Math.round(v/tot*100):0}%</span></div>`).join('')}</div>`;
+ const TS=[1,2,3].map(t=>[SH[t].e,`var(--t${t})`,'Turno '+t]),tt=TS.reduce((a,x)=>a+x[0],0),SIT=[[T.p,'var(--ok)','Presentes'],[T.f,'var(--er)','Faltas'],[pe(T),'var(--pn)','Pendentes de check-in']];
+ // barras horizontais empilhadas
+ const hb=(nm,ttl,o,m,ex)=>`<div class="hb"><span class="nm" title="${E(ttl)}">${nm}</span><div class="tr"><div style="width:${Math.max(o.e/m*100,1)}%"><i class="k-p" style="flex:${o.p}"></i><i class="k-f" style="flex:${o.f}"></i><i class="k-n" style="flex:${pe(o)}"></i></div></div><span class="mu">${ex}</span></div>`;
+ const top=ob=>Object.entries(ob).sort((a,b)=>b[1].e-a[1].e||a[0].localeCompare(b[0],'pt-BR')).slice(0,12),hbs=(ob)=>{const l=top(ob),m=Math.max(1,...l.map(x=>x[1].e));return '<div class="hbs">'+l.map(([k,o])=>hb(E(k),k,o,m,o.e+' esc. · '+pc(o))).join('')+'</div>'+(Object.keys(ob).length>12?`<div class="mu">Mostrando os 12 maiores de ${Object.keys(ob).length}.</div>`:'')};
+ const mT=Math.max(1,...[1,2,3].map(t=>SH[t].e)),hasS=secList().length>0;
+ // dia da semana (média de escalados por dia)
+ const WO=[1,2,3,4,5,6,0],WN=['dom','seg','ter','qua','qui','sex','sáb'],avg=w=>w.n?w.e/w.n:0,mA=Math.max(2,Math.ceil(Math.max(0,...WO.map(i=>avg(WD[i])))/2)*2);
+ const wdc=`<div class="cw"><div class="ya"><span>${n1(mA)}</span><span>${n1(mA/2)}</span><span>0</span></div><div class="sc"><div class="dw"><div class="dc" style="--n:7" role="img" aria-label="Média de escalados por dia da semana">${WO.map(i=>{const w=WD[i],n=w.n||1,a={e:w.e/n,p:w.p/n,f:w.f/n};return `<div class="dcc" title="${E(WN[i]+': média de '+n1(avg(w))+' escalado(s) por dia ('+w.n+' dia(s)) · '+w.p+' presente(s) · '+w.f+' falta(s) no total')}">${w.n?stk(a,avg(w)/mA*100):''}</div>`}).join('')}</div><div class="dl" style="--n:7">${WO.map(i=>`<span class="${i%6==0?'fd':''}">${WN[i]}<br>${WD[i].n?n1(avg(WD[i])):'—'}</span>`).join('')}</div></div></div></div>`;
+ // ranking de faltas
+ const rk=rows.filter(x=>x[1].f>0).slice(0,10),mF=Math.max(1,...rk.map(x=>x[1].f));
+ const rkh=rk.length?'<div class="hbs">'+rk.map(([id,o])=>{const e=emp(id),nm=e?E(e.name):'(removido)';return `<div class="hb"><span class="nm" title="${nm}">${e?`<span class="t t${e.shift}">T${e.shift}</span> `:''}${nm}</span><div class="tr"><div style="width:${o.f/mF*100}%"><i class="k-f" style="flex:1"></i></div></div><span class="mu">${o.f} ${o.f==1?'falta':'faltas'} de ${o.e}</span></div>`}).join('')+'</div>':'<div class="mu">Nenhuma falta registrada no período.</div>';
+ const has=DA.length>0;
  return `<div class="bar"><label><b>Período:</b> <select data-a="per">${[[7,'Últimos 7 dias'],[30,'Últimos 30 dias'],[90,'Últimos 90 dias'],[0,'Todo o histórico']].map(x=>`<option value="${x[0]}" ${per==x[0]?'selected':''}>${x[1]}</option>`).join('')}</select></label></div>`+
- `<div class="kpis"><div class="kpi"><b>${T.e}</b><span>Escalados</span></div><div class="kpi"><b>${T.p}</b><span>Compareceram</span></div><div class="kpi ${T.f?'cf':''}"><b>${T.f}</b><span>Faltas após confirmação</span></div><div class="kpi"><b>${pc(T)}</b><span>% de comparecimento</span></div></div>`+
- `<div class="card"><h2>Por turno</h2>${[1,2,3].map(t=>{const o=SH[t],w=o.p+o.f?Math.round(o.p/(o.p+o.f)*100):0;return `<div class="sr"><span class="t t${t}" style="width:24px">T${t}</span><div class="bb"><i style="width:${w}%"></i></div><span class="sv">${pc(o)} · ${o.e} esc. · ${o.p} pres. · ${o.f} ${o.f==1?'falta':'faltas'}</span></div>`}).join('')}<div class="mu">% = presentes ÷ (presentes + faltas). Pendentes de check-in não entram na conta.</div></div>`+
+ `<div class="kpis">${kp(T.e,'Escalados')}${kp(T.p,'Compareceram')}${kp(T.f,'Faltas após confirmação',T.f?'cf':'')}${kp(pc(T),'% de comparecimento')}${kp(pe(T),'Pendentes de check-in',pe(T)?'vz':'')}${kp(ML,'Refeições reservadas')}${kp(DA.length,'Dias com hora extra')}${kp(Object.keys(EM).length,'Pessoas diferentes')}</div>`+
+ (has?`<div class="card"><h2>Escalados por dia</h2>${LG}${daily}${N<DA.length?`<div class="mu">Mostrando os últimos ${N} dias com hora extra. A tabela abaixo tem todos.</div>`:''}</div>`+
+ `<div class="card"><h2>Comparecimento por dia</h2>${pct}</div>`+
+ `<div class="g2"><div class="card"><h2>Por turno</h2><div class="dn">${donut(TS,tt,'escalados')}${dleg(TS,tt)}</div><div class="hbs">${[1,2,3].map(t=>hb(`<span class="t t${t}">T${t}</span> Turno ${t}`,'Turno '+t,SH[t],mT,pc(SH[t])+' · '+SH[t].e+' esc. · '+SH[t].p+' pres. · '+SH[t].f+(SH[t].f==1?' falta':' faltas'))).join('')}</div>${LG}</div>`+
+ `<div class="card"><h2>Situação no período</h2><div class="dn">${donut(SIT,T.e,'escalados')}${dleg(SIT,T.e)}</div><div class="mu" style="margin-top:8px">Pendentes: quem foi escalado e ainda não teve presença ou falta marcada.</div></div></div>`+
+ `<div class="g2">${hasS?`<div class="card"><h2>Por seção</h2>${hbs(SC)}${LG}</div>`:''}<div class="card"><h2>Por grupo de máquinas</h2>${hbs(GR)}${LG}</div></div>`+
+ `<div class="g2"><div class="card"><h2>Por dia da semana</h2>${wdc}<div class="mu">O número sob cada dia é a média de pessoas escaladas nos dias com hora extra; sábado e domingo em destaque.</div>${LG}</div><div class="card"><h2>Mais faltas</h2>${rkh}</div></div>`
+ :'<div class="card"><h2>Gráficos</h2><div class="mu">Sem escalas no período escolhido. Escolha outro período ou monte uma escala.</div></div>')+
  `<div class="card sc"><h2>Histórico por colaborador</h2>${rows.length?`<table><tr><th>Colaborador</th><th>Turno</th><th>Escalado</th><th>Presente</th><th>Faltas</th><th>%</th><th></th></tr>${rows.map(([id,o])=>{const e=emp(id);return `<tr><td>${E(e?e.name:'(removido)')}</td><td>${e?`<span class="t t${e.shift}">T${e.shift}</span>`:'—'}</td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td>${o.f>=2?'<span class="tag cf">Ausência recorrente</span>':''}</td></tr>`}).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`+
- `<div class="card sc"><h2>Histórico por dia</h2>${DY.length?`<table><tr><th>Data</th><th>Escalados</th><th>Presentes</th><th>Faltas</th><th>%</th><th></th></tr>${DY.map(([k,o])=>`<tr><td>${fmt(k)}</td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td><button class="lk a" data-a="goto" data-v="${k}">abrir</button></td></tr>`).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`}
+ `<div class="card sc"><h2>Histórico por dia</h2>${DY.length?`<table><tr><th>Data</th><th>Escalados</th><th>Presentes</th><th>Faltas</th><th>%</th><th>Refeições</th><th></th></tr>${DY.map(([k,o,ml])=>`<tr><td>${fmt(k)} <span class="mu">${wdn(k)}</span></td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td>${ml}</td><td><button class="lk a" data-a="goto" data-v="${k}">abrir</button></td></tr>`).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`}
 
 let imp=null,bk='',bp='Outros';
-const findM=n=>{n=String(n).trim().toLowerCase();return cfg.machines.find(m=>m.name.toLowerCase()==n||(m.ct&&m.ct.toLowerCase()==n))};
+const zz=s=>s.replace(/^0+(?=\d)/,''),nk=s=>String(s).replace(/\s+/g,' ').trim().toLowerCase();
+const findM=n=>{n=String(n).trim().toLowerCase();let m=cfg.machines.find(m=>m.name.toLowerCase()==n||(m.ct&&m.ct.toLowerCase()==n));
+ if(!m&&/^\d+$/.test(n)){const k=zz(n);m=cfg.machines.find(m=>/^\d+$/.test(m.ct||'')&&zz(m.ct)==k)} // CT sem os zeros à esquerda (Excel come os zeros)
+ return m};
 const nmx=n=>!!findM(n);
+const shOf=c=>{c=String(c||'').trim();if(!c)return 0;const d=c.match(/\d/g)||[];return d.length==1&&/[1-3]/.test(d[0])?+d[0]:-1}; // 1, T1, "Turno 1", "1º turno"
+// Importar colaboradores: Nome, Turno e CT(s) — de .xlsx, .csv ou linhas coladas; o mesmo nome em várias linhas soma as máquinas
 function parse(){
- const ex=new Map(cfg.employees.map(e=>[e.name.toLowerCase(),e])),seen=new Set(),rows=[];
- bk.split(/\r?\n/).forEach(l=>{l=l.trim();if(!l)return;
-  const c=l.split(l.includes('\t')?'\t':l.includes(';')?';':',').map(x=>x.trim());
-  if(/^(nome|colaborador|funcion)/i.test(c[0])&&!/[1-3]/.test(c[1]||''))return;
-  const sh=(c[1]||'').match(/[1-3]/),ms=[...new Set(c.slice(2).join(',').split(/[,|/]/).map(x=>x.trim()).filter(Boolean))],k=c[0].toLowerCase();
-  const r={n:c[0],sh:sh?+sh[0]:0,ms,old:ex.get(k),err:''};
-  if(!sh)r.err='Turno inválido (1, 2 ou 3)';else if(seen.has(k))r.err='Nome repetido na lista';
-  seen.add(k);rows.push(r)});
- imp=rows}
+ const ex=new Map(cfg.employees.map(e=>[nk(e.name),e])),rows=ctText(bk),ix={n:0,t:1,m:null},h=rows[0]||[];let hd=false;
+ if(h.some(x=>/^(nome|colaborador|funcion[aá]rio|operador|turno|cts?\b|m[aá]quinas?|centro|c[oó]digo)/i.test(x))){
+  hd=true;const a=h.findIndex(x=>/^(nome|colaborador|funcion[aá]rio|operador)/i.test(x)),b=h.findIndex(x=>/^turno/i.test(x)),c=h.map((x,i)=>/^(cts?\b|m[aá]quinas?|centros?|c[oó]digo)/i.test(x)?i:-1).filter(i=>i>=0);
+  ix.n=a>=0?a:0;ix.t=b;ix.m=c.length?c:null;rows.shift()}
+ const by=new Map(),out=[];
+ rows.forEach(r=>{if(!r.some(Boolean))return;
+  const n=(r[ix.n]||'').replace(/\s+/g,' ').trim(),k=n.toLowerCase(),sh=ix.t>=0?shOf(r[ix.t]):0,
+   cols=ix.m||r.map((_,i)=>i).filter(i=>hd?i!=ix.n&&i!=ix.t:i>1),seen=new Set(),ms=[];
+  cols.forEach(i=>String(r[i]||'').split(/[,;|/]/).forEach(x=>{x=x.trim();if(x&&!seen.has(x.toLowerCase())){seen.add(x.toLowerCase());ms.push(x)}}));
+  const p=n?by.get(k):null;
+  if(p){ms.forEach(x=>{if(!p.ms.some(y=>y.toLowerCase()==x.toLowerCase()))p.ms.push(x)});p.lines++;
+   if(sh<0&&!p.err)p.err='Turno inválido (use 1, 2 ou 3)';else if(sh>0){if(p.sh>0&&p.sh!=sh&&!p.err)p.err='Turnos diferentes para o mesmo nome';else p.sh=sh}return}
+  const o={n,sh:Math.max(sh,0),ms,old:n?ex.get(k)||null:null,err:'',lines:1};
+  if(!n)o.err='Nome vazio';else if(sh<0)o.err='Turno inválido (use 1, 2 ou 3)';
+  if(n)by.set(k,o);out.push(o)});
+ out.forEach(o=>{if(!o.err&&!o.sh&&!o.old)o.err='Turno não informado (1, 2 ou 3)'});
+ imp=out}
 function prevHtml(){
  if(!imp.length)return '<div class="mu" style="margin-top:10px">Nenhuma linha encontrada.</div>';
- const ok=imp.filter(r=>!r.err),nm=new Set();ok.forEach(r=>r.ms.forEach(n=>{if(!nmx(n))nm.add(n.toLowerCase())}));
- return `<div style="margin-top:12px"><b>${ok.filter(r=>!r.old).length} novos · ${ok.filter(r=>r.old).length} atualizações · ${imp.length-ok.length} com erro · ${nm.size} máquina(s) nova(s)</b><div class="sc"><table><tr><th>Nome</th><th>Turno</th><th>Máquinas</th><th>Ação</th></tr>${imp.map(r=>`<tr><td>${E(r.n)}</td><td>${r.sh?'T'+r.sh:'—'}</td><td class="mc">${r.ms.map(n=>E(n)+(nmx(n)?'':' <span class="tag vz">nova</span>')).join(', ')||'—'}</td><td>${r.err?`<span class="tag cf">${r.err}</span>`:r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>'}</td></tr>`).join('')}</table></div><div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="apply" ${ok.length?'':'disabled'}>Importar ${ok.length} linha(s)</button><button class="btn" data-a="cancel">Cancelar</button></div></div>`}
+ const ok=imp.filter(r=>!r.err),nm=new Set(),nw=ok.filter(r=>!r.old).length;ok.forEach(r=>r.ms.forEach(n=>{if(!nmx(n))nm.add(n.toLowerCase())}));
+ const secs=r=>[...new Set(r.ms.map(findM).filter(Boolean).map(m=>m.sec).filter(Boolean))].join(', ')||'—',
+  note=r=>{if(!r.old)return '';const p=[];if(r.sh&&r.sh!=r.old.shift)p.push('T'+r.old.shift+'→T'+r.sh);const a=r.ms.filter(n=>{const m=findM(n);return !m||!r.old.machines.includes(m.id)}).length;if(a)p.push('+'+a+' máq.');return p.join(' · ')||'sem mudanças'};
+ return `<div style="margin-top:12px"><b>${nw} novo(s) · ${ok.length-nw} atualização(ões) · ${imp.length-ok.length} com erro</b>${nm.size?` <span class="mu">· ${nm.size} CT/máquina(s) não cadastrado(s) serão criados no grupo "${E(bp)}"</span>`:''}<div class="sc tall" style="max-height:340px;overflow:auto"><table class="rt rv ve"><tr class="h"><th>Nome</th><th>Turno</th><th>Seção</th><th>CT / máquinas</th><th>Ação</th></tr>${imp.slice(0,300).map(r=>`<tr><td data-l="Nome">${E(r.n)||'—'}</td><td data-l="Turno">${r.sh?'T'+r.sh:r.old?'T'+r.old.shift+' <span class="mu">(mantém)</span>':'—'}</td><td class="mc" data-l="Seção">${E(secs(r))}</td><td class="mc" data-l="CT / máquinas">${r.ms.map(n=>E(n)+(nmx(n)?'':' <span class="tag vz">nova</span>')).join(', ')||'—'}</td><td data-l="Ação">${r.err?`<span class="tag cf">${r.err}</span>`:(r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>')+(note(r)?` <span class="mu">${E(note(r))}</span>`:'')}</td></tr>`).join('')}</table></div>${imp.length>300?`<div class="mu">Mostrando as 300 primeiras de ${imp.length} linhas; todas as válidas serão importadas.</div>`:''}<div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="apply" ${ok.length?'':'disabled'}>Importar ${ok.length} colaborador(es)</button><button class="btn" data-a="cancel">Cancelar</button></div></div>`}
 
 // ---- Importar CTs (Seção, CT, Grupo de Máq) de .xlsx, .csv ou texto colado
 const decX=s=>String(s).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&#x([0-9a-f]+);/gi,(_,h)=>String.fromCodePoint(parseInt(h,16))).replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(+n)).replace(/&amp;/g,'&');
@@ -257,11 +331,16 @@ function ctRows(rows){
   if(o.ct)seen.add(k);
   if(!o.err){o.grp=o.grp||'Outros';o.old=cfg.machines.find(m=>(m.ct&&m.ct.toLowerCase()==k)||m.name.toLowerCase()==k)||null}});
  return out}
-const ctText=t=>t.split(/\r?\n/).filter(l=>l.trim()).map(l=>l.split(l.includes('\t')?'\t':l.includes(';')?';':',').map(x=>x.trim().replace(/^"(.*)"$/,'$1')));
+const splitL=(l,d)=>{if(!l.includes('"'))return l.split(d).map(x=>x.trim());const o=[];let c='',q=false;for(let i=0;i<l.length;i++){const ch=l[i];if(q){if(ch=='"'){if(l[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"'&&!c.trim())q=true;else if(ch==d){o.push(c.trim());c=''}else c+=ch}o.push(c.trim());return o}; // divide a linha respeitando "aspas"
+const ctText=t=>t.split(/\r?\n/).filter(l=>l.trim()).map(l=>splitL(l,l.includes('\t')?'\t':l.includes(';')?';':','));
+async function fileText(fl){const buf=await fl.arrayBuffer(),u8=new Uint8Array(buf); // .xlsx vira linhas separadas por tabulação; .csv/.txt em UTF-8 ou Windows-1252
+ if(u8[0]==0x50&&u8[1]==0x4b)return (await xlsxRows(buf)).map(r=>r.join('\t')).join('\n');
+ if(u8[0]==0xD0&&u8[1]==0xCF)throw Error('formato .xls antigo: salve como .xlsx ou .csv');
+ try{return new TextDecoder('utf-8',{fatal:true}).decode(buf)}catch{return new TextDecoder('windows-1252').decode(buf)}}
 function ctPrev(){
  if(!ctr.length)return '<div class="mu" style="margin-top:10px">Nenhuma linha encontrada.</div>';
  const ok=ctr.filter(r=>!r.err),nw=ok.filter(r=>!r.old).length,secs=[...new Set(ok.map(r=>r.sec||'(sem seção)'))],grp=new Set(ok.map(r=>r.sec+'|'+r.grp));
- return `<div style="margin-top:12px"><b>${nw} novo(s) · ${ok.length-nw} atualização(ões) · ${ctr.length-ok.length} com erro</b> <span class="mu">· ${secs.length} seção(ões): ${secs.map(E).join(', ')} · ${grp.size} grupo(s) de máquinas</span><div class="sc tall" style="max-height:340px;overflow:auto"><table><tr><th>Seção</th><th>CT</th><th>Grupo de Máq</th><th>Ação</th></tr>${ctr.slice(0,300).map(r=>`<tr><td>${E(r.sec)||'—'}</td><td>${E(r.ct)||'—'}</td><td>${E(r.grp)||'—'}</td><td>${r.err?`<span class="tag cf">${r.err}</span>`:(r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>')+(r.note?` <span class="mu">${E(r.note)}</span>`:'')}</td></tr>`).join('')}</table></div>${ctr.length>300?`<div class="mu">Mostrando as 300 primeiras de ${ctr.length} linhas; todas as válidas serão importadas.</div>`:''}<div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="ctapply" ${ok.length?'':'disabled'}>Importar ${ok.length} CT(s)</button><button class="btn" data-a="ctcancel">Cancelar</button></div></div>`}
+ return `<div style="margin-top:12px"><b>${nw} novo(s) · ${ok.length-nw} atualização(ões) · ${ctr.length-ok.length} com erro</b> <span class="mu">· ${secs.length} seção(ões): ${secs.map(E).join(', ')} · ${grp.size} grupo(s) de máquinas</span><div class="sc tall" style="max-height:340px;overflow:auto"><table class="rt rv vc"><tr class="h"><th>Seção</th><th>CT</th><th>Grupo de Máq</th><th>Ação</th></tr>${ctr.slice(0,300).map(r=>`<tr><td data-l="Seção">${E(r.sec)||'—'}</td><td data-l="CT">${E(r.ct)||'—'}</td><td data-l="Grupo de Máq">${E(r.grp)||'—'}</td><td data-l="Ação">${r.err?`<span class="tag cf">${r.err}</span>`:(r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>')+(r.note?` <span class="mu">${E(r.note)}</span>`:'')}</td></tr>`).join('')}</table></div>${ctr.length>300?`<div class="mu">Mostrando as 300 primeiras de ${ctr.length} linhas; todas as válidas serão importadas.</div>`:''}<div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="ctapply" ${ok.length?'':'disabled'}>Importar ${ok.length} CT(s)</button><button class="btn" data-a="ctcancel">Cancelar</button></div></div>`}
 function vCad(){
  const ms=cfg.machines,ps=[...new Set(ms.map(m=>m.proc))],vm=ms.filter(mIn),ve=[...cfg.employees].filter(eIn).sort((a,b)=>a.name.localeCompare(b.name));
  const mo=s=>`<option value="">— sem máquina —</option>`+ms.map(m=>`<option value="${m.id}" ${m.id===s?'selected':''}>${E(mlb(m))}</option>`).join('');
@@ -276,9 +355,9 @@ function vCad(){
  <textarea id="ctk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Seção&#9;CT&#9;Grupo de Máq&#10;Eixos D&#9;01061031&#9;CHOQUE TÉRMICO">${E(ctt)}</textarea><button class="btn pr" data-a="ctprev">Pré-visualizar</button>${ctr?ctPrev():''}</div></div>
  <div class="col"><div class="card"><h2>Colaboradores <span class="mu">${ve.length}${ve.length!=cfg.employees.length?' de '+cfg.employees.length:''}</span></h2><div class="bar"><input id="en" placeholder="Nome do colaborador" aria-label="Nome do colaborador"><select id="es" aria-label="Turno">${shOpt(1)}</select><select id="em">${mo('')}</select><button class="btn pr" data-a="adde">Adicionar</button></div><div class="mu" style="margin-bottom:8px">A seção da pessoa vem das máquinas em que ela é treinada. Para treinar em mais máquinas, use "+ adicionar máquina" na tabela. A primeira é o posto padrão na escala.</div>
  <div class="sc"><table class="rt re"><tr class="h"><th>Nome</th><th>Turno</th><th>Seção</th><th>Máquinas em que é treinado</th><th></th></tr>${ve.map(e=>`<tr><td data-l="Nome"><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"></td><td data-l="Turno"><select data-a="ef" data-f="shift" data-id="${e.id}">${shOpt(e.shift)}</select></td><td class="mc" data-l="Seção">${E(esec(e))}</td><td class="mc" data-l="Máquinas em que é treinado">${mcell(e)}</td><td><button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover</button></td></tr>`).join('')}</table></div></div>
- <div class="card"><h2>Importar colaboradores em lote</h2><div class="mu">Uma linha por colaborador: <b>Nome;Turno;CT ou máquina 1/CT ou máquina 2</b>. Separe os campos com ponto e vírgula, tabulação (colar do Excel) ou vírgula, e várias máquinas com / ou |. As máquinas podem ser indicadas pelo CT ou pelo nome. O turno pode ser 1, T1 ou "Turno 1". Quem já existe é atualizado (as máquinas são somadas) e máquinas novas são criadas.</div>
- <div class="bar" style="margin-top:8px"><label>Grupo das máquinas novas: <input id="bp" list="pl" value="${E(bp)}"></label><label class="btn">Abrir arquivo .csv/.txt <input type="file" accept=".csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Inserir exemplo</button></div>
- <textarea id="bk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Ana Souza;1;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}</div></div></div>`}
+ <div class="card"><h2>Importar colaboradores (planilha)</h2><div class="mu">Colunas: <b>Nome</b>, <b>Turno</b> (1, 2, 3, T1 ou "Turno 1") e <b>CT</b> (ou o nome da máquina). A primeira linha pode ser o cabeçalho (as colunas são achadas pelo título). Para mais de um CT, separe com / ou | na mesma célula, use várias colunas de CT ou repita o nome em outras linhas: as máquinas são somadas. Aceita arquivo .xlsx ou .csv, ou linhas coladas do Excel. Quem já existe é atualizado (turno e máquinas somadas; turno em branco mantém o atual) e CTs ainda não cadastrados são criados.</div>
+ <div class="bar" style="margin-top:8px"><label>Grupo dos CTs novos: <input id="bp" list="pl" value="${E(bp)}"></label><label class="btn">Escolher planilha (.xlsx, .csv)<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Inserir exemplo</button></div>
+ <textarea id="bk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Nome&#9;Turno&#9;CT&#10;Ana Souza&#9;1&#9;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}</div></div></div>`}
 
 let calRef=iso(new Date()),calMode='w',opn=ls.get('open')||{},opnS=ls.get('openS')||{};
 const so=k=>opnS[k]!==false;
@@ -345,10 +424,10 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='delm'){const m=mac(id);if(m&&!confirm('Remover "'+(m.ct||m.name)+'"? As pessoas treinadas nesta máquina deixam de ter esse treinamento. A mudança vale para todos os gestores.'))return;cfg.machines=cfg.machines.filter(m=>m.id!==id);cfg.employees.forEach(e=>e.machines=e.machines.filter(i=>i!==id));saveCfg();render()}
  else if(a=='dele'){const e=emp(id);if(e&&!confirm('Remover '+e.name+' do cadastro? O histórico de presença continua nos indicadores como "(removido)". A mudança vale para todos os gestores.'))return;cfg.employees=cfg.employees.filter(e=>e.id!==id);saveCfg();render()}
  else if(a=='rm'){const e=emp(id);e.machines=e.machines.filter(i=>i!==v);saveCfg();render()}
- else if(a=='ex'){bk='Nome;Turno;Máquinas\nAna Souza;1;Ret 01/Ret 02\nBruno Lima;T2;Estria 01\nCarlos Dias;Turno 3;Fres 01|Fres 02|Estria 01';parse();render()}
+ else if(a=='ex'){bk='Nome\tTurno\tCT\nAna Souza\t1\t01061031/01061008\nBruno Lima\tT2\t01061031\nCarlos Dias\tTurno 3\t01061008|01061009';parse();render()}
  else if(a=='prev'){bk=$('#bk').value;bp=g('#bp')||'Outros';parse();render()}
  else if(a=='cancel'){imp=null;render()}
- else if(a=='apply'){let n=0,u=0;imp.filter(r=>!r.err).forEach(r=>{const ids=r.ms.map(nm=>{let m=findM(nm);if(!m){m={id:uid(),name:nm,ct:'',sec:'',proc:bp||'Outros',slots:1};cfg.machines.push(m)}return m.id});const e=cfg.employees.find(e=>e.name.toLowerCase()==r.n.toLowerCase());if(e){e.shift=r.sh;e.machines=[...new Set([...e.machines,...ids])];u++}else{cfg.employees.push({id:uid(),name:r.n,shift:r.sh,machines:ids});n++}});saveCfg();imp=null;bk='';render();toast(n+' novo(s), '+u+' atualizado(s)')}
+ else if(a=='apply'){let n=0,u=0;imp.filter(r=>!r.err).forEach(r=>{const ids=r.ms.map(nm=>{let m=findM(nm);if(!m){m={id:uid(),name:nm,ct:/^\d+$/.test(nm)?nm:'',sec:'',proc:bp||'Outros',slots:1};cfg.machines.push(m)}return m.id});const e=cfg.employees.find(e=>nk(e.name)==nk(r.n));if(e){if(r.sh)e.shift=r.sh;e.machines=[...new Set([...e.machines,...ids])];u++}else{cfg.employees.push({id:uid(),name:r.n,shift:r.sh,machines:ids});n++}});saveCfg();imp=null;bk='';render();toast(n+' novo(s), '+u+' atualizado(s)')}
  else if(a=='demo'){const G=[['Retificadora','Eixos A','Ret 01','Ret 02','Ret 03'],['Estria','Eixos D','Estria 01','Estria 02'],['Fresadora','Eixos D','Fres 01','Fres 02']];G.forEach(g=>g.slice(2).forEach(n=>cfg.machines.push({id:uid(),name:n,ct:'',sec:g[1],proc:g[0],slots:1})));const M=cfg.machines,L=M.length;
   'Ana Souza,Bruno Lima,Carlos Dias,Daniela Rocha,Eduardo Alves,Fernanda Reis,Gustavo Melo,Helena Costa,Igor Santos,Julia Prado,Kleber Nunes,Larissa Moura,Marcos Pinto,Nadia Freitas,Otávio Ramos,Paula Vieira'.split(',').forEach((n,i)=>cfg.employees.push({id:uid(),name:n,shift:i%3+1,machines:[M[i%L].id,...(i%3==0?[M[(i+1)%L].id]:[])]}));saveCfg();render()}
 });
@@ -361,17 +440,13 @@ document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dat
  else if(a=='am'){const e=emp(id);if(e&&t.value){e.machines.push(t.value);saveCfg();render()}}
  else if(a=='mf'){const m=mac(id);if(m){const v=t.value.trim();if(f=='slots')m.slots=Math.max(1,+t.value||1);else if(f=='ct'){if(v){if(!m.ct||m.name===m.ct)m.name=v;m.ct=v}}else if(f=='sec')m.sec=v;else m[f]=v||m[f];saveCfg();soft()}}
  else if(a=='sec'){secF=t.value;ls.set('sec',secF);render()}
- else if(a=='ctfile'&&t.files[0]){const fl=t.files[0];fl.arrayBuffer().then(async buf=>{try{const u8=new Uint8Array(buf);let tx;
-  if(u8[0]==0x50&&u8[1]==0x4b)tx=(await xlsxRows(buf)).map(r=>r.join('\t')).join('\n');
-  else if(u8[0]==0xD0&&u8[1]==0xCF)throw Error('formato .xls antigo: salve como .xlsx ou .csv');
-  else{try{tx=new TextDecoder('utf-8',{fatal:true}).decode(buf)}catch{tx=new TextDecoder('windows-1252').decode(buf)}}
-  ctt=tx;ctr=ctRows(ctText(ctt));render()}catch(e){toast('Não consegui ler o arquivo: '+(e.message||e))}});t.value=''}
- else if(a=='file'&&t.files[0])t.files[0].arrayBuffer().then(buf=>{let x;try{x=new TextDecoder('utf-8',{fatal:true}).decode(buf)}catch{x=new TextDecoder('windows-1252').decode(buf)}bk=x;bp=($('#bp')||{}).value||bp;parse();render()})
+ else if(a=='ctfile'&&t.files[0]){fileText(t.files[0]).then(tx=>{ctt=tx;ctr=ctRows(ctText(ctt));render()}).catch(e=>toast('Não consegui ler o arquivo: '+(e.message||e)));t.value=''}
+ else if(a=='file'&&t.files[0]){fileText(t.files[0]).then(tx=>{bk=tx;bp=($('#bp')||{}).value||bp;parse();render()}).catch(e=>toast('Não consegui ler o arquivo: '+(e.message||e)));t.value=''}
 });
 document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='bk')bk=t.value;if(t.id=='ctk')ctt=t.value;if(t.id=='bp')bp=t.value});
 
 cfg=ls.get('cfg')||cfg;norm();days=ls.get('days')||{};render();
 pull();setInterval(()=>{if(!document.hidden)pull()},8000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
 // ao imprimir, abre todas as seções e grupos (e volta ao que estava depois)
-if(typeof window!=='undefined'&&window.addEventListener){window.addEventListener('beforeprint',()=>{PR=true;render()});window.addEventListener('afterprint',()=>{PR=false;render()})}
+if(typeof window!=='undefined'&&window.addEventListener){window.addEventListener('beforeprint',()=>{PR=true;render()});window.addEventListener('afterprint',()=>{PR=false;render()});let lw=innerWidth,rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(innerWidth!=lw){lw=innerWidth;if(tab=='ind')render()}},200)})}
 </script></body></html>

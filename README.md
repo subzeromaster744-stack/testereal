@@ -58,7 +58,25 @@ Eixos A   01061008    CHOQUE TÉRMICO
 - CTs que já existem são **atualizados** (seção e grupo); as vagas que você ajustou ficam. Seção em branco na planilha não apaga a seção já cadastrada. CTs novos entram com 1 vaga.
 - Arquivos `.xls` antigos não são lidos: salve como `.xlsx` ou `.csv`.
 - Também dá para cadastrar um CT por vez (Seção, CT, Grupo de Máq e Vagas; só o CT é obrigatório), e tudo pode ser editado na tabela. A máquina **não tem campo Nome**: o nome dela é o próprio CT.
-- Na importação de colaboradores em lote, as máquinas podem ser indicadas pelo CT ou pelo nome.
+- Os colaboradores também entram por planilha (próxima seção).
+
+## Importar colaboradores (planilha)
+
+Em **Cadastro → Importar colaboradores (planilha)** (coluna da direita), escolha um `.xlsx` ou `.csv`, ou cole as linhas do Excel, com estas colunas:
+
+```
+Nome          Turno     CT
+Ana Souza     1         01061031/01061008
+Bruno Lima    T2        01061031
+Carla Dias    Turno 3   01061008|01061009
+```
+
+- A primeira linha pode ser o cabeçalho; as colunas são achadas pelo título (**Nome** ou Colaborador, **Turno**, **CT** ou Máquina), em qualquer ordem, e outras colunas (como Matrícula) são ignoradas. Sem cabeçalho, vale a ordem Nome, Turno, CT.
+- **Turno**: 1, 2, 3, T1, "Turno 1" ou "1º turno".
+- **Vários CTs** para a mesma pessoa: na mesma célula, separados por `/`, `|`, `,` ou `;`; em várias colunas de CT (CT 1, CT 2…); ou repetindo o nome em outras linhas (as máquinas são somadas).
+- Quem já existe (mesmo nome, sem diferença de maiúsculas ou espaços) é **atualizado**: o turno muda se vier preenchido (em branco mantém o atual) e as máquinas são somadas, sem apagar as que a pessoa já tinha.
+- CT que está na planilha mas não no cadastro é criado (com o CT como nome, 1 vaga e o grupo escolhido em "Grupo dos CTs novos"); se não tiver seção, preencha depois ou importe os CTs antes. CT que o Excel gravou sem os zeros à esquerda (1061031) é reconhecido como 01061031.
+- A pré-visualização mostra novos, atualizações (com a mudança de turno e quantas máquinas entram) e erros: nome vazio, turno inválido ou ausente (para quem é novo), mesmo nome com turnos diferentes. Só as linhas válidas são importadas. No celular, cada pessoa vira um cartão.
 
 O seletor **Seção** (nas telas Escala, Calendário, Presença e Cadastro) mostra só as máquinas da seção e as pessoas treinadas nelas, e os contadores passam a valer só para a seção. A seção da pessoa vem das máquinas em que ela é treinada. A escolha fica lembrada no navegador. **(sem seção)** mostra as máquinas sem seção e as pessoas sem máquina. Se nenhuma máquina tiver seção, o seletor não aparece.
 
@@ -91,6 +109,21 @@ O calendário (semana ou mês) tem duas colunas fixas à esquerda: **Seção** e
 ## Cadastro: máquinas à esquerda, colaboradores à direita
 
 No computador o Cadastro tem **duas colunas**: **Máquinas** (cadastro e importação de CTs) na esquerda e **Colaboradores** (cadastro e importação em lote) na direita. No celular vira **uma coluna** só, com cada máquina e cada colaborador em um cartão com os campos legíveis.
+
+## Indicadores
+
+A tela tem o seletor de período (7, 30, 90 dias ou todo o histórico) e, sobre os mesmos dados, indicadores e gráficos feitos no próprio site (sem biblioteca externa, sem depender de internet):
+
+- **Indicadores no alto**: escalados, compareceram, faltas após confirmação, % de comparecimento, pendentes de check-in, refeições reservadas, dias com hora extra e pessoas diferentes.
+- **Escalados por dia**: uma coluna por dia, empilhada em presentes (verde), faltas (vermelho) e pendentes de check-in (cinza); sábados e domingos com a data em destaque. Passe o mouse (ou toque) na coluna para ver os números. Com mais de 120 dias, o gráfico mostra os últimos 120 e a tabela abaixo tem todos.
+- **Comparecimento por dia**: linha do % (presentes ÷ presentes + faltas) dia a dia.
+- **Por turno** e **Situação no período**: duas roscas e barras por turno.
+- **Por seção** (se houver seções) e **Por grupo de máquinas**: barras com presentes, faltas e pendentes, ordenadas pelas que mais escalaram. A máquina de cada pessoa é a que estava escolhida na escala do dia.
+- **Por dia da semana**: média de pessoas escaladas por segunda, terça… domingo, nos dias com hora extra.
+- **Mais faltas**: as 10 pessoas com mais faltas no período.
+- As tabelas **Histórico por colaborador** (com "Ausência recorrente" a partir de 2 faltas) e **Histórico por dia** (agora com refeições) continuam abaixo.
+
+Os gráficos se ajustam à largura da tela e, no celular, ficam em uma coluna.
 
 ## No celular e na impressão
 
