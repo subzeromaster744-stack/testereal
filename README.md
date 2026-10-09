@@ -55,34 +55,47 @@ Eixos A   01061008    CHOQUE TÉRMICO
 - A primeira linha pode ser o cabeçalho; as colunas são achadas pelo título (em qualquer ordem). Sem cabeçalho, vale a ordem Seção, CT, Grupo.
 - Os zeros à esquerda do CT são mantidos, inclusive quando o Excel guarda o CT como número com formato `00000000`.
 - Antes de importar, a pré-visualização mostra o que é novo, o que será atualizado e as linhas com erro (CT vazio ou repetido na planilha).
-- CTs que já existem são **atualizados** (seção e grupo); o nome e as vagas que você ajustou ficam. Seção em branco na planilha não apaga a seção já cadastrada. CTs novos entram com 1 vaga e com o CT como nome.
+- CTs que já existem são **atualizados** (seção e grupo); as vagas que você ajustou ficam. Seção em branco na planilha não apaga a seção já cadastrada. CTs novos entram com 1 vaga.
 - Arquivos `.xls` antigos não são lidos: salve como `.xlsx` ou `.csv`.
-- Também dá para cadastrar um CT por vez, e a seção, o CT, o nome e o grupo podem ser editados na tabela.
+- Também dá para cadastrar um CT por vez (Seção, CT, Grupo de Máq e Vagas; só o CT é obrigatório), e tudo pode ser editado na tabela. A máquina **não tem campo Nome**: o nome dela é o próprio CT.
 - Na importação de colaboradores em lote, as máquinas podem ser indicadas pelo CT ou pelo nome.
 
 O seletor **Seção** (nas telas Escala, Calendário, Presença e Cadastro) mostra só as máquinas da seção e as pessoas treinadas nelas, e os contadores passam a valer só para a seção. A seção da pessoa vem das máquinas em que ela é treinada. A escolha fica lembrada no navegador. **(sem seção)** mostra as máquinas sem seção e as pessoas sem máquina. Se nenhuma máquina tiver seção, o seletor não aparece.
 
+## Escala: seção › grupo de máquinas › máquinas
+
+A tela de escalar segue o mesmo desenho do calendário, para continuar curta mesmo com 100 CTs ou mais:
+
+1. **Seção** (por exemplo, Eixos D): uma linha com quantas pessoas estão escaladas e quantas máquinas da seção já têm operador. As seções começam abertas.
+2. **Grupo de máquinas** (por exemplo, CHOQUE TÉRMICO), dentro da seção. Começa **fechado**; a linha dele resume os escalados e as máquinas com operador, e mostra ⚠ se houver conflito dentro dele.
+3. **Máquinas**: ao abrir o grupo, aparece um cartão por CT, com as pessoas treinadas nela. Clique na pessoa para escalá-la naquela máquina (quem tem mais de uma máquina aparece em todas; clicar em outra troca o posto).
+
+**Expandir tudo** e **Recolher tudo** abrem e fecham tudo de uma vez. O que está aberto fica lembrado só no navegador de cada pessoa e é independente do calendário. O filtro **Seção** e os botões **Todos / T1 / T2 / T3** continuam valendo.
+
+**Nem toda máquina precisa de operador.** Não existe lista de pendências "sem operador": uma máquina parada fica neutra, uma com gente escalada fica verde ("Com operador") e só o **conflito** (mais gente que vagas) aparece em vermelho e é contado no alto da tela. O indicador "Máquinas com operador" mostra quantas têm alguém, sem cobrar as demais.
+
+## Turnos no sábado e no domingo
+
+Sábado e domingo funcionam como qualquer outro dia: podem ter **os três turnos** trabalhando, cada pessoa com o turno do cadastro (T1, T2 ou T3), com os botões Todos / T1 / T2 / T3 e os indicadores por turno.
+
 ## Calendário: seção, grupo de máquinas e CTs
 
-O calendário (semana ou mês) tem duas colunas fixas à esquerda: **Seção** e **Grupo de Máq · CT**. A estrutura abre em três níveis:
+O calendário (semana ou mês) tem duas colunas fixas à esquerda: **Seção** e **Grupo de Máq · CT**. A estrutura abre nos mesmos três níveis da Escala:
 
-1. **Seção** (por exemplo, Eixos D): uma linha com o total de pessoas de cada dia e quantas máquinas estão cobertas. Clique em ▾/▸ para recolher ou abrir a seção. As seções começam abertas; "(sem seção)" fica por último.
-2. **Grupo de máquinas** (por exemplo, CHOQUE TÉRMICO), dentro da seção. Começa fechado. O mesmo grupo em duas seções aparece separado em cada uma.
-3. **CT**: ao abrir o grupo, aparece uma linha por CT, com o código em destaque, o nome (se for diferente), as vagas e as pessoas escaladas em cada dia, com turno e presença.
+1. **Seção**: uma linha com o total de pessoas de cada dia e quantas máquinas têm operador. Clique em ▾/▸ para recolher ou abrir. As seções começam abertas; "(sem seção)" fica por último.
+2. **Grupo de máquinas**, dentro da seção. Começa fechado. O mesmo grupo em duas seções aparece separado em cada uma.
+3. **CT**: ao abrir o grupo, uma linha por CT, com o código em destaque, as vagas e as pessoas escaladas em cada dia, com turno e presença.
 
-**Expandir tudo** abre seções e grupos e mostra todos os CTs; **Recolher tudo** deixa só as linhas das seções. O filtro **Seção** da barra continua valendo. Se nenhuma máquina tiver seção, a coluna Seção não aparece. O que está aberto fica lembrado só no navegador de cada pessoa.
+**Expandir tudo** abre seções e grupos; **Recolher tudo** deixa só as linhas das seções. Cores: verde = tem operador escalado, vermelho = conflito; máquina sem ninguém fica sem cor. Se nenhuma máquina tiver seção, a coluna Seção não aparece.
 
-## Turnos: sábado e domingo são turno único
+## Cadastro: máquinas à esquerda, colaboradores à direita
 
-Cada pessoa tem o turno dela no cadastro (T1, T2 ou T3), e esse turno continua aparecendo ao lado do nome. Mas na Escala, **no sábado e no domingo só um turno trabalha**, então nesses dias aparecem juntas, em cada máquina, as pessoas de todos os turnos (em ordem de T1, T2, T3). Os botões T1/T2/T3 e os indicadores por turno somem, e uma vaga conta para qualquer turno: duas pessoas de turnos diferentes na mesma máquina de 1 vaga dão conflito.
-
-- Em dias úteis nada muda: continuam os botões **Todos / T1 / T2 / T3** para filtrar.
-- A chave **Turno único** (dia útil) e **Filtrar por turno** (sábado/domingo) muda o modo só naquele dia, por exemplo para um feriado. A escolha é gravada junto com a escala do dia e vale para todos os gestores.
+No computador o Cadastro tem **duas colunas**: **Máquinas** (cadastro e importação de CTs) na esquerda e **Colaboradores** (cadastro e importação em lote) na direita. No celular vira **uma coluna** só, com cada máquina e cada colaborador em um cartão com os campos legíveis.
 
 ## No celular e na impressão
 
 - **Presença e refeição** no celular vira uma lista de cartões, com os botões Presente e Faltou grandes e sem rolar para o lado.
-- **Imprimir** (Ctrl+P): a tela da Escala sai sem menu e botões, só com as pessoas escaladas em cada máquina. A Presença imprime a tabela do dia, com os botões de check-in como caixas para marcar à mão.
+- **Imprimir** (Ctrl+P): a tela da Escala sai sem menu e botões, só com as máquinas que têm gente escalada e as pessoas de cada uma. Seções e grupos fechados na tela são abertos sozinhos só para a impressão (o Calendário também). A Presença imprime a tabela do dia, com os botões de check-in como caixas para marcar à mão.
 - **Remover** um CT ou uma pessoa do cadastro pede confirmação, porque a mudança vale para todos os gestores.
 - No Calendário, abrir ou fechar seções e grupos mantém a posição da rolagem.
 

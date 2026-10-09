@@ -26,7 +26,7 @@ input,select,textarea{border:1px solid var(--bd);background:var(--card);border-r
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
 .m{background:var(--card);border:1px solid var(--bd);border-top:4px solid var(--bd);border-radius:10px;padding:10px}
 .m.ok{border-top-color:var(--ok)}.m.cf{border-top-color:var(--er);background:var(--erb)}.m.vz{border-top-color:var(--wa)}
-.m h3{font-size:14px;margin:0 0 2px;display:flex;justify-content:space-between;gap:6px}
+.m h4{font-size:14px;margin:0 0 2px;display:flex;justify-content:space-between;gap:6px}
 .tag{font-size:11px;padding:2px 7px;border-radius:99px;font-weight:600;white-space:nowrap}
 .tag.ok{background:var(--okb);color:var(--ok)}.tag.cf{background:var(--erb);color:var(--er)}.tag.vz{background:var(--wab);color:var(--wa)}
 .chip{display:flex;align-items:center;gap:6px;width:100%;text-align:left;border:1px solid var(--bd);background:var(--card);border-radius:8px;padding:6px 8px;margin-top:4px;cursor:pointer}
@@ -49,6 +49,15 @@ td input,td select{width:100%;min-width:90px}
 .cal tr.se .first{background:var(--bg);font-weight:700}.cal tr.se td{border-top:2px solid var(--bd)}.cal tr.se .c b{font-weight:700}
 .cal tr.pr .first{background:var(--bg);font-weight:600}.cal .sub{padding-left:22px}.cal tr.tot .first{background:var(--bg)}
 .cn{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cal .lk{text-align:left;font-size:13px;color:var(--tx);text-decoration:none}
+/* Escala em níveis (seção > grupo > máquinas) e Cadastro em colunas */
+.tag.n{background:var(--bg);color:var(--mu);border:1px solid var(--bd);font-weight:500}
+.sec{margin-bottom:6px}.sh{font-size:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:2px solid var(--bd);padding-bottom:6px;margin:20px 0 10px}
+.gh{font-size:15px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 8px}
+.lk.gt{color:var(--tx);text-decoration:none;font:inherit;font-weight:700;text-align:left}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}.col{min-width:0}
+main.wide{max-width:1480px}
+.cols td input,.cols td select{min-width:70px}.cols .mc{min-width:180px}
+@media(max-width:900px){.cols{grid-template-columns:1fr}}
 /* polimento: foco, hover, desativado, números alinhados */
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--pr);outline-offset:2px}
@@ -73,6 +82,15 @@ td input[type=checkbox]{width:auto;min-width:0}
  .pt td:nth-child(n+3){grid-column:1/-1}
  .pt td:nth-child(5){display:flex;gap:8px}.pt td:nth-child(5) .btn{flex:1}
  .pt td select{width:100%;min-width:0}
+ .rt,.rt tbody{display:block}.rt tr.h{display:none}
+ .rt tr{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;align-items:end;padding:12px 2px;border-bottom:1px solid var(--bd)}
+ .rt td{display:block;border:0;padding:0;white-space:normal;min-width:0}
+ .rt td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--mu);margin-bottom:2px}
+ .rt input,.rt select{width:100%;min-width:0!important}
+ .rt.rm td:nth-child(3){grid-column:1/-1}.rt.rm td:nth-child(4){grid-column:1}.rt.rm td:nth-child(5){grid-column:2}
+ .rt.rm td input[type=number]{width:100%!important}
+ .rt.re td:nth-child(1),.rt.re td:nth-child(4){grid-column:1/-1}.rt.re td:nth-child(5){grid-column:1/-1}
+ .rt .btn{width:100%}
 }
 @media(pointer:coarse){.btn,.tab,.chip{min-height:42px}}
 @media print{
@@ -81,6 +99,7 @@ td input[type=checkbox]{width:auto;min-width:0}
  header{border:0;padding:0 0 8px}main{padding:0}
  .chip.on{background:none;color:#000;border:1px solid #000}.chip.on .t{color:#000}
  .card,.m,tr,.chip{break-inside:avoid}.m.cf{background:none}
+ .m:not(.ok):not(.cf){display:none}section.proc:not(:has(.m.ok,.m.cf)){display:none}
  .sc{overflow:visible}.cal .first{position:static}
  .lk{color:#000;text-decoration:none}
 }
@@ -88,7 +107,7 @@ td input[type=checkbox]{width:auto;min-width:0}
 <script>
 const $=s=>document.querySelector(s),E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,8),iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),fmt=k=>k.split('-').reverse().join('/');
-let cfg={machines:[],employees:[]},days={},db=null,tab='escala',date=iso(new Date()),flt=0,per=30;
+let PR=false,cfg={machines:[],employees:[]},days={},db=null,tab='escala',date=iso(new Date()),flt=0,per=30;
 const ls={get(k){try{return JSON.parse(localStorage.getItem('escalaHE:'+k))}catch{return null}},set(k,v){try{localStorage.setItem('escalaHE:'+k,JSON.stringify(v))}catch{}}};
 const D=d=>days[d]||{s:[],a:{},m:{}},emp=id=>cfg.employees.find(e=>e.id===id),mac=id=>cfg.machines.find(m=>m.id===id);
 function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>e.style.display='none',3200)}
@@ -112,12 +131,10 @@ async function pull(manual){if(busy)return;if(manual===true)call.no=false;
  cfg=r.cfg||{machines:[],employees:[]};norm();days=r.days||{};rr();setSy()}
  catch(e){sync={s:e===401?'e401':e===503?'e503':e===404?'e404':'err',c:e};setSy()}}
 function upd(d,fn){const x=JSON.parse(JSON.stringify(D(d)));fn(x);days[d]=x;saveDay(d);render()}
-// Turno único: no sábado e no domingo só um turno trabalha, então todas as pessoas aparecem, de qualquer turno (cada uma mantém o turno do cadastro). A chave 'Turno único' vale por dia e muda o padrão (day.u: 1 liga, 0 desliga).
 const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
-const wend=k=>[0,6].includes(new Date(k+'T12:00').getDay()),one=k=>{const u=D(k).u;return u==null?wend(k):!!u};
 const shiftDate=n=>{const x=new Date(date+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
 
-function dbar(f){return `<div class="bar"><button class="btn" data-a="dd" data-v="-1" aria-label="Dia anterior">◀</button><input type="date" data-a="date" value="${date}" aria-label="Data"><button class="btn" data-a="dd" data-v="1" aria-label="Próximo dia">▶</button><button class="btn" data-a="today">Hoje</button><b>${cap(new Date(date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long'}))}</b>${secSel()}${f?`<span style="flex:1"></span>${one(date)?`<span class="tag ok" title="Só um turno trabalha neste dia: aparecem as pessoas de todos os turnos">Turno único · todos os turnos</span><button class="btn" data-a="uni" data-v="0" title="Voltar a filtrar por T1, T2 ou T3">Filtrar por turno</button>`:`${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn ${flt==x[0]?'pr':''}" aria-pressed="${flt==x[0]}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}<button class="btn" data-a="uni" data-v="1" title="Só um turno trabalha neste dia: mostrar as pessoas de todos os turnos">Turno único</button>`}`:''}</div>`}
+function dbar(f){return `<div class="bar"><button class="btn" data-a="dd" data-v="-1" aria-label="Dia anterior">◀</button><input type="date" data-a="date" value="${date}" aria-label="Data"><button class="btn" data-a="dd" data-v="1" aria-label="Próximo dia">▶</button><button class="btn" data-a="today">Hoje</button><b>${cap(new Date(date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long'}))}</b>${secSel()}${f?`<span style="flex:1"></span>${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn ${flt==x[0]?'pr':''}" aria-pressed="${flt==x[0]}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}`:''}</div>`}
 function noData(){if(sync.s=='wait')return `<div class="card empty"><h2>Carregando…</h2><p class="mu">Buscando a escala no servidor.</p></div>`;return `<div class="card empty"><h2>Comece cadastrando máquinas e colaboradores</h2><p class="mu">Cadastre as máquinas (por grupo de processo) e os operadores de cada turno para montar a escala.</p><button class="btn pr" data-a="tab" data-v="cad">Ir para o Cadastro</button> <button class="btn" data-a="demo">Carregar dados de exemplo</button></div>`}
 
 const wk=(e,d)=>{const w=(d.w||{})[e.id];return e.machines.includes(w)?w:(e.machines[0]||'')};
@@ -134,22 +151,29 @@ const gk=m=>(m.sec||'')+'|'+(m.proc||'Outros');
 const bySec=gs=>gs.sort((a,b)=>a.split('|')[0].localeCompare(b.split('|')[0],'pt-BR'));
 const mlb=m=>(m.sec?m.sec+' · ':'')+(m.proc||'Outros')+' · '+m.name;
 function secSel(){const l=secList();if(!l.length)return '';const s=sf();return `<label class="mu">Seção: <select data-a="sec"><option value="">Todas</option>${l.map(x=>`<option value="${E(x)}" ${s===x?'selected':''}>${E(x)}</option>`).join('')}${cfg.machines.some(m=>!m.sec)?`<option value="${SN}" ${s==SN?'selected':''}>(sem seção)</option>`:''}</select></label>`}
+let opnE=ls.get('openE')||{},opnSE=ls.get('openSE')||{};
+const soE=k=>opnSE[k]!==false; // seção aberta por padrão; grupo fechado por padrão
 function vEscala(){
  if(!cfg.machines.length&&!cfg.employees.length)return dbar()+noData();
- const d=D(date),S=new Set(d.s),cnt=counts(d),s0=sf(),ms0=cfg.machines.filter(mIn),ids=new Set(ms0.map(m=>m.id)),U=one(date),FL=U?0:flt,bysh=(a,b)=>a.shift-b.shift||a.name.localeCompare(b.name,'pt-BR');
- const st=m=>{const n=cnt[m.id]||0;return n>(m.slots||1)?'cf':n?'ok':'vz'};
+ const d=D(date),S=new Set(d.s),cnt=counts(d),s0=sf(),ms0=cfg.machines.filter(mIn),ids=new Set(ms0.map(m=>m.id)),hasS=secList().length>0,bysh=(a,b)=>a.shift-b.shift||a.name.localeCompare(b.name,'pt-BR');
+ // máquina sem operador é normal na hora extra: só importa o conflito (mais gente que vagas)
+ const st=m=>{const n=cnt[m.id]||0;return n>(m.slots||1)?'cf':n?'ok':''};
  const sc=cfg.employees.filter(e=>S.has(e.id)&&(!s0||(wk(e,d)?ids.has(wk(e,d)):s0==SN)));
  const sh=[1,2,3].map(t=>sc.filter(e=>e.shift==t).length);
- const cf=ms0.filter(m=>st(m)=='cf').length,vz=ms0.filter(m=>st(m)=='vz');
- const chip=(e,mid)=>{const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return  `<button class="chip ${here?'on':''} ${el?'alt':''}" aria-pressed="${here}" data-a="tog" data-id="${e.id}" data-v="${mid}"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
- const card=m=>{const s=st(m),es=cfg.employees.filter(e=>e.machines.includes(m.id)&&(!FL||e.shift==FL)).sort(bysh);return `<div class="m ${s}"><h3><span>${E(m.name)}${m.ct&&m.ct!==m.name?` <span class="mu">CT ${E(m.ct)}</span>`:''}</span><span class="tag ${s}">${{cf:'Conflito',ok:'Coberta',vz:'Sem operador'}[s]}</span></h3><div class="mu">Vagas: ${cnt[m.id]||0}/${m.slots||1}</div>${es.map(e=>chip(e,m.id)).join('')||'<div class="mu" style="margin-top:6px">Sem operadores neste filtro</div>'}</div>`};
- const gs=bySec([...new Set(ms0.map(gk))]);
- const orphan=cfg.employees.filter(e=>!e.machines.some(i=>mac(i))&&(!FL||e.shift==FL)).sort(bysh);
- return dbar(1)+(s0?`<div class="mu" style="margin-bottom:10px">Mostrando ${s0==SN?'as máquinas sem seção':'a seção <b>'+E(s0)+'</b>'}: ${ms0.length} máquina(s) e ${cfg.employees.filter(eIn).length} pessoa(s) treinada(s) nelas.</div>`:'')+(cfg.employees.some(e=>e.machines.length>1)?`<div class="mu" style="margin-bottom:10px">Quem é treinado em mais de uma máquina aparece em todas elas. Clique na máquina onde a pessoa vai trabalhar; clicar em outra máquina dela troca o posto.</div>`:'')+(U?`<div class="mu" style="margin-bottom:10px">Turno único neste dia: aparecem as pessoas de todos os turnos. Cada uma mantém o turno do cadastro (T1, T2, T3).</div>`:'')+`<div class="kpis"><div class="kpi"><b>${sc.length}</b><span>Escalados</span></div>${U?'':sh.map((n,i)=>`<div class="kpi"><b>${n}</b><span>Turno ${i+1}</span></div>`).join('')}<div class="kpi ${cf?'cf':''}"><b>${cf}</b><span>Máquinas em conflito</span></div><div class="kpi ${vz.length?'vz':''}"><b>${vz.length}</b><span>Máquinas sem operador</span></div></div>`+
+ const cf=ms0.filter(m=>st(m)=='cf').length,use=ms0.filter(m=>st(m)).length;
+ const chip=(e,mid)=>{const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return `<button class="chip ${here?'on':''} ${el?'alt':''}" aria-pressed="${here}" data-a="tog" data-id="${e.id}" data-v="${mid}"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
+ const card=m=>{const s=st(m),es=cfg.employees.filter(e=>e.machines.includes(m.id)&&(!flt||e.shift==flt)).sort(bysh);return `<div class="m ${s}"><h4><span>${E(m.name)}${m.ct&&m.ct!==m.name?` <span class="mu">CT ${E(m.ct)}</span>`:''}</span>${s?`<span class="tag ${s}">${{cf:'Conflito',ok:'Com operador'}[s]}</span>`:''}</h4><div class="mu">Vagas: ${cnt[m.id]||0}/${m.slots||1}</div>${es.map(e=>chip(e,m.id)).join('')||`<div class="mu" style="margin-top:6px">${flt?'Sem operadores neste filtro':'Ninguém treinado nesta máquina'}</div>`}</div>`};
+ const sum=ms=>{const c=ms.filter(m=>st(m)=='cf').length;return `<span class="tag n">${ms.reduce((a,m)=>a+(cnt[m.id]||0),0)} escalado(s)</span> <span class="tag n">${ms.filter(m=>st(m)).length} de ${ms.length} com operador</span>${c?` <span class="tag cf">⚠ ${c} em conflito</span>`:''}`};
+ const secs=hasS?[...new Set(ms0.map(m=>m.sec||''))].sort((a,b)=>!a?1:!b?-1:a.localeCompare(b,'pt-BR')):[''];
+ const body=secs.map(sec=>{const sm=ms0.filter(m=>(m.sec||'')==sec),key=sec||SN,open=!hasS||soE(key)||PR,gs=[...new Set(sm.map(gk))];
+  const head=hasS?`<h2 class="sh"><button class="lk gt" data-a="opse" data-v="${E(key)}" aria-expanded="${open}" title="${open?'Recolher':'Expandir'} a seção">${open?'▾':'▸'} ${sec?E(sec):'(sem seção)'}</button> ${sum(sm)}</h2>`:'';
+  const groups=open?gs.map(g=>{const ms=sm.filter(m=>gk(m)==g),o=!!opnE[g]||PR;return `<section class="proc"><h3 class="gh"><button class="lk gt" data-a="opne" data-v="${E(g)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} as máquinas">${o?'▾':'▸'} ${E(ms[0].proc||'Outros')}</button> ${sum(ms)}</h3>${o?`<div class="grid">${ms.map(card).join('')}</div>`:''}</section>`}).join(''):'';
+  return `<div class="sec">${head}${groups}</div>`}).join('');
+ const orphan=cfg.employees.filter(e=>!e.machines.some(i=>mac(i))&&(!flt||e.shift==flt)).sort(bysh);
+ return dbar(1)+`<div class="bar"><span class="mu">Abra a seção e o grupo para escolher a máquina de cada pessoa.</span><span style="flex:1"></span><button class="btn" data-a="opene">Expandir tudo</button><button class="btn" data-a="closee">Recolher tudo</button></div>`+(s0?`<div class="mu" style="margin-bottom:10px">Mostrando ${s0==SN?'as máquinas sem seção':'a seção <b>'+E(s0)+'</b>'}: ${ms0.length} máquina(s) e ${cfg.employees.filter(eIn).length} pessoa(s) treinada(s) nelas.</div>`:'')+(cfg.employees.some(e=>e.machines.length>1)?`<div class="mu" style="margin-bottom:10px">Quem é treinado em mais de uma máquina aparece em todas elas. Clique na máquina onde a pessoa vai trabalhar; clicar em outra máquina dela troca o posto.</div>`:'')+`<div class="kpis"><div class="kpi"><b>${sc.length}</b><span>Escalados</span></div>${sh.map((n,i)=>`<div class="kpi"><b>${n}</b><span>Turno ${i+1}</span></div>`).join('')}<div class="kpi"><b>${use}</b><span>Máquinas com operador</span></div><div class="kpi ${cf?'cf':''}"><b>${cf}</b><span>Máquinas em conflito</span></div></div>`+
  (cf?`<div class="card" style="border-color:var(--er);color:var(--er)">⚠ Há mais operadores escalados do que vagas na mesma máquina — alguém ficaria sem máquina. Mude o posto de um deles (se for treinado em outra máquina) ou escale outra pessoa.</div>`:'')+
- (vz.length?`<div class="card"><b>Ainda sem operador:</b> <span class="mu" style="font-size:13px">${vz.map(m=>E(m.name)).join(', ')}</span></div>`:'')+
- gs.map(g=>{const ms=ms0.filter(m=>gk(m)==g),ok=ms.filter(m=>st(m)!='vz').length,m0=ms[0],t=(!s0&&m0.sec?E(m0.sec)+' · ':'')+E(m0.proc||'Outros');return `<section class="proc"><h2>${t} <span class="tag ${ok==ms.length?'ok':'vz'}">${ok}/${ms.length} máquinas cobertas</span></h2><div class="grid">${ms.map(card).join('')}</div></section>`}).join('')+
- ((!s0||s0==SN)&&orphan.length?`<section class="proc"><h2>Sem máquina definida</h2><div class="grid"><div class="m">${orphan.map(e=>chip(e,'')).join('')}</div></div></section>`:'')}
+ body+
+ ((!s0||s0==SN)&&orphan.length?`<section class="proc"><h3 class="gh">Sem máquina definida</h3><div class="grid"><div class="m">${orphan.map(e=>chip(e,'')).join('')}</div></div></section>`:'')}
 
 function vPres(){
  const d=D(date),c=counts(d),s0=sf(),ids=new Set(cfg.machines.filter(mIn).map(m=>m.id)),l=d.s.map(emp).filter(Boolean).filter(e=>!s0||(wk(e,d)?ids.has(wk(e,d)):s0==SN)).sort((a,b)=>a.shift-b.shift||a.name.localeCompare(b.name));
@@ -245,16 +269,16 @@ function vCad(){
  const mcell=e=>e.machines.map(i=>mac(i)?`<span class="tag ok" style="display:inline-block;margin:0 4px 4px 0">${E(mac(i).name)} <button class="lk" data-a="rm" data-id="${e.id}" data-v="${i}" title="Remover">×</button></span>`:'').join('')+`<select data-a="am" data-id="${e.id}"><option value="">+ adicionar máquina</option>${ms.filter(m=>!e.machines.includes(m.id)).map(m=>`<option value="${m.id}">${E(mlb(m))}</option>`).join('')}</select>`;
  const esec=e=>[...new Set(eMs(e).map(m=>m.sec).filter(Boolean))].join(', ')||'—';
  return `<div class="bar">${secSel()||'<span class="mu">Cadastre ou importe CTs com seção para poder filtrar por seção.</span>'}</div>
- <div class="card"><h2>Máquinas (CTs) <span class="mu">${vm.length}${vm.length!=ms.length?' de '+ms.length:''}</span></h2><div class="bar"><input id="msec" list="sl" placeholder="Seção (ex.: Eixos D)" aria-label="Seção"><input id="mc" placeholder="CT (ex.: 01061031)" aria-label="CT"><input id="mn" placeholder="Nome (opcional)" aria-label="Nome"><input id="mp" list="pl" placeholder="Grupo de Máq (ex.: CHOQUE TÉRMICO)" aria-label="Grupo de Máq"><datalist id="pl">${ps.map(p=>`<option value="${E(p)}">`).join('')}</datalist><datalist id="sl">${secList().map(p=>`<option value="${E(p)}">`).join('')}</datalist><input id="ms" type="number" min="1" value="1" style="width:80px" title="Vagas por máquina" aria-label="Vagas por máquina"><button class="btn pr" data-a="addm">Adicionar</button></div>
- <div class="sc tall" data-sk="mach" style="max-height:480px;overflow:auto"><table><tr><th>Seção</th><th>CT</th><th>Nome</th><th>Grupo de Máq</th><th>Vagas</th><th></th></tr>${vm.map(m=>`<tr><td><input list="sl" data-a="mf" data-f="sec" data-id="${m.id}" value="${E(m.sec)}"></td><td><input data-a="mf" data-f="ct" data-id="${m.id}" value="${E(m.ct)}"></td><td><input data-a="mf" data-f="name" data-id="${m.id}" value="${E(m.name)}"></td><td><input list="pl" data-a="mf" data-f="proc" data-id="${m.id}" value="${E(m.proc)}"></td><td><input type="number" min="1" style="width:70px" data-a="mf" data-f="slots" data-id="${m.id}" value="${m.slots||1}"></td><td><button class="btn er" data-a="delm" data-id="${m.id}" aria-label="Remover ${E(m.ct||m.name)}">Remover</button></td></tr>`).join('')}</table></div></div>
- <div class="card"><h2>Importar CTs (planilha)</h2><div class="mu">Colunas: <b>Seção</b>, <b>CT</b> e <b>Grupo de Máq</b>. A primeira linha pode ser o cabeçalho (as colunas são achadas pelo título). Aceita arquivo .xlsx ou .csv, ou linhas coladas do Excel. CTs que já existem são atualizados (seção e grupo, o nome e as vagas ficam); os outros são criados com 1 vaga.</div>
+ <div class="cols"><div class="col"><div class="card"><h2>Máquinas (CTs) <span class="mu">${vm.length}${vm.length!=ms.length?' de '+ms.length:''}</span></h2><div class="bar"><input id="msec" list="sl" placeholder="Seção (ex.: Eixos D)" aria-label="Seção"><input id="mc" placeholder="CT (ex.: 01061031)" aria-label="CT"><input id="mp" list="pl" placeholder="Grupo de Máq (ex.: CHOQUE TÉRMICO)" aria-label="Grupo de Máq"><datalist id="pl">${ps.map(p=>`<option value="${E(p)}">`).join('')}</datalist><datalist id="sl">${secList().map(p=>`<option value="${E(p)}">`).join('')}</datalist><input id="ms" type="number" min="1" value="1" style="width:80px" title="Vagas por máquina" aria-label="Vagas por máquina"><button class="btn pr" data-a="addm">Adicionar</button></div>
+ <div class="sc tall" data-sk="mach" style="max-height:480px;overflow:auto"><table class="rt rm"><tr class="h"><th>Seção</th><th>CT</th><th>Grupo de Máq</th><th>Vagas</th><th></th></tr>${vm.map(m=>`<tr><td data-l="Seção"><input list="sl" data-a="mf" data-f="sec" data-id="${m.id}" value="${E(m.sec)}"></td><td data-l="CT"><input data-a="mf" data-f="ct" data-id="${m.id}" value="${E(m.ct||m.name)}" aria-label="CT"></td><td data-l="Grupo de Máq"><input list="pl" data-a="mf" data-f="proc" data-id="${m.id}" value="${E(m.proc)}"></td><td data-l="Vagas"><input type="number" min="1" style="width:70px" data-a="mf" data-f="slots" data-id="${m.id}" value="${m.slots||1}"></td><td><button class="btn er" data-a="delm" data-id="${m.id}" aria-label="Remover ${E(m.ct||m.name)}">Remover</button></td></tr>`).join('')}</table></div></div>
+ <div class="card"><h2>Importar CTs (planilha)</h2><div class="mu">Colunas: <b>Seção</b>, <b>CT</b> e <b>Grupo de Máq</b>. A primeira linha pode ser o cabeçalho (as colunas são achadas pelo título). Aceita arquivo .xlsx ou .csv, ou linhas coladas do Excel. CTs que já existem são atualizados (seção e grupo; as vagas ficam); os outros são criados com 1 vaga.</div>
  <div class="bar" style="margin-top:8px"><label class="btn">Escolher planilha (.xlsx, .csv)<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="ctfile" hidden></label><button class="btn" data-a="ctex">Inserir exemplo</button></div>
- <textarea id="ctk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Seção&#9;CT&#9;Grupo de Máq&#10;Eixos D&#9;01061031&#9;CHOQUE TÉRMICO">${E(ctt)}</textarea><button class="btn pr" data-a="ctprev">Pré-visualizar</button>${ctr?ctPrev():''}</div>
- <div class="card"><h2>Colaboradores <span class="mu">${ve.length}${ve.length!=cfg.employees.length?' de '+cfg.employees.length:''}</span></h2><div class="bar"><input id="en" placeholder="Nome do colaborador" aria-label="Nome do colaborador"><select id="es" aria-label="Turno">${shOpt(1)}</select><select id="em">${mo('')}</select><button class="btn pr" data-a="adde">Adicionar</button></div><div class="mu" style="margin-bottom:8px">A seção da pessoa vem das máquinas em que ela é treinada. Para treinar em mais máquinas, use "+ adicionar máquina" na tabela. A primeira é o posto padrão na escala.</div>
- <div class="sc"><table><tr><th>Nome</th><th>Turno</th><th>Seção</th><th>Máquinas em que é treinado</th><th></th></tr>${ve.map(e=>`<tr><td><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"></td><td><select data-a="ef" data-f="shift" data-id="${e.id}">${shOpt(e.shift)}</select></td><td class="mc">${E(esec(e))}</td><td class="mc">${mcell(e)}</td><td><button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover</button></td></tr>`).join('')}</table></div></div>
+ <textarea id="ctk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Seção&#9;CT&#9;Grupo de Máq&#10;Eixos D&#9;01061031&#9;CHOQUE TÉRMICO">${E(ctt)}</textarea><button class="btn pr" data-a="ctprev">Pré-visualizar</button>${ctr?ctPrev():''}</div></div>
+ <div class="col"><div class="card"><h2>Colaboradores <span class="mu">${ve.length}${ve.length!=cfg.employees.length?' de '+cfg.employees.length:''}</span></h2><div class="bar"><input id="en" placeholder="Nome do colaborador" aria-label="Nome do colaborador"><select id="es" aria-label="Turno">${shOpt(1)}</select><select id="em">${mo('')}</select><button class="btn pr" data-a="adde">Adicionar</button></div><div class="mu" style="margin-bottom:8px">A seção da pessoa vem das máquinas em que ela é treinada. Para treinar em mais máquinas, use "+ adicionar máquina" na tabela. A primeira é o posto padrão na escala.</div>
+ <div class="sc"><table class="rt re"><tr class="h"><th>Nome</th><th>Turno</th><th>Seção</th><th>Máquinas em que é treinado</th><th></th></tr>${ve.map(e=>`<tr><td data-l="Nome"><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"></td><td data-l="Turno"><select data-a="ef" data-f="shift" data-id="${e.id}">${shOpt(e.shift)}</select></td><td class="mc" data-l="Seção">${E(esec(e))}</td><td class="mc" data-l="Máquinas em que é treinado">${mcell(e)}</td><td><button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover</button></td></tr>`).join('')}</table></div></div>
  <div class="card"><h2>Importar colaboradores em lote</h2><div class="mu">Uma linha por colaborador: <b>Nome;Turno;CT ou máquina 1/CT ou máquina 2</b>. Separe os campos com ponto e vírgula, tabulação (colar do Excel) ou vírgula, e várias máquinas com / ou |. As máquinas podem ser indicadas pelo CT ou pelo nome. O turno pode ser 1, T1 ou "Turno 1". Quem já existe é atualizado (as máquinas são somadas) e máquinas novas são criadas.</div>
  <div class="bar" style="margin-top:8px"><label>Grupo das máquinas novas: <input id="bp" list="pl" value="${E(bp)}"></label><label class="btn">Abrir arquivo .csv/.txt <input type="file" accept=".csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Inserir exemplo</button></div>
- <textarea id="bk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Ana Souza;1;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}</div>`}
+ <textarea id="bk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Ana Souza;1;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}</div></div></div>`}
 
 let calRef=iso(new Date()),calMode='w',opn=ls.get('open')||{},opnS=ls.get('openS')||{};
 const so=k=>opnS[k]!==false;
@@ -266,9 +290,9 @@ function vCal(){
  const ds=calDays(),td=iso(new Date()),s0=sf(),MS=cfg.machines.filter(mIn),hasS=secList().length>0;
  const info=ds.map(k=>{const d=days[k]||{s:[],a:{},w:{}},by={};d.s.forEach(id=>{const e=emp(id);if(e){const w=wk(e,d);(by[w]=by[w]||[]).push(e)}});
   const tot=s0?MS.reduce((a,m)=>a+(by[m.id]||[]).length,0)+(s0==SN?(by['']||[]).length:0):Object.values(by).reduce((a,l)=>a+l.length,0);return {k,d,by,tot}});
- const st=(m,I)=>{const n=(I.by[m.id]||[]).length;return n>(m.slots||1)?'cf':n?'ok':'vz'};
+ const st=(m,I)=>{const n=(I.by[m.id]||[]).length;return n>(m.slots||1)?'cf':n?'ok':''};
  // resumo de um conjunto de máquinas (seção ou grupo) em um dia
- const sum=(ms,I)=>{const sts=ms.map(m=>st(m,I)),n=ms.reduce((a,m)=>a+(I.by[m.id]||[]).length,0),cov=sts.filter(x=>x!='vz').length,cls=sts.includes('cf')?'cf':n?(cov==ms.length?'ok':'vz'):'';return `<td class="c ${cls}" data-a="goto" data-v="${I.k}"><b>${n||'·'}</b>${n?`<div class="mu">${cov}/${ms.length} máq.</div>`:''}</td>`};
+ const sum=(ms,I)=>{const sts=ms.map(m=>st(m,I)),n=ms.reduce((a,m)=>a+(I.by[m.id]||[]).length,0),cov=sts.filter(Boolean).length,cls=sts.includes('cf')?'cf':n?'ok':'';return `<td class="c ${cls}" data-a="goto" data-v="${I.k}"><b>${n||'·'}</b>${n?`<div class="mu">${cov}/${ms.length} máq.</div>`:''}</td>`};
  const lbl=calMode=='m'?cap(wd(calRef).toLocaleDateString('pt-BR',{month:'long',year:'numeric'})):fmt(ds[0]).slice(0,5)+' – '+fmt(ds[6]);
  const c1=hasS?'<td class="first s1"></td>':'';
  const head=`<tr>${hasS?'<th class="first s1">Seção</th>':''}<th class="first s2">Grupo de Máq${hasS?' · CT':''}</th>${info.map(I=>{const x=wd(I.k);return `<th class="dh ${I.k==td?'hoje':''} ${x.getDay()%6==0?'fds':''}" data-a="goto" data-v="${I.k}" title="Abrir a escala deste dia">${x.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','')}<br><b>${x.getDate()}</b></th>`}).join('')}</tr>`;
@@ -277,20 +301,20 @@ function vCal(){
  const secs=hasS?[...new Set(MS.map(m=>m.sec||''))].sort((a,b)=>!a?1:!b?-1:a.localeCompare(b,'pt-BR')):[''];
  const ctl=m=>m.ct?`<b>${E(m.ct)}</b>${m.name&&m.name!==m.ct?` <span class="mu">${E(m.name)}</span>`:''}`:E(m.name);
  const body=secs.map(sc=>{
-  const sm=MS.filter(m=>(m.sec||'')==sc),key=sc||SN,gs=[...new Set(sm.map(gk))],open=!hasS||so(key);
+  const sm=MS.filter(m=>(m.sec||'')==sc),key=sc||SN,gs=[...new Set(sm.map(gk))],open=!hasS||so(key)||PR;
   const srow=hasS?`<tr class="se"><td class="first s1"><button class="lk" data-a="ops" data-v="${E(key)}" aria-expanded="${open}" title="${open?'Recolher':'Expandir'} a seção">${open?'▾':'▸'} ${sc?E(sc):'(sem seção)'}</button></td><td class="first s2 mu" style="font-weight:400">${gs.length} grupo(s) · ${sm.length} CT(s)</td>${info.map(I=>sum(sm,I)).join('')}</tr>`:'';
-  const grows=open?gs.map(g=>{const ms=sm.filter(m=>gk(m)==g),o=!!opn[g];
+  const grows=open?gs.map(g=>{const ms=sm.filter(m=>gk(m)==g),o=!!opn[g]||PR;
    const prow=`<tr class="pr">${c1}<td class="first s2"><button class="lk" data-a="opn" data-v="${E(g)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} os CTs">${o?'▾':'▸'} ${E(ms[0].proc||'Outros')}</button><div class="mu" style="font-weight:400">${ms.length} CT(s)</div></td>${info.map(I=>sum(ms,I)).join('')}</tr>`;
-   const mrows=o?ms.map(m=>`<tr>${c1}<td class="first s2 sub">${ctl(m)}<span class="mu"> · ${m.slots||1} vaga(s)</span></td>${info.map(I=>{const l=(I.by[m.id]||[]).sort((a,b)=>a.shift-b.shift),s=st(m,I);return `<td class="c ${s=='vz'?'':s}" data-a="goto" data-v="${I.k}">${l.map(e=>`<div class="cn" title="${E(e.name)}"><i class="t t${e.shift}">T${e.shift}</i> ${I.d.a[e.id]=='p'?'✓ ':I.d.a[e.id]=='f'?'✗ ':''}${E(short(e.name))}</div>`).join('')}</td>`}).join('')}</tr>`).join(''):'';
+   const mrows=o?ms.map(m=>`<tr>${c1}<td class="first s2 sub">${ctl(m)}<span class="mu"> · ${m.slots||1} vaga(s)</span></td>${info.map(I=>{const l=(I.by[m.id]||[]).sort((a,b)=>a.shift-b.shift),s=st(m,I);return `<td class="c ${s}" data-a="goto" data-v="${I.k}">${l.map(e=>`<div class="cn" title="${E(e.name)}"><i class="t t${e.shift}">T${e.shift}</i> ${I.d.a[e.id]=='p'?'✓ ':I.d.a[e.id]=='f'?'✗ ':''}${E(short(e.name))}</div>`).join('')}</td>`}).join('')}</tr>`).join(''):'';
    return prow+mrows}).join(''):'';
   return srow+grows}).join('');
  return `<div class="bar"><button class="btn" data-a="cnav" data-v="-1" aria-label="${calMode=='w'?'Semana anterior':'Mês anterior'}">◀</button><button class="btn" data-a="cnav" data-v="1" aria-label="${calMode=='w'?'Próxima semana':'Próximo mês'}">▶</button><button class="btn" data-a="ctoday">Hoje</button><b style="min-width:150px">${lbl}</b>${secSel()}<button class="btn ${calMode=='w'?'pr':''}" data-a="cmode" data-v="w">Semana</button><button class="btn ${calMode=='m'?'pr':''}" data-a="cmode" data-v="m">Mês</button><span style="flex:1"></span><button class="btn" data-a="openall">Expandir tudo</button><button class="btn" data-a="closeall">Recolher tudo</button></div>
  <div class="card sc" data-sk="cal" style="padding:0"><table class="cal ${calMode=='m'?'mo':'wk'} ${hasS?'':'ns'}">${head}${tot}${body}</table></div>
- <div class="mu"><span class="tag ok">verde</span> todas as máquinas cobertas &nbsp;<span class="tag vz">âmbar</span> parte das máquinas cobertas &nbsp;<span class="tag cf">vermelho</span> conflito (mais gente que vagas) &nbsp;·&nbsp; ✓ presente &nbsp;✗ faltou &nbsp;·&nbsp; clique em um dia para abrir a escala dele. Use ▸ para abrir a seção, o grupo de máquinas e ver os CTs.</div>`}
+ <div class="mu"><span class="tag ok">verde</span> tem operador escalado &nbsp;<span class="tag cf">vermelho</span> conflito (mais gente que vagas) &nbsp;·&nbsp; ✓ presente &nbsp;✗ faltou &nbsp;·&nbsp; clique em um dia para abrir a escala dele. Use ▸ para abrir a seção, o grupo de máquinas e ver os CTs.</div>`}
 
 function render(){const keep=render.t==tab?[...document.querySelectorAll('#app [data-sk]')].map(e=>[e.dataset.sk,e.scrollLeft,e.scrollTop]):[];render.t=tab;
  const T=[['escala','Escala'],['cal','Calendário'],['pres','Presença e refeição'],['ind','Indicadores'],['cad','Cadastro']];
- $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu" id="sy">${syl()}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" ${tab==t[0]?'aria-current="page"':''} data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main>${({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,cad:vCad})[tab]()}</main>`;keep.forEach(([k,l,t])=>{const e=document.querySelector('#app [data-sk="'+k+'"]');if(e){e.scrollLeft=l;e.scrollTop=t}})}
+ $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu" id="sy">${syl()}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" ${tab==t[0]?'aria-current="page"':''} data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main class="${tab=='cad'?'wide':''}">${({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,cad:vCad})[tab]()}</main>`;keep.forEach(([k,l,t])=>{const e=document.querySelector('#app [data-sk="'+k+'"]');if(e){e.scrollLeft=l;e.scrollTop=t}})}
 const soft=()=>setTimeout(()=>{const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest&&a.closest('#app')))render()},0);
 function rr(){const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest('#app')&&!/date|checkbox/.test(a.type))return;render()}
 
@@ -299,8 +323,10 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='tog')upd(date,x=>{x.w=x.w||{};const cur=wk(emp(id),x);if(!x.s.includes(id)){x.s.push(id);x.w[id]=v}else if(cur==v){x.s=x.s.filter(i=>i!=id);delete x.a[id];delete x.m[id];delete x.w[id]}else x.w[id]=v})
  else if(a=='att')upd(date,x=>{if(x.a[id]==v)delete x.a[id];else x.a[id]=v})
  else if(a=='flt'){flt=+v;render()}
- else if(a=='uni')upd(date,x=>{if((v=='1')==wend(date))delete x.u;else x.u=v=='1'?1:0})
  else if(a=='opn'){opn[v]=!opn[v];ls.set('open',opn);render()}
+ else if(a=='opne'){opnE[v]=!opnE[v];ls.set('openE',opnE);render()}
+ else if(a=='opse'){opnSE[v]=!soE(v);ls.set('openSE',opnSE);render()}
+ else if(a=='opene'||a=='closee'){const o=a=='opene';cfg.machines.forEach(m=>{opnE[gk(m)]=o;opnSE[m.sec||SN]=o});ls.set('openE',opnE);ls.set('openSE',opnSE);render()}
  else if(a=='ops'){opnS[v]=!so(v);ls.set('openS',opnS);render()}
  else if(a=='openall'||a=='closeall'){const o=a=='openall';cfg.machines.forEach(m=>{opn[gk(m)]=o;opnS[m.sec||SN]=o});ls.set('open',opn);ls.set('openS',opnS);render()}
  else if(a=='cmode'){calMode=v;render()}
@@ -310,7 +336,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='today'){date=iso(new Date());render()}
  else if(a=='sync'){sync={s:'wait'};setSy();pull(true)}
  else if(a=='goto'){date=v;tab='escala';render()}
- else if(a=='addm'){const ct=g('#mc'),nm=g('#mn')||ct;if(!nm)return toast('Informe o CT ou o nome da máquina');cfg.machines.push({id:uid(),name:nm,ct,sec:g('#msec'),proc:g('#mp')||'Outros',slots:Math.max(1,+$('#ms').value||1)});saveCfg();render()}
+ else if(a=='addm'){const ct=g('#mc');if(!ct)return toast('Informe o CT da máquina');cfg.machines.push({id:uid(),name:ct,ct,sec:g('#msec'),proc:g('#mp')||'Outros',slots:Math.max(1,+$('#ms').value||1)});saveCfg();render()}
  else if(a=='ctex'){ctt='Seção\tCT\tGrupo de Máq\nEixos D\t01061031\tCHOQUE TÉRMICO\nEixos A\t01061008\tCHOQUE TÉRMICO';ctr=ctRows(ctText(ctt));render()}
  else if(a=='ctprev'){ctt=$('#ctk').value;ctr=ctRows(ctText(ctt));render()}
  else if(a=='ctcancel'){ctr=null;render()}
@@ -333,7 +359,7 @@ document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dat
  else if(a=='wk')upd(date,x=>{x.w=x.w||{};x.w[id]=t.value})
  else if(a=='ef'){const e=emp(id);if(e){e[f]=f=='shift'?+t.value:t.value.trim()||e[f];saveCfg();soft()}}
  else if(a=='am'){const e=emp(id);if(e&&t.value){e.machines.push(t.value);saveCfg();render()}}
- else if(a=='mf'){const m=mac(id);if(m){m[f]=f=='slots'?Math.max(1,+t.value||1):(f=='sec'||f=='ct')?t.value.trim():t.value.trim()||m[f];saveCfg();soft()}}
+ else if(a=='mf'){const m=mac(id);if(m){const v=t.value.trim();if(f=='slots')m.slots=Math.max(1,+t.value||1);else if(f=='ct'){if(v){if(!m.ct||m.name===m.ct)m.name=v;m.ct=v}}else if(f=='sec')m.sec=v;else m[f]=v||m[f];saveCfg();soft()}}
  else if(a=='sec'){secF=t.value;ls.set('sec',secF);render()}
  else if(a=='ctfile'&&t.files[0]){const fl=t.files[0];fl.arrayBuffer().then(async buf=>{try{const u8=new Uint8Array(buf);let tx;
   if(u8[0]==0x50&&u8[1]==0x4b)tx=(await xlsxRows(buf)).map(r=>r.join('\t')).join('\n');
@@ -346,4 +372,6 @@ document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='bk')bk=t.valu
 
 cfg=ls.get('cfg')||cfg;norm();days=ls.get('days')||{};render();
 pull();setInterval(()=>{if(!document.hidden)pull()},8000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
+// ao imprimir, abre todas as seções e grupos (e volta ao que estava depois)
+if(typeof window!=='undefined'&&window.addEventListener){window.addEventListener('beforeprint',()=>{PR=true;render()});window.addEventListener('afterprint',()=>{PR=false;render()})}
 </script></body></html>
