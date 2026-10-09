@@ -79,11 +79,19 @@ Cada pessoa tem o turno dela no cadastro (T1, T2 ou T3), e esse turno continua a
 - Em dias úteis nada muda: continuam os botões **Todos / T1 / T2 / T3** para filtrar.
 - A chave **Turno único** (dia útil) e **Filtrar por turno** (sábado/domingo) muda o modo só naquele dia, por exemplo para um feriado. A escolha é gravada junto com a escala do dia e vale para todos os gestores.
 
+## No celular e na impressão
+
+- **Presença e refeição** no celular vira uma lista de cartões, com os botões Presente e Faltou grandes e sem rolar para o lado.
+- **Imprimir** (Ctrl+P): a tela da Escala sai sem menu e botões, só com as pessoas escaladas em cada máquina. A Presença imprime a tabela do dia, com os botões de check-in como caixas para marcar à mão.
+- **Remover** um CT ou uma pessoa do cadastro pede confirmação, porque a mudança vale para todos os gestores.
+- No Calendário, abrir ou fechar seções e grupos mantém a posição da rolagem.
+
 ## Observações
 
 - **Sem `ACCESS_KEY`**, qualquer pessoa com o link vê e edita a escala, que contém nomes de colaboradores.
 - **Sem o binding `DB`**, o site abre, mas cada navegador guarda os dados só para si, e o cabeçalho mostra o motivo (veja a tabela abaixo).
 - Os dados cadastrados em outras versões (claude.ai, Vercel) não vêm junto: recadastre ou use **Cadastro → Importar em lote**. Se o servidor estiver vazio e o navegador já tiver dados locais, o site os envia na primeira abertura. Se o servidor já tiver dados, eles substituem os do navegador; por isso, abra primeiro no computador cujos dados valem.
+- **Dois gestores editando o mesmo dia ao mesmo tempo**: vale a última gravação. O site se atualiza sozinho a cada 8 segundos (e ao voltar para a aba), então o risco é só quando duas pessoas mexem no mesmo dia dentro desse intervalo.
 - Para testar no seu computador: `npx wrangler dev --var ACCESS_KEY:meucodigo` (usa um banco local temporário).
 
 ## O cabeçalho diz se está sincronizando

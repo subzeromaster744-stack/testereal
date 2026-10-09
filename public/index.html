@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗓</text></svg>"><title>Escala de Hora Extra</title>
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f7;--card:#fff;--tx:#1d2433;--mu:#667085;--bd:#e1e4ea;--pr:#2457d6;--ok:#17803d;--okb:#e3f5ea;--wa:#b45309;--wab:#fdf0d9;--er:#c0262d;--erb:#fde6e6;--t1:#2457d6;--t2:#0e8f7e;--t3:#8a4fd6}
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f7;--card:#fff;--tx:#1d2433;--mu:#667085;--bd:#e1e4ea;--pr:#2457d6;--ok:#17803d;--okb:#e3f5ea;--wa:#b45309;--wab:#fdf0d9;--er:#c0262d;--erb:#fde6e6;--t1:#2457d6;--t2:#0e8f7e;--t3:#8a4fd6}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}}
-:root[data-theme=dark]{--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 header{background:var(--card);border-bottom:1px solid var(--bd);padding:12px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
@@ -49,7 +49,42 @@ td input,td select{width:100%;min-width:90px}
 .cal tr.se .first{background:var(--bg);font-weight:700}.cal tr.se td{border-top:2px solid var(--bd)}.cal tr.se .c b{font-weight:700}
 .cal tr.pr .first{background:var(--bg);font-weight:600}.cal .sub{padding-left:22px}.cal tr.tot .first{background:var(--bg)}
 .cn{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cal .lk{text-align:left;font-size:13px;color:var(--tx);text-decoration:none}
-</style></head><body><div id="app"></div><div id="toast"></div>
+/* polimento: foco, hover, desativado, números alinhados */
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--pr);outline-offset:2px}
+.chip.on:focus-visible{outline-color:var(--tx)}
+.tab:hover,.btn:hover,.chip:hover{border-color:var(--pr)}
+.btn:disabled{opacity:.5;cursor:not-allowed}.btn:disabled:hover{border-color:var(--bd)}
+.mu select{color:var(--tx);font-size:13px}
+td input[type=checkbox]{width:auto;min-width:0}
+.pt td select{width:auto;min-width:130px;max-width:230px}
+.kpi b,td{font-variant-numeric:tabular-nums}
+.tall th{position:sticky;top:0;z-index:1;background:var(--card)}
+.sr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}.sr .bb{flex:1;min-width:120px}.sr .sv{width:260px}
+.cal.wk{--cw:118px}.cal.mo{--cw:66px}
+@media(max-width:640px){
+ main{padding:12px}
+ .cal.wk{--cw:88px}
+ .cal .s1{position:static;min-width:76px;max-width:76px}.cal .s2,.cal.ns .s2{left:0;min-width:112px;max-width:120px}
+ .sr .sv{width:auto;flex-basis:100%}
+ .pt,.pt tbody{display:block}.pt tr.h{display:none}
+ .pt tr{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--bd)}
+ .pt td{display:block;border:0;padding:0;white-space:normal}
+ .pt td:nth-child(n+3){grid-column:1/-1}
+ .pt td:nth-child(5){display:flex;gap:8px}.pt td:nth-child(5) .btn{flex:1}
+ .pt td select{width:100%;min-width:0}
+}
+@media(pointer:coarse){.btn,.tab,.chip{min-height:42px}}
+@media print{
+ body{background:#fff;color:#000}
+ nav,#sy,#toast,.bar button,.bar select,.bar label,button.chip:not(.on),.chip.alt{display:none!important}
+ header{border:0;padding:0 0 8px}main{padding:0}
+ .chip.on{background:none;color:#000;border:1px solid #000}.chip.on .t{color:#000}
+ .card,.m,tr,.chip{break-inside:avoid}.m.cf{background:none}
+ .sc{overflow:visible}.cal .first{position:static}
+ .lk{color:#000;text-decoration:none}
+}
+</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div>
 <script>
 const $=s=>document.querySelector(s),E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,8),iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),fmt=k=>k.split('-').reverse().join('/');
@@ -64,7 +99,7 @@ async function call(body,q,tried){const r=await fetch('/api/state'+(q||''),body?
  if(r.status==401){if(!call.no){const k=prompt(tried?'Código incorreto. Digite novamente (ou cancele):':'Código de acesso:');if(k){ls.set('key',k.trim());return call(body,q,1)}call.no=true}throw 401}
  if(!r.ok)throw r.status;return r.json()}
 function syl(){const x=sync,b=' <button class="lk" data-a="sync">Sincronizar agora</button>';
- if(x.s=='ok')return '● Dados compartilhados entre os gestores · sincronizado às '+x.t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+b;
+ if(x.s=='ok')return '<span style="color:var(--ok)">●</span> Dados compartilhados entre os gestores · sincronizado às '+x.t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+b;
  if(x.s=='wait')return 'Conectando ao servidor…';
  const m={e503:'o banco D1 não está ligado ao Worker (confira o binding DB e o ID do banco em d1_databases no wrangler.jsonc)',e404:'a API /api/state não foi encontrada (o código da API não foi publicado; confira o wrangler.jsonc e o nome do Worker)',e401:'código de acesso não informado ou incorreto'}[x.s]||'sem conexão com o servidor ('+E(x.c&&x.c.message||x.c)+')';
  return '<span style="color:var(--er)">⚠ Não sincronizado: '+m+'.</span> Os dados estão sendo salvos só neste navegador.'+b}
@@ -78,11 +113,12 @@ async function pull(manual){if(busy)return;if(manual===true)call.no=false;
  catch(e){sync={s:e===401?'e401':e===503?'e503':e===404?'e404':'err',c:e};setSy()}}
 function upd(d,fn){const x=JSON.parse(JSON.stringify(D(d)));fn(x);days[d]=x;saveDay(d);render()}
 // Turno único: no sábado e no domingo só um turno trabalha, então todas as pessoas aparecem, de qualquer turno (cada uma mantém o turno do cadastro). A chave 'Turno único' vale por dia e muda o padrão (day.u: 1 liga, 0 desliga).
+const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
 const wend=k=>[0,6].includes(new Date(k+'T12:00').getDay()),one=k=>{const u=D(k).u;return u==null?wend(k):!!u};
 const shiftDate=n=>{const x=new Date(date+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
 
-function dbar(f){return `<div class="bar"><button class="btn" data-a="dd" data-v="-1">◀</button><input type="date" data-a="date" value="${date}"><button class="btn" data-a="dd" data-v="1">▶</button><button class="btn" data-a="today">Hoje</button><b style="text-transform:capitalize">${new Date(date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long'})}</b>${secSel()}${f?`<span style="flex:1"></span>${one(date)?`<span class="tag ok" title="Só um turno trabalha neste dia: aparecem as pessoas de todos os turnos">Turno único · todos os turnos</span><button class="btn" data-a="uni" data-v="0" title="Voltar a filtrar por T1, T2 ou T3">Filtrar por turno</button>`:`${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn ${flt==x[0]?'pr':''}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}<button class="btn" data-a="uni" data-v="1" title="Só um turno trabalha neste dia: mostrar as pessoas de todos os turnos">Turno único</button>`}`:''}</div>`}
-function noData(){return `<div class="card empty"><h2>Comece cadastrando máquinas e colaboradores</h2><p class="mu">Cadastre as máquinas (por grupo de processo) e os operadores de cada turno para montar a escala.</p><button class="btn pr" data-a="tab" data-v="cad">Ir para o Cadastro</button> <button class="btn" data-a="demo">Carregar dados de exemplo</button></div>`}
+function dbar(f){return `<div class="bar"><button class="btn" data-a="dd" data-v="-1" aria-label="Dia anterior">◀</button><input type="date" data-a="date" value="${date}" aria-label="Data"><button class="btn" data-a="dd" data-v="1" aria-label="Próximo dia">▶</button><button class="btn" data-a="today">Hoje</button><b>${cap(new Date(date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long'}))}</b>${secSel()}${f?`<span style="flex:1"></span>${one(date)?`<span class="tag ok" title="Só um turno trabalha neste dia: aparecem as pessoas de todos os turnos">Turno único · todos os turnos</span><button class="btn" data-a="uni" data-v="0" title="Voltar a filtrar por T1, T2 ou T3">Filtrar por turno</button>`:`${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn ${flt==x[0]?'pr':''}" aria-pressed="${flt==x[0]}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}<button class="btn" data-a="uni" data-v="1" title="Só um turno trabalha neste dia: mostrar as pessoas de todos os turnos">Turno único</button>`}`:''}</div>`}
+function noData(){if(sync.s=='wait')return `<div class="card empty"><h2>Carregando…</h2><p class="mu">Buscando a escala no servidor.</p></div>`;return `<div class="card empty"><h2>Comece cadastrando máquinas e colaboradores</h2><p class="mu">Cadastre as máquinas (por grupo de processo) e os operadores de cada turno para montar a escala.</p><button class="btn pr" data-a="tab" data-v="cad">Ir para o Cadastro</button> <button class="btn" data-a="demo">Carregar dados de exemplo</button></div>`}
 
 const wk=(e,d)=>{const w=(d.w||{})[e.id];return e.machines.includes(w)?w:(e.machines[0]||'')};
 const counts=d=>{const c={};cfg.employees.forEach(e=>{if(d.s.includes(e.id)){const w=wk(e,d);c[w]=(c[w]||0)+1}});return c};
@@ -105,7 +141,7 @@ function vEscala(){
  const sc=cfg.employees.filter(e=>S.has(e.id)&&(!s0||(wk(e,d)?ids.has(wk(e,d)):s0==SN)));
  const sh=[1,2,3].map(t=>sc.filter(e=>e.shift==t).length);
  const cf=ms0.filter(m=>st(m)=='cf').length,vz=ms0.filter(m=>st(m)=='vz');
- const chip=(e,mid)=>{const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return `<button class="chip ${here?'on':''} ${el?'alt':''}" data-a="tog" data-id="${e.id}" data-v="${mid}"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
+ const chip=(e,mid)=>{const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return  `<button class="chip ${here?'on':''} ${el?'alt':''}" aria-pressed="${here}" data-a="tog" data-id="${e.id}" data-v="${mid}"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
  const card=m=>{const s=st(m),es=cfg.employees.filter(e=>e.machines.includes(m.id)&&(!FL||e.shift==FL)).sort(bysh);return `<div class="m ${s}"><h3><span>${E(m.name)}${m.ct&&m.ct!==m.name?` <span class="mu">CT ${E(m.ct)}</span>`:''}</span><span class="tag ${s}">${{cf:'Conflito',ok:'Coberta',vz:'Sem operador'}[s]}</span></h3><div class="mu">Vagas: ${cnt[m.id]||0}/${m.slots||1}</div>${es.map(e=>chip(e,m.id)).join('')||'<div class="mu" style="margin-top:6px">Sem operadores neste filtro</div>'}</div>`};
  const gs=bySec([...new Set(ms0.map(gk))]);
  const orphan=cfg.employees.filter(e=>!e.machines.some(i=>mac(i))&&(!FL||e.shift==FL)).sort(bysh);
@@ -119,17 +155,17 @@ function vPres(){
  const d=D(date),c=counts(d),s0=sf(),ids=new Set(cfg.machines.filter(mIn).map(m=>m.id)),l=d.s.map(emp).filter(Boolean).filter(e=>!s0||(wk(e,d)?ids.has(wk(e,d)):s0==SN)).sort((a,b)=>a.shift-b.shift||a.name.localeCompare(b.name));
  const p=l.filter(e=>d.a[e.id]=='p').length,f=l.filter(e=>d.a[e.id]=='f').length,r=l.filter(e=>d.m[e.id]).length;
  return dbar()+`<div class="kpis"><div class="kpi"><b>${l.length}</b><span>Escalados</span></div><div class="kpi"><b>${p}</b><span>Presentes</span></div><div class="kpi ${f?'cf':''}"><b>${f}</b><span>Faltas</span></div><div class="kpi"><b>${l.length-p-f}</b><span>Pendentes</span></div><div class="kpi"><b>${r}</b><span>Refeições reservadas</span></div></div>`+
- (l.length?`<div class="card sc"><table><tr><th>Turno</th><th>Colaborador</th><th>Vai trabalhar em</th><th>Refeição</th><th>Check-in</th></tr>${l.map(e=>{const a=d.a[e.id],w=wk(e,d),m=mac(w),cf=m&&c[w]>(m.slots||1);return `<tr><td><span class="t t${e.shift}">T${e.shift}</span></td><td>${E(e.name)}</td><td>${e.machines.length>1?`<select data-a="wk" data-id="${e.id}">${e.machines.map(i=>`<option value="${i}" ${i==w?'selected':''}>${E((mac(i)||{}).name)}</option>`).join('')}</select>`:m?E(m.name):'—'} ${cf?'<span class="tag cf">conflito</span>':''}</td><td><label><input type="checkbox" data-a="meal" data-id="${e.id}" ${d.m[e.id]?'checked':''}> Reservada</label></td><td><button class="btn ${a=='p'?'ok':''}" data-a="att" data-v="p" data-id="${e.id}">Presente</button> <button class="btn ${a=='f'?'cf':''}" data-a="att" data-v="f" data-id="${e.id}">Faltou</button></td></tr>`}).join('')}</table></div>`:`<div class="card empty mu">Ninguém escalado para esta data${s0?' nesta seção':''}. Monte a escala na aba "Escala".</div>`)}
+ (l.length?`<div class="card sc"><table class="pt"><tr class="h"><th>Turno</th><th>Colaborador</th><th>Vai trabalhar em</th><th>Refeição</th><th>Check-in</th></tr>${l.map(e=>{const a=d.a[e.id],w=wk(e,d),m=mac(w),cf=m&&c[w]>(m.slots||1);return `<tr><td><span class="t t${e.shift}">T${e.shift}</span></td><td>${E(e.name)}</td><td>${e.machines.length>1?`<select data-a="wk" data-id="${e.id}" aria-label="Máquina de ${E(e.name)}">${e.machines.map(i=>`<option value="${i}" ${i==w?'selected':''}>${E((mac(i)||{}).name)}</option>`).join('')}</select>`:m?E(m.name):'—'} ${cf?'<span class="tag cf">conflito</span>':''}</td><td><label><input type="checkbox" data-a="meal" data-id="${e.id}" ${d.m[e.id]?'checked':''}> Reservada</label></td><td><button class="btn ${a=='p'?'ok':''}" aria-pressed="${a=='p'}" data-a="att" data-v="p" data-id="${e.id}">Presente</button> <button class="btn ${a=='f'?'cf':''}" aria-pressed="${a=='f'}" data-a="att" data-v="f" data-id="${e.id}">Faltou</button></td></tr>`}).join('')}</table></div>`:`<div class="card empty mu">Ninguém escalado para esta data${s0?' nesta seção':''}. Monte a escala na aba "Escala".</div>`)}
 
 function vInd(){
  const z=()=>({e:0,p:0,f:0}),add=(o,v)=>{o.e++;if(v=='p')o.p++;if(v=='f')o.f++},pc=o=>o.p+o.f?Math.round(o.p/(o.p+o.f)*100)+'%':'—';
  const lim=per?iso(new Date(Date.now()-per*864e5)):'',T=z(),SH={1:z(),2:z(),3:z()},EM={},DY=[];
  Object.keys(days).filter(k=>k>=lim).sort().reverse().forEach(k=>{const d=days[k],o=z();(d.s||[]).forEach(id=>{const e=emp(id),v=(d.a||{})[id];add(T,v);add(o,v);if(e&&SH[e.shift])add(SH[e.shift],v);add(EM[id]=EM[id]||z(),v)});DY.push([k,o])});
  const rows=Object.entries(EM).sort((a,b)=>b[1].f-a[1].f||b[1].e-a[1].e);
- return `<div class="bar"><b>Período:</b><select data-a="per">${[[7,'Últimos 7 dias'],[30,'Últimos 30 dias'],[90,'Últimos 90 dias'],[0,'Todo o histórico']].map(x=>`<option value="${x[0]}" ${per==x[0]?'selected':''}>${x[1]}</option>`).join('')}</select></div>`+
+ return `<div class="bar"><label><b>Período:</b> <select data-a="per">${[[7,'Últimos 7 dias'],[30,'Últimos 30 dias'],[90,'Últimos 90 dias'],[0,'Todo o histórico']].map(x=>`<option value="${x[0]}" ${per==x[0]?'selected':''}>${x[1]}</option>`).join('')}</select></label></div>`+
  `<div class="kpis"><div class="kpi"><b>${T.e}</b><span>Escalados</span></div><div class="kpi"><b>${T.p}</b><span>Compareceram</span></div><div class="kpi ${T.f?'cf':''}"><b>${T.f}</b><span>Faltas após confirmação</span></div><div class="kpi"><b>${pc(T)}</b><span>% de comparecimento</span></div></div>`+
- `<div class="card"><h2>Por turno</h2>${[1,2,3].map(t=>{const o=SH[t],w=o.p+o.f?Math.round(o.p/(o.p+o.f)*100):0;return `<div class="bar" style="margin-bottom:6px"><span class="t t${t}" style="width:24px">T${t}</span><div class="bb" style="flex:1"><i style="width:${w}%"></i></div><span style="min-width:190px">${pc(o)} · ${o.e} esc. · ${o.p} pres. · ${o.f} faltas</span></div>`}).join('')}<div class="mu">% = presentes ÷ (presentes + faltas). Pendentes de check-in não entram na conta.</div></div>`+
- `<div class="card sc"><h2>Histórico por colaborador</h2>${rows.length?`<table><tr><th>Colaborador</th><th>Turno</th><th>Escalado</th><th>Presente</th><th>Faltas</th><th>%</th><th></th></tr>${rows.map(([id,o])=>{const e=emp(id);return `<tr><td>${E(e?e.name:'(removido)')}</td><td>${e?'T'+e.shift:'—'}</td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td>${o.f>=2?'<span class="tag cf">Ausência recorrente</span>':''}</td></tr>`}).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`+
+ `<div class="card"><h2>Por turno</h2>${[1,2,3].map(t=>{const o=SH[t],w=o.p+o.f?Math.round(o.p/(o.p+o.f)*100):0;return `<div class="sr"><span class="t t${t}" style="width:24px">T${t}</span><div class="bb"><i style="width:${w}%"></i></div><span class="sv">${pc(o)} · ${o.e} esc. · ${o.p} pres. · ${o.f} ${o.f==1?'falta':'faltas'}</span></div>`}).join('')}<div class="mu">% = presentes ÷ (presentes + faltas). Pendentes de check-in não entram na conta.</div></div>`+
+ `<div class="card sc"><h2>Histórico por colaborador</h2>${rows.length?`<table><tr><th>Colaborador</th><th>Turno</th><th>Escalado</th><th>Presente</th><th>Faltas</th><th>%</th><th></th></tr>${rows.map(([id,o])=>{const e=emp(id);return `<tr><td>${E(e?e.name:'(removido)')}</td><td>${e?`<span class="t t${e.shift}">T${e.shift}</span>`:'—'}</td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td>${o.f>=2?'<span class="tag cf">Ausência recorrente</span>':''}</td></tr>`}).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`+
  `<div class="card sc"><h2>Histórico por dia</h2>${DY.length?`<table><tr><th>Data</th><th>Escalados</th><th>Presentes</th><th>Faltas</th><th>%</th><th></th></tr>${DY.map(([k,o])=>`<tr><td>${fmt(k)}</td><td>${o.e}</td><td>${o.p}</td><td>${o.f}</td><td>${pc(o)}</td><td><button class="lk a" data-a="goto" data-v="${k}">abrir</button></td></tr>`).join('')}</table>`:'<div class="mu">Sem dados no período.</div>'}</div>`}
 
 let imp=null,bk='',bp='Outros';
@@ -201,21 +237,21 @@ const ctText=t=>t.split(/\r?\n/).filter(l=>l.trim()).map(l=>l.split(l.includes('
 function ctPrev(){
  if(!ctr.length)return '<div class="mu" style="margin-top:10px">Nenhuma linha encontrada.</div>';
  const ok=ctr.filter(r=>!r.err),nw=ok.filter(r=>!r.old).length,secs=[...new Set(ok.map(r=>r.sec||'(sem seção)'))],grp=new Set(ok.map(r=>r.sec+'|'+r.grp));
- return `<div style="margin-top:12px"><b>${nw} novo(s) · ${ok.length-nw} atualização(ões) · ${ctr.length-ok.length} com erro</b> <span class="mu">· ${secs.length} seção(ões): ${secs.map(E).join(', ')} · ${grp.size} grupo(s) de máquinas</span><div class="sc" style="max-height:340px;overflow:auto"><table><tr><th>Seção</th><th>CT</th><th>Grupo de Máq</th><th>Ação</th></tr>${ctr.slice(0,300).map(r=>`<tr><td>${E(r.sec)||'—'}</td><td>${E(r.ct)||'—'}</td><td>${E(r.grp)||'—'}</td><td>${r.err?`<span class="tag cf">${r.err}</span>`:(r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>')+(r.note?` <span class="mu">${E(r.note)}</span>`:'')}</td></tr>`).join('')}</table></div>${ctr.length>300?`<div class="mu">Mostrando as 300 primeiras de ${ctr.length} linhas; todas as válidas serão importadas.</div>`:''}<div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="ctapply" ${ok.length?'':'disabled'}>Importar ${ok.length} CT(s)</button><button class="btn" data-a="ctcancel">Cancelar</button></div></div>`}
+ return `<div style="margin-top:12px"><b>${nw} novo(s) · ${ok.length-nw} atualização(ões) · ${ctr.length-ok.length} com erro</b> <span class="mu">· ${secs.length} seção(ões): ${secs.map(E).join(', ')} · ${grp.size} grupo(s) de máquinas</span><div class="sc tall" style="max-height:340px;overflow:auto"><table><tr><th>Seção</th><th>CT</th><th>Grupo de Máq</th><th>Ação</th></tr>${ctr.slice(0,300).map(r=>`<tr><td>${E(r.sec)||'—'}</td><td>${E(r.ct)||'—'}</td><td>${E(r.grp)||'—'}</td><td>${r.err?`<span class="tag cf">${r.err}</span>`:(r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>')+(r.note?` <span class="mu">${E(r.note)}</span>`:'')}</td></tr>`).join('')}</table></div>${ctr.length>300?`<div class="mu">Mostrando as 300 primeiras de ${ctr.length} linhas; todas as válidas serão importadas.</div>`:''}<div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="ctapply" ${ok.length?'':'disabled'}>Importar ${ok.length} CT(s)</button><button class="btn" data-a="ctcancel">Cancelar</button></div></div>`}
 function vCad(){
  const ms=cfg.machines,ps=[...new Set(ms.map(m=>m.proc))],vm=ms.filter(mIn),ve=[...cfg.employees].filter(eIn).sort((a,b)=>a.name.localeCompare(b.name));
  const mo=s=>`<option value="">— sem máquina —</option>`+ms.map(m=>`<option value="${m.id}" ${m.id===s?'selected':''}>${E(mlb(m))}</option>`).join('');
- const so=v=>[1,2,3].map(t=>`<option value="${t}" ${t==v?'selected':''}>Turno ${t}</option>`).join('');
+ const shOpt=v=>[1,2,3].map(t=>`<option value="${t}" ${t==v?'selected':''}>Turno ${t}</option>`).join('');
  const mcell=e=>e.machines.map(i=>mac(i)?`<span class="tag ok" style="display:inline-block;margin:0 4px 4px 0">${E(mac(i).name)} <button class="lk" data-a="rm" data-id="${e.id}" data-v="${i}" title="Remover">×</button></span>`:'').join('')+`<select data-a="am" data-id="${e.id}"><option value="">+ adicionar máquina</option>${ms.filter(m=>!e.machines.includes(m.id)).map(m=>`<option value="${m.id}">${E(mlb(m))}</option>`).join('')}</select>`;
  const esec=e=>[...new Set(eMs(e).map(m=>m.sec).filter(Boolean))].join(', ')||'—';
  return `<div class="bar">${secSel()||'<span class="mu">Cadastre ou importe CTs com seção para poder filtrar por seção.</span>'}</div>
- <div class="card"><h2>Máquinas (CTs) <span class="mu">${vm.length}${vm.length!=ms.length?' de '+ms.length:''}</span></h2><div class="bar"><input id="msec" list="sl" placeholder="Seção (ex.: Eixos D)"><input id="mc" placeholder="CT (ex.: 01061031)"><input id="mn" placeholder="Nome (opcional)"><input id="mp" list="pl" placeholder="Grupo de Máq (ex.: CHOQUE TÉRMICO)"><datalist id="pl">${ps.map(p=>`<option value="${E(p)}">`).join('')}</datalist><datalist id="sl">${secList().map(p=>`<option value="${E(p)}">`).join('')}</datalist><input id="ms" type="number" min="1" value="1" style="width:80px" title="Vagas por máquina"><button class="btn pr" data-a="addm">Adicionar</button></div>
- <div class="sc" style="max-height:480px;overflow:auto"><table><tr><th>Seção</th><th>CT</th><th>Nome</th><th>Grupo de Máq</th><th>Vagas</th><th></th></tr>${vm.map(m=>`<tr><td><input list="sl" data-a="mf" data-f="sec" data-id="${m.id}" value="${E(m.sec)}"></td><td><input data-a="mf" data-f="ct" data-id="${m.id}" value="${E(m.ct)}"></td><td><input data-a="mf" data-f="name" data-id="${m.id}" value="${E(m.name)}"></td><td><input list="pl" data-a="mf" data-f="proc" data-id="${m.id}" value="${E(m.proc)}"></td><td><input type="number" min="1" style="width:70px" data-a="mf" data-f="slots" data-id="${m.id}" value="${m.slots||1}"></td><td><button class="btn er" data-a="delm" data-id="${m.id}">Remover</button></td></tr>`).join('')}</table></div></div>
+ <div class="card"><h2>Máquinas (CTs) <span class="mu">${vm.length}${vm.length!=ms.length?' de '+ms.length:''}</span></h2><div class="bar"><input id="msec" list="sl" placeholder="Seção (ex.: Eixos D)" aria-label="Seção"><input id="mc" placeholder="CT (ex.: 01061031)" aria-label="CT"><input id="mn" placeholder="Nome (opcional)" aria-label="Nome"><input id="mp" list="pl" placeholder="Grupo de Máq (ex.: CHOQUE TÉRMICO)" aria-label="Grupo de Máq"><datalist id="pl">${ps.map(p=>`<option value="${E(p)}">`).join('')}</datalist><datalist id="sl">${secList().map(p=>`<option value="${E(p)}">`).join('')}</datalist><input id="ms" type="number" min="1" value="1" style="width:80px" title="Vagas por máquina" aria-label="Vagas por máquina"><button class="btn pr" data-a="addm">Adicionar</button></div>
+ <div class="sc tall" data-sk="mach" style="max-height:480px;overflow:auto"><table><tr><th>Seção</th><th>CT</th><th>Nome</th><th>Grupo de Máq</th><th>Vagas</th><th></th></tr>${vm.map(m=>`<tr><td><input list="sl" data-a="mf" data-f="sec" data-id="${m.id}" value="${E(m.sec)}"></td><td><input data-a="mf" data-f="ct" data-id="${m.id}" value="${E(m.ct)}"></td><td><input data-a="mf" data-f="name" data-id="${m.id}" value="${E(m.name)}"></td><td><input list="pl" data-a="mf" data-f="proc" data-id="${m.id}" value="${E(m.proc)}"></td><td><input type="number" min="1" style="width:70px" data-a="mf" data-f="slots" data-id="${m.id}" value="${m.slots||1}"></td><td><button class="btn er" data-a="delm" data-id="${m.id}" aria-label="Remover ${E(m.ct||m.name)}">Remover</button></td></tr>`).join('')}</table></div></div>
  <div class="card"><h2>Importar CTs (planilha)</h2><div class="mu">Colunas: <b>Seção</b>, <b>CT</b> e <b>Grupo de Máq</b>. A primeira linha pode ser o cabeçalho (as colunas são achadas pelo título). Aceita arquivo .xlsx ou .csv, ou linhas coladas do Excel. CTs que já existem são atualizados (seção e grupo, o nome e as vagas ficam); os outros são criados com 1 vaga.</div>
  <div class="bar" style="margin-top:8px"><label class="btn">Escolher planilha (.xlsx, .csv)<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="ctfile" hidden></label><button class="btn" data-a="ctex">Inserir exemplo</button></div>
  <textarea id="ctk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Seção&#9;CT&#9;Grupo de Máq&#10;Eixos D&#9;01061031&#9;CHOQUE TÉRMICO">${E(ctt)}</textarea><button class="btn pr" data-a="ctprev">Pré-visualizar</button>${ctr?ctPrev():''}</div>
- <div class="card"><h2>Colaboradores <span class="mu">${ve.length}${ve.length!=cfg.employees.length?' de '+cfg.employees.length:''}</span></h2><div class="bar"><input id="en" placeholder="Nome do colaborador"><select id="es">${so(1)}</select><select id="em">${mo('')}</select><button class="btn pr" data-a="adde">Adicionar</button></div><div class="mu" style="margin-bottom:8px">A seção da pessoa vem das máquinas em que ela é treinada. Para treinar em mais máquinas, use "+ adicionar máquina" na tabela. A primeira é o posto padrão na escala.</div>
- <div class="sc"><table><tr><th>Nome</th><th>Turno</th><th>Seção</th><th>Máquinas em que é treinado</th><th></th></tr>${ve.map(e=>`<tr><td><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"></td><td><select data-a="ef" data-f="shift" data-id="${e.id}">${so(e.shift)}</select></td><td class="mc">${E(esec(e))}</td><td class="mc">${mcell(e)}</td><td><button class="btn er" data-a="dele" data-id="${e.id}">Remover</button></td></tr>`).join('')}</table></div></div>
+ <div class="card"><h2>Colaboradores <span class="mu">${ve.length}${ve.length!=cfg.employees.length?' de '+cfg.employees.length:''}</span></h2><div class="bar"><input id="en" placeholder="Nome do colaborador" aria-label="Nome do colaborador"><select id="es" aria-label="Turno">${shOpt(1)}</select><select id="em">${mo('')}</select><button class="btn pr" data-a="adde">Adicionar</button></div><div class="mu" style="margin-bottom:8px">A seção da pessoa vem das máquinas em que ela é treinada. Para treinar em mais máquinas, use "+ adicionar máquina" na tabela. A primeira é o posto padrão na escala.</div>
+ <div class="sc"><table><tr><th>Nome</th><th>Turno</th><th>Seção</th><th>Máquinas em que é treinado</th><th></th></tr>${ve.map(e=>`<tr><td><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"></td><td><select data-a="ef" data-f="shift" data-id="${e.id}">${shOpt(e.shift)}</select></td><td class="mc">${E(esec(e))}</td><td class="mc">${mcell(e)}</td><td><button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover</button></td></tr>`).join('')}</table></div></div>
  <div class="card"><h2>Importar colaboradores em lote</h2><div class="mu">Uma linha por colaborador: <b>Nome;Turno;CT ou máquina 1/CT ou máquina 2</b>. Separe os campos com ponto e vírgula, tabulação (colar do Excel) ou vírgula, e várias máquinas com / ou |. As máquinas podem ser indicadas pelo CT ou pelo nome. O turno pode ser 1, T1 ou "Turno 1". Quem já existe é atualizado (as máquinas são somadas) e máquinas novas são criadas.</div>
  <div class="bar" style="margin-top:8px"><label>Grupo das máquinas novas: <input id="bp" list="pl" value="${E(bp)}"></label><label class="btn">Abrir arquivo .csv/.txt <input type="file" accept=".csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Inserir exemplo</button></div>
  <textarea id="bk" rows="5" style="width:100%;margin-bottom:8px" placeholder="Ana Souza;1;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}</div>`}
@@ -233,7 +269,7 @@ function vCal(){
  const st=(m,I)=>{const n=(I.by[m.id]||[]).length;return n>(m.slots||1)?'cf':n?'ok':'vz'};
  // resumo de um conjunto de máquinas (seção ou grupo) em um dia
  const sum=(ms,I)=>{const sts=ms.map(m=>st(m,I)),n=ms.reduce((a,m)=>a+(I.by[m.id]||[]).length,0),cov=sts.filter(x=>x!='vz').length,cls=sts.includes('cf')?'cf':n?(cov==ms.length?'ok':'vz'):'';return `<td class="c ${cls}" data-a="goto" data-v="${I.k}"><b>${n||'·'}</b>${n?`<div class="mu">${cov}/${ms.length} máq.</div>`:''}</td>`};
- const lbl=calMode=='m'?wd(calRef).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}):fmt(ds[0]).slice(0,5)+' – '+fmt(ds[6]);
+ const lbl=calMode=='m'?cap(wd(calRef).toLocaleDateString('pt-BR',{month:'long',year:'numeric'})):fmt(ds[0]).slice(0,5)+' – '+fmt(ds[6]);
  const c1=hasS?'<td class="first s1"></td>':'';
  const head=`<tr>${hasS?'<th class="first s1">Seção</th>':''}<th class="first s2">Grupo de Máq${hasS?' · CT':''}</th>${info.map(I=>{const x=wd(I.k);return `<th class="dh ${I.k==td?'hoje':''} ${x.getDay()%6==0?'fds':''}" data-a="goto" data-v="${I.k}" title="Abrir a escala deste dia">${x.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','')}<br><b>${x.getDate()}</b></th>`}).join('')}</tr>`;
  const tot=`<tr class="tot">${hasS?'<td class="first s1"><b>Total escalados</b></td>':''}<td class="first s2">${hasS?`<span class="mu">${s0?(s0==SN?'sem seção':E(s0)):'todas as seções'}</span>`:'<b>Total escalados</b>'}</td>${info.map(I=>{const cf=MS.filter(m=>st(m,I)=='cf').length;return `<td class="c" data-a="goto" data-v="${I.k}"><b>${I.tot||'·'}</b>${cf?` <span class="tag cf">⚠ ${cf}</span>`:''}</td>`}).join('')}</tr>`;
@@ -242,19 +278,20 @@ function vCal(){
  const ctl=m=>m.ct?`<b>${E(m.ct)}</b>${m.name&&m.name!==m.ct?` <span class="mu">${E(m.name)}</span>`:''}`:E(m.name);
  const body=secs.map(sc=>{
   const sm=MS.filter(m=>(m.sec||'')==sc),key=sc||SN,gs=[...new Set(sm.map(gk))],open=!hasS||so(key);
-  const srow=hasS?`<tr class="se"><td class="first s1"><button class="lk" data-a="ops" data-v="${E(key)}" title="${open?'Recolher':'Expandir'} a seção">${open?'▾':'▸'} ${sc?E(sc):'(sem seção)'}</button></td><td class="first s2 mu" style="font-weight:400">${gs.length} grupo(s) · ${sm.length} CT(s)</td>${info.map(I=>sum(sm,I)).join('')}</tr>`:'';
+  const srow=hasS?`<tr class="se"><td class="first s1"><button class="lk" data-a="ops" data-v="${E(key)}" aria-expanded="${open}" title="${open?'Recolher':'Expandir'} a seção">${open?'▾':'▸'} ${sc?E(sc):'(sem seção)'}</button></td><td class="first s2 mu" style="font-weight:400">${gs.length} grupo(s) · ${sm.length} CT(s)</td>${info.map(I=>sum(sm,I)).join('')}</tr>`:'';
   const grows=open?gs.map(g=>{const ms=sm.filter(m=>gk(m)==g),o=!!opn[g];
-   const prow=`<tr class="pr">${c1}<td class="first s2"><button class="lk" data-a="opn" data-v="${E(g)}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} os CTs">${o?'▾':'▸'} ${E(ms[0].proc||'Outros')}</button><div class="mu" style="font-weight:400">${ms.length} CT(s)</div></td>${info.map(I=>sum(ms,I)).join('')}</tr>`;
+   const prow=`<tr class="pr">${c1}<td class="first s2"><button class="lk" data-a="opn" data-v="${E(g)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} os CTs">${o?'▾':'▸'} ${E(ms[0].proc||'Outros')}</button><div class="mu" style="font-weight:400">${ms.length} CT(s)</div></td>${info.map(I=>sum(ms,I)).join('')}</tr>`;
    const mrows=o?ms.map(m=>`<tr>${c1}<td class="first s2 sub">${ctl(m)}<span class="mu"> · ${m.slots||1} vaga(s)</span></td>${info.map(I=>{const l=(I.by[m.id]||[]).sort((a,b)=>a.shift-b.shift),s=st(m,I);return `<td class="c ${s=='vz'?'':s}" data-a="goto" data-v="${I.k}">${l.map(e=>`<div class="cn" title="${E(e.name)}"><i class="t t${e.shift}">T${e.shift}</i> ${I.d.a[e.id]=='p'?'✓ ':I.d.a[e.id]=='f'?'✗ ':''}${E(short(e.name))}</div>`).join('')}</td>`}).join('')}</tr>`).join(''):'';
    return prow+mrows}).join(''):'';
   return srow+grows}).join('');
- return `<div class="bar"><button class="btn" data-a="cnav" data-v="-1">◀</button><button class="btn" data-a="cnav" data-v="1">▶</button><button class="btn" data-a="ctoday">Hoje</button><b style="text-transform:capitalize;min-width:150px">${lbl}</b>${secSel()}<button class="btn ${calMode=='w'?'pr':''}" data-a="cmode" data-v="w">Semana</button><button class="btn ${calMode=='m'?'pr':''}" data-a="cmode" data-v="m">Mês</button><span style="flex:1"></span><button class="btn" data-a="openall">Expandir tudo</button><button class="btn" data-a="closeall">Recolher tudo</button></div>
- <div class="card sc" style="padding:0"><table class="cal ${hasS?'':'ns'}" style="--cw:${calMode=='m'?'66px':'118px'}">${head}${tot}${body}</table></div>
+ return `<div class="bar"><button class="btn" data-a="cnav" data-v="-1" aria-label="${calMode=='w'?'Semana anterior':'Mês anterior'}">◀</button><button class="btn" data-a="cnav" data-v="1" aria-label="${calMode=='w'?'Próxima semana':'Próximo mês'}">▶</button><button class="btn" data-a="ctoday">Hoje</button><b style="min-width:150px">${lbl}</b>${secSel()}<button class="btn ${calMode=='w'?'pr':''}" data-a="cmode" data-v="w">Semana</button><button class="btn ${calMode=='m'?'pr':''}" data-a="cmode" data-v="m">Mês</button><span style="flex:1"></span><button class="btn" data-a="openall">Expandir tudo</button><button class="btn" data-a="closeall">Recolher tudo</button></div>
+ <div class="card sc" data-sk="cal" style="padding:0"><table class="cal ${calMode=='m'?'mo':'wk'} ${hasS?'':'ns'}">${head}${tot}${body}</table></div>
  <div class="mu"><span class="tag ok">verde</span> todas as máquinas cobertas &nbsp;<span class="tag vz">âmbar</span> parte das máquinas cobertas &nbsp;<span class="tag cf">vermelho</span> conflito (mais gente que vagas) &nbsp;·&nbsp; ✓ presente &nbsp;✗ faltou &nbsp;·&nbsp; clique em um dia para abrir a escala dele. Use ▸ para abrir a seção, o grupo de máquinas e ver os CTs.</div>`}
 
-function render(){
+function render(){const keep=render.t==tab?[...document.querySelectorAll('#app [data-sk]')].map(e=>[e.dataset.sk,e.scrollLeft,e.scrollTop]):[];render.t=tab;
  const T=[['escala','Escala'],['cal','Calendário'],['pres','Presença e refeição'],['ind','Indicadores'],['cad','Cadastro']];
- $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu" id="sy">${syl()}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main>${({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,cad:vCad})[tab]()}</main>`}
+ $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu" id="sy">${syl()}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" ${tab==t[0]?'aria-current="page"':''} data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main>${({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,cad:vCad})[tab]()}</main>`;keep.forEach(([k,l,t])=>{const e=document.querySelector('#app [data-sk="'+k+'"]');if(e){e.scrollLeft=l;e.scrollTop=t}})}
+const soft=()=>setTimeout(()=>{const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest&&a.closest('#app')))render()},0);
 function rr(){const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest('#app')&&!/date|checkbox/.test(a.type))return;render()}
 
 document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(!b||/INPUT|SELECT/.test(b.tagName))return;const a=b.dataset.a,id=b.dataset.id,v=b.dataset.v,g=i=>($(i).value||'').trim();
@@ -279,8 +316,8 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='ctcancel'){ctr=null;render()}
  else if(a=='ctapply'){let n=0,u=0;ctr.filter(r=>!r.err).forEach(r=>{const k=r.ct.toLowerCase(),m=cfg.machines.find(m=>(m.ct&&m.ct.toLowerCase()==k)||m.name.toLowerCase()==k);if(m){m.ct=r.ct;if(r.sec)m.sec=r.sec;m.proc=r.grp||m.proc;u++}else{cfg.machines.push({id:uid(),name:r.ct,ct:r.ct,sec:r.sec,proc:r.grp||'Outros',slots:1});n++}});saveCfg();ctr=null;ctt='';render();toast(n+' CT(s) novo(s), '+u+' atualizado(s)')}
  else if(a=='adde'){if(!g('#en'))return toast('Informe o nome do colaborador');cfg.employees.push({id:uid(),name:g('#en'),shift:+$('#es').value,machines:$('#em').value?[$('#em').value]:[]});saveCfg();render()}
- else if(a=='delm'){cfg.machines=cfg.machines.filter(m=>m.id!==id);cfg.employees.forEach(e=>e.machines=e.machines.filter(i=>i!==id));saveCfg();render()}
- else if(a=='dele'){cfg.employees=cfg.employees.filter(e=>e.id!==id);saveCfg();render()}
+ else if(a=='delm'){const m=mac(id);if(m&&!confirm('Remover "'+(m.ct||m.name)+'"? As pessoas treinadas nesta máquina deixam de ter esse treinamento. A mudança vale para todos os gestores.'))return;cfg.machines=cfg.machines.filter(m=>m.id!==id);cfg.employees.forEach(e=>e.machines=e.machines.filter(i=>i!==id));saveCfg();render()}
+ else if(a=='dele'){const e=emp(id);if(e&&!confirm('Remover '+e.name+' do cadastro? O histórico de presença continua nos indicadores como "(removido)". A mudança vale para todos os gestores.'))return;cfg.employees=cfg.employees.filter(e=>e.id!==id);saveCfg();render()}
  else if(a=='rm'){const e=emp(id);e.machines=e.machines.filter(i=>i!==v);saveCfg();render()}
  else if(a=='ex'){bk='Nome;Turno;Máquinas\nAna Souza;1;Ret 01/Ret 02\nBruno Lima;T2;Estria 01\nCarlos Dias;Turno 3;Fres 01|Fres 02|Estria 01';parse();render()}
  else if(a=='prev'){bk=$('#bk').value;bp=g('#bp')||'Outros';parse();render()}
@@ -294,9 +331,9 @@ document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dat
  else if(a=='per'){per=+t.value;render()}
  else if(a=='meal')upd(date,x=>{t.checked?x.m[id]=1:delete x.m[id]})
  else if(a=='wk')upd(date,x=>{x.w=x.w||{};x.w[id]=t.value})
- else if(a=='ef'){const e=emp(id);if(e){e[f]=f=='shift'?+t.value:t.value.trim()||e[f];saveCfg();render()}}
+ else if(a=='ef'){const e=emp(id);if(e){e[f]=f=='shift'?+t.value:t.value.trim()||e[f];saveCfg();soft()}}
  else if(a=='am'){const e=emp(id);if(e&&t.value){e.machines.push(t.value);saveCfg();render()}}
- else if(a=='mf'){const m=mac(id);if(m){m[f]=f=='slots'?Math.max(1,+t.value||1):(f=='sec'||f=='ct')?t.value.trim():t.value.trim()||m[f];saveCfg();render()}}
+ else if(a=='mf'){const m=mac(id);if(m){m[f]=f=='slots'?Math.max(1,+t.value||1):(f=='sec'||f=='ct')?t.value.trim():t.value.trim()||m[f];saveCfg();soft()}}
  else if(a=='sec'){secF=t.value;ls.set('sec',secF);render()}
  else if(a=='ctfile'&&t.files[0]){const fl=t.files[0];fl.arrayBuffer().then(async buf=>{try{const u8=new Uint8Array(buf);let tx;
   if(u8[0]==0x50&&u8[1]==0x4b)tx=(await xlsxRows(buf)).map(r=>r.join('\t')).join('\n');
@@ -308,5 +345,5 @@ document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dat
 document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='bk')bk=t.value;if(t.id=='ctk')ctt=t.value;if(t.id=='bp')bp=t.value});
 
 cfg=ls.get('cfg')||cfg;norm();days=ls.get('days')||{};render();
-pull();setInterval(pull,8000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
+pull();setInterval(()=>{if(!document.hidden)pull()},8000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
 </script></body></html>
