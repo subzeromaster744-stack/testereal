@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗓</text></svg>"><title>Escala de Hora Extra</title>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="manifest" href="/manifest.json"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#1b2029" media="(prefers-color-scheme: dark)"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Escala HE"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Escala de hora extra por máquina, compartilhada entre os gestores."><title>Escala de Hora Extra</title>
 <style>
 :root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f7;--card:#fff;--tx:#1d2433;--mu:#667085;--bd:#e1e4ea;--pn:#aab2c0;--pr:#2457d6;--ok:#17803d;--okb:#e3f5ea;--wa:#b45309;--wab:#fdf0d9;--er:#c0262d;--erb:#fde6e6;--t1:#2457d6;--t2:#0e8f7e;--t3:#8a4fd6}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -179,19 +179,29 @@ let sync={s:'wait'};
 async function call(body,q,tried){const r=await fetch('/api/state'+(q||''),body?{method:'POST',headers:hd(),body:JSON.stringify(body)}:{headers:hd(),cache:'no-store'});
  if(r.status==401){if(!call.no){const k=prompt(tried?'Código incorreto. Digite novamente (ou cancele):':'Código de acesso:');if(k){ls.set('key',k.trim());return call(body,q,1)}call.no=true}throw 401}
  if(!r.ok)throw r.status;return r.json()}
-function syl(){const x=sync,b=' <button class="lk" data-a="sync">Sincronizar agora</button>';
+function syl(){const x=sync,b=' <button class="lk" data-a="sync">Sincronizar agora</button>'+ib();
  if(x.s=='ok')return '<span style="color:var(--ok)">●</span> Dados compartilhados entre os gestores · sincronizado às '+x.t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+b;
- if(x.s=='wait')return 'Conectando ao servidor…';
+ if(x.s=='wait')return 'Conectando ao servidor…'+ib();
  const m={e503:'o banco D1 não está ligado ao Worker (confira o binding DB e o ID do banco em d1_databases no wrangler.jsonc)',e404:'a API /api/state não foi encontrada (o código da API não foi publicado; confira o wrangler.jsonc e o nome do Worker)',e401:'código de acesso não informado ou incorreto'}[x.s]||'sem conexão com o servidor ('+E(x.c&&x.c.message||x.c)+')';
- return '<span style="color:var(--er)">⚠ Não sincronizado: '+m+'.</span> Os dados estão sendo salvos só neste navegador.'+b}
+ return '<span style="color:var(--er)">⚠ Não sincronizado: '+m+'.</span> Suas alterações ficam salvas neste aparelho'+(np()?' (<b>'+np()+' aguardando envio</b>)':'')+' e são enviadas ao servidor assim que a sincronização voltar.'+b}
 function setSy(){const e=$('#sy');if(e)e.innerHTML=syl()}
-async function saveCfg(){ls.set('cfg',cfg);if(!db)return;busy++;try{await call({t:'cfg',data:cfg})}catch{toast('Não foi possível salvar no servidor')}busy--}
-async function saveDay(d){ls.set('days',days);if(!db)return;busy++;try{await call({t:'day',date:d,data:days[d]})}catch{toast('Não foi possível salvar no servidor')}busy--}
+// Alterações que ainda não chegaram ao servidor (sem conexão) ficam guardadas neste aparelho e são reenviadas quando a sincronização volta.
+let pend=ls.get('pend')||{cfg:0,days:{}},sq=0;if(!pend.days)pend.days={};
+const savePend=()=>ls.set('pend',pend),np=()=>(pend.cfg?1:0)+Object.keys(pend.days).length;
+const fail=e=>{sync={s:e===401?'e401':e===503?'e503':e===404?'e404':'err',c:e}};
+async function saveCfg(){ls.set('cfg',cfg);const n=pend.cfg=++sq;savePend();if(!db)return setSy();busy++;
+ try{await call({t:'cfg',data:cfg});if(pend.cfg===n){pend.cfg=0;savePend()}}catch(e){fail(e);toast('Sem conexão com o servidor: a alteração fica neste aparelho e será enviada depois')}busy--;setSy()}
+async function saveDay(d){ls.set('days',days);const n=pend.days[d]=++sq;savePend();if(!db)return setSy();busy++;
+ try{await call({t:'day',date:d,data:days[d]});if(pend.days[d]===n){delete pend.days[d];savePend()}}catch(e){fail(e);toast('Sem conexão com o servidor: a alteração fica neste aparelho e será enviada depois')}busy--;setSy()}
+async function flush(){busy++;try{const c=pend.cfg;if(c){await call({t:'cfg',data:cfg});if(pend.cfg===c)pend.cfg=0}
+ for(const d of Object.keys(pend.days)){const n=pend.days[d];if(days[d])await call({t:'day',date:d,data:days[d]});if(pend.days[d]===n)delete pend.days[d]}return true}catch{return false}finally{savePend();busy--}}
 async function pull(manual){if(busy)return;if(manual===true)call.no=false;
- try{const r=await call(null,ver?'?v='+encodeURIComponent(ver):''),first=!db;db=true;call.no=false;sync={s:'ok',t:new Date()};if(r.same)return setSy();ver=r.v;
+ try{const r=await call(null,ver?'?v='+encodeURIComponent(ver):''),first=!db;db=true;call.no=false;sync={s:'ok',t:new Date()};
+  if(np()){if(!await flush())throw Error('as alterações feitas sem conexão ainda não foram enviadas');ver='';return pull()}
+  if(r.same)return setSy();ver=r.v;
  if(first&&!r.cfg&&(cfg.machines.length||cfg.employees.length)){saveCfg();Object.keys(days).forEach(saveDay);return render()}
- cfg=r.cfg||{machines:[],employees:[]};norm();days=r.days||{};rr();setSy()}
- catch(e){sync={s:e===401?'e401':e===503?'e503':e===404?'e404':'err',c:e};setSy()}}
+ cfg=r.cfg||{machines:[],employees:[]};norm();days=r.days||{};ls.set('cfg',cfg);ls.set('days',days);rr();setSy()}
+ catch(e){fail(e);setSy()}}
 function upd(d,fn){const x=JSON.parse(JSON.stringify(D(d)));fn(x);days[d]=x;saveDay(d);render()}
 const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
 const shiftDate=n=>{const x=new Date(date+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
@@ -496,8 +506,9 @@ function vCal(){
  <div class="card sc" data-sk="cal" style="padding:0"><table class="cal ${calMode=='m'?'mo':'wk'} ${hasS?'':'ns'}">${head}${tot}${body}</table></div>
  <div class="mu"><span class="tag ok">verde</span> tem operador escalado &nbsp;<span class="tag cf">vermelho</span> conflito (mais gente que vagas) &nbsp;·&nbsp; ✓ presente &nbsp;✗ faltou &nbsp;·&nbsp; clique em um dia para abrir a escala dele. Use ▸ para abrir a seção, o grupo de máquinas e ver os CTs.</div>`}
 
+const TABS=[['escala','Escala'],['cal','Calendário'],['pres','Presença e refeição'],['ind','Indicadores'],['col','Colaboradores'],['cad','Cadastro']],T0=TABS.map(t=>t[0]);
 function render(){const keep=render.t==tab?[...document.querySelectorAll('#app [data-sk]')].map(e=>[e.dataset.sk,e.scrollLeft,e.scrollTop]):[];render.t=tab;
- const T=[['escala','Escala'],['cal','Calendário'],['pres','Presença e refeição'],['ind','Indicadores'],['col','Colaboradores'],['cad','Cadastro']];
+ const T=TABS;
  $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu" id="sy">${syl()}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" ${tab==t[0]?'aria-current="page"':''} data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main class="${tab=='cad'?'wide':tab=='col'?'nar':''}">${({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,col:vCol,cad:vCad})[tab]()}</main>`;keep.forEach(([k,l,t])=>{const e=document.querySelector('#app [data-sk="'+k+'"]');if(e){e.scrollLeft=l;e.scrollTop=t}})}
 const soft=()=>setTimeout(()=>{const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest&&a.closest('#app')))render()},0);
 function rr(){const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest('#app')&&!/date|checkbox/.test(a.type))return;render()}
@@ -523,6 +534,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='dd'){date=shiftDate(+v);render()}
  else if(a=='today'){date=iso(new Date());render()}
  else if(a=='sync'){sync={s:'wait'};setSy();pull(true)}
+ else if(a=='install'){if(ip){const e=ip;ip=null;setSy();e.prompt();Promise.resolve(e.userChoice).catch(()=>{}).then(()=>setSy())}else if(ios())alert('No iPhone/iPad: toque no botão Compartilhar do navegador e escolha "Adicionar à Tela de Início".')}
  else if(a=='goto'){date=v;tab='escala';render()}
  else if(a=='addm'){const ct=g('#mc');if(!ct)return toast('Informe o CT da máquina');cfg.machines.push({id:uid(),name:ct,ct,sec:g('#msec'),proc:g('#mp')||'Outros',slots:Math.max(1,+$('#ms').value||1)});saveCfg();render()}
  else if(a=='ctex'){ctt='Seção\tCT\tGrupo de Máq\nEixos D\t01061031\tCHOQUE TÉRMICO\nEixos A\t01061008\tCHOQUE TÉRMICO';ctr=ctRows(ctText(ctt));render()}
@@ -574,6 +586,16 @@ document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dat
 document.addEventListener('keydown',ev=>{if(ev.key=='Escape'&&pk)pkClose()});
 document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='pkq'&&pk){pk.q=t.value;pkUp()}if(t.id=='cq'){colQ=t.value;const l=$('#cl');if(l)l.innerHTML=colList()}if(t.id=='en')ne.n=t.value;if(t.id=='bk')bk=t.value;if(t.id=='ctk')ctt=t.value;if(t.id=='bp')bp=t.value});
 
+// ---- PWA: instalar como aplicativo e abrir sem internet
+let ip=null; // evento beforeinstallprompt (Chrome, Edge, Android)
+const stand=()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch{return false}};
+const ios=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const ib=()=>!stand()&&(ip||ios())?' <button class="lk" data-a="install">Instalar aplicativo</button>':'';
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();ip=e;setSy()});
+window.addEventListener('appinstalled',()=>{ip=null;setSy();toast('Aplicativo instalado')});
+window.addEventListener('online',()=>pull());
+if('serviceWorker' in navigator&&(location.protocol=='https:'||/^(localhost|127\.0\.0\.1)$/.test(location.hostname)))window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+const q0=new URLSearchParams(location.search).get('tab');if(T0.includes(q0))tab=q0; // atalhos do ícone do aplicativo: /?tab=pres
 cfg=ls.get('cfg')||cfg;norm();days=ls.get('days')||{};render();
 pull();setInterval(()=>{if(!document.hidden)pull()},8000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
 // ao imprimir, abre todas as seções e grupos (e volta ao que estava depois)

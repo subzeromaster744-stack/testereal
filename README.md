@@ -166,6 +166,28 @@ Os gráficos se ajustam à largura da tela e, no celular, ficam em uma coluna.
 - **Dois gestores editando o mesmo dia ao mesmo tempo**: vale a última gravação. O site se atualiza sozinho a cada 8 segundos (e ao voltar para a aba), então o risco é só quando duas pessoas mexem no mesmo dia dentro desse intervalo.
 - Para testar no seu computador: `npx wrangler dev --var ACCESS_KEY:meucodigo` (usa um banco local temporário).
 
+## Instalar como aplicativo (PWA)
+
+O site é um **PWA**: dá para instalar no celular ou no computador, com ícone próprio, abrindo em tela cheia, sem a barra do navegador. Nada muda no Cloudflare: o mesmo endereço `https://SEU-SITE.workers.dev` já serve o manifesto (`manifest.json`), os ícones e o service worker (`sw.js`), que ficam em `public/`.
+
+**Como instalar**
+
+- **Android (Chrome)** e **computador (Chrome ou Edge)**: abra o site e clique em **Instalar aplicativo** (aparece no cabeçalho, ao lado de "Sincronizar agora"), ou use o menu do navegador → *Instalar aplicativo* / *Adicionar à tela inicial*.
+- **iPhone/iPad (Safari)**: toque em **Compartilhar** → **Adicionar à Tela de Início**. (O botão "Instalar aplicativo" do cabeçalho mostra esse passo a passo.)
+
+Depois de instalado, o ícone também tem **atalhos** (pressione e segure no Android): Escala, Presença e refeição e Colaboradores.
+
+**Sem internet**
+
+- O aplicativo **abre mesmo sem conexão**, com a **última cópia dos dados** que o aparelho sincronizou (a cada sincronização o site guarda uma cópia no aparelho). O cabeçalho avisa "Não sincronizado".
+- O que você alterar sem conexão fica **guardado no aparelho** e o cabeçalho mostra "N aguardando envio". Quando a conexão volta (o site tenta de novo sozinho a cada 8 segundos e assim que a internet retorna), as alterações são **enviadas ao servidor automaticamente**, mesmo se você fechar e abrir o aplicativo antes.
+- Atenção: o envio funciona como as demais gravações do site, a **última gravação vale**. Se outro gestor mudou o mesmo cadastro (ou o mesmo dia) enquanto você estava sem conexão, o que você enviar depois substitui a versão dele. Para o dia a dia isso é raro; se for editar muito sem internet, avise os outros gestores.
+- Os dados nunca ficam no cache do aplicativo: a API (`/api/state`) sempre vai direto ao servidor.
+
+**Atualizações**: com internet, o aplicativo sempre carrega a versão mais nova publicada (a página usa "rede primeiro"); sem internet, usa a última que abriu. Se a rede estiver muito lenta (mais de 4 segundos), ele abre a cópia guardada. Para forçar a atualização de um aplicativo que ficou aberto por dias, feche e abra de novo.
+
+**Para quem mexe no código**: se mudar a lista de arquivos guardados em `sw.js` (constante `SHELL`) troque também o nome do cache (`V`), para os aparelhos apagarem o cache antigo. Os ícones são gerados a partir de `public/icon.svg`.
+
 ## O cabeçalho diz se está sincronizando
 
 Logo abaixo do título, o site mostra o estado da conexão com o servidor. O botão **Sincronizar agora** força uma nova tentativa.
@@ -176,6 +198,6 @@ Logo abaixo do título, o site mostra o estado da conexão com o servidor. O bot
 | ⚠ o banco D1 não está ligado ao Worker | O Worker roda, mas não encontra o binding `DB`. | Confira o bloco `d1_databases` do `wrangler.jsonc` (binding `DB`, nome e ID do banco), envie o commit e aguarde o deploy. |
 | ⚠ a API /api/state não foi encontrada | O site está no ar, mas o código da API não foi publicado (por exemplo, o projeto é Pages ou falta o `wrangler.jsonc`). | Confira se `wrangler.jsonc` e `src/worker.js` estão na raiz do repositório e se o `name` do arquivo é igual ao do Worker; veja o resultado do build. |
 | ⚠ código de acesso não informado ou incorreto | O `ACCESS_KEY` está definido e o navegador não tem o código certo. | Clique em **Sincronizar agora** e digite o código. |
-| ⚠ sem conexão com o servidor | Rede fora do ar ou erro no servidor. | Tente de novo; veja os logs do Worker em **Observability**. |
+| ⚠ sem conexão com o servidor | Rede fora do ar ou erro no servidor. Suas alterações ficam salvas no aparelho ("N aguardando envio") e são enviadas quando a sincronização voltar. | Tente de novo; veja os logs do Worker em **Observability**. |
 
 Você também pode abrir `https://SEU-SITE.workers.dev/api/state` no navegador: `{"error":"storage_not_configured"}` indica binding ausente; `{"error":"unauthorized"}` indica que o banco está ligado e falta só o código; uma página 404 indica que a API não foi publicada.
