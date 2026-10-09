@@ -78,7 +78,19 @@ Carla Dias    Turno 3   01061008|01061009
 - CT que está na planilha mas não no cadastro é criado (com o CT como nome, 1 vaga e o grupo escolhido em "Grupo dos CTs novos"); se não tiver seção, preencha depois ou importe os CTs antes. CT que o Excel gravou sem os zeros à esquerda (1061031) é reconhecido como 01061031.
 - A pré-visualização mostra novos, atualizações (com a mudança de turno e quantas máquinas entram) e erros: nome vazio, turno inválido ou ausente (para quem é novo), mesmo nome com turnos diferentes. Só as linhas válidas são importadas. No celular, cada pessoa vira um cartão.
 
-O seletor **Seção** (nas telas Escala, Calendário, Presença e Cadastro) mostra só as máquinas da seção e as pessoas treinadas nelas, e os contadores passam a valer só para a seção. A seção da pessoa vem das máquinas em que ela é treinada. A escolha fica lembrada no navegador. **(sem seção)** mostra as máquinas sem seção e as pessoas sem máquina. Se nenhuma máquina tiver seção, o seletor não aparece.
+## Buscar máquina: seção, grupo ou CT
+
+Em todo lugar onde se escolhe máquina há a mesma **janela de busca**: um campo no alto e, abaixo, a lista em **Seção › Grupo de máquinas › CT**.
+
+- **Buscar**: digite parte do nome da seção, do grupo ou do CT (sem diferenciar maiúsculas e acentos). Várias palavras se combinam ("estria eixos b"). Letras soltas valem pelo começo da palavra, e 3 ou mais letras/números valem em qualquer trecho do CT ("031" acha 01061031). Um nome de seção ou de grupo digitado por inteiro ("eixos c") mostra só ele. A lista mostra até 500 máquinas; refine a busca para ver as demais.
+- **Adicionar máquinas a uma pessoa** (Cadastro → Colaboradores → **+ adicionar máquinas**): marque uma **seção inteira**, um **grupo inteiro** ou só os **CTs** que quiser; com a busca ativa, marcar uma seção ou grupo escolhe só o que está aparecendo. O que a pessoa já tem aparece como "já tem". A seleção continua ao mudar a busca, e o botão do rodapé confirma ("Adicionar N máquina(s)"). As máquinas novas entram em ordem de seção, grupo e CT, depois das que a pessoa já tinha (a primeira, com ★, é o posto padrão na escala).
+- **Novo colaborador**: o botão **+ Máquinas (opcional)** do formulário abre a mesma janela. O nome e o turno digitados ficam enquanto você escolhe.
+- **Tabela de colaboradores**: as máquinas de cada pessoa aparecem agrupadas por seção › grupo, com **remover grupo** para tirar um grupo inteiro de uma vez (pede confirmação). Cada pessoa ocupa uma linha larga; no celular os campos empilham.
+- **Filtrar as telas**: ao lado do seletor **Seção** (Escala, Calendário, Presença e Cadastro) há o botão **Buscar máquina…**. Clique em uma seção, em um grupo ou em um CT e a tela mostra só ele (e as pessoas treinadas nele); uma etiqueta "Grupo …" ou "CT …" com **×** limpa o filtro. Com grupo ou CT filtrado, os grupos aparecem abertos (dá para recolher). A escolha fica lembrada no navegador. Trocar a seção no seletor limpa o grupo e o CT.
+- **Presença**: quando a pessoa tem máquinas em mais de um grupo, a lista "Vai trabalhar em" vem agrupada por seção › grupo.
+- A janela fecha com **Esc**, com o **×**, em **Cancelar** ou clicando fora. No celular ela sobe como uma folha na parte de baixo da tela.
+
+O seletor **Seção** mostra só as máquinas da seção e as pessoas treinadas nelas, e os contadores passam a valer só para o filtro. A seção da pessoa vem das máquinas em que ela é treinada. **(sem seção)** mostra as máquinas sem seção e as pessoas sem máquina. Se nenhuma máquina tiver seção, o seletor de seção não aparece (a busca por grupo e CT continua).
 
 ## Escala: seção › grupo de máquinas › máquinas
 
