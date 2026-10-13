@@ -391,7 +391,7 @@ function parse(){
  const by=new Map(),out=[];
  rows.forEach(r=>{if(!r.some(Boolean))return;
   const n=(r[ix.n]||'').replace(/\s+/g,' ').trim(),k=n.toLowerCase(),sh=ix.t>=0?shOf(r[ix.t]):0,
-   cols=ix.m||r.map((_,i)=>i).filter(i=>hd?i!=ix.n&&i!=ix.t:i>1),seen=new Set(),ms=[];
+   cols=ix.m||(hd?[]:r.map((_,i)=>i).filter(i=>i>1)),seen=new Set(),ms=[];
   cols.forEach(i=>String(r[i]||'').split(/[,;|/]/).forEach(x=>{x=x.trim();if(x&&!seen.has(x.toLowerCase())){seen.add(x.toLowerCase());ms.push(x)}}));
   const p=n?by.get(k):null;
   if(p){ms.forEach(x=>{if(!p.ms.some(y=>y.toLowerCase()==x.toLowerCase()))p.ms.push(x)});p.lines++;
