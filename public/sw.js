@@ -3,7 +3,7 @@
 // - A página usa "rede primeiro": quando há internet, vem a versão mais nova publicada;
 //   sem internet (ou se a rede demorar mais de 4 s), abre a última cópia guardada.
 // - Ícones e manifesto: cache primeiro.
-const V = 'escala-he-v1';
+const V = 'escala-he-v2';
 const SHELL = ['/', '/manifest.json', '/icon.svg', '/icon-192.png', '/icon-512.png', '/icon-maskable-512.png', '/apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {

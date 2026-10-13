@@ -44,7 +44,7 @@ No projeto, abra **Settings → Variables and Secrets → Add**: nome `ACCESS_KE
 
 ## Cadastrar os CTs (planilha) e filtrar por seção
 
-Cada máquina é um **CT** (centro de trabalho) e pertence a uma **Seção** e a um **Grupo de Máq**. Em **Cadastro → Importar CTs (planilha)**, escolha um arquivo `.xlsx` ou `.csv`, ou cole as linhas do Excel, com estas colunas:
+Cada máquina é um **CT** (centro de trabalho) e pertence a uma **Seção** e a um **Grupo de Máq**. Em **Cadastro → Importar CTs** (o quadro abre com um clique), escolha um arquivo `.xlsx` ou `.csv`, ou cole as linhas do Excel, com estas colunas:
 
 ```
 Seção     CT          Grupo de Máq
@@ -57,12 +57,12 @@ Eixos A   01061008    CHOQUE TÉRMICO
 - Antes de importar, a pré-visualização mostra o que é novo, o que será atualizado e as linhas com erro (CT vazio ou repetido na planilha).
 - CTs que já existem são **atualizados** (seção e grupo); as vagas que você ajustou ficam. Seção em branco na planilha não apaga a seção já cadastrada. CTs novos entram com 1 vaga.
 - Arquivos `.xls` antigos não são lidos: salve como `.xlsx` ou `.csv`.
-- Também dá para cadastrar um CT por vez (Seção, CT, Grupo de Máq e Vagas; só o CT é obrigatório), e tudo pode ser editado na tabela. A máquina **não tem campo Nome**: o nome dela é o próprio CT.
+- Também dá para cadastrar um CT por vez (**+ Nova máquina**: Seção, CT e Grupo; só o CT é obrigatório; entra com 1 vaga). Para mudar seção, CT, grupo ou vagas, use **Editar** na linha do CT. A máquina **não tem campo Nome**: o nome dela é o próprio CT.
 - Os colaboradores também entram por planilha (próxima seção).
 
 ## Importar colaboradores (planilha)
 
-Em **Cadastro → Importar colaboradores (planilha)** (coluna da direita), escolha um `.xlsx` ou `.csv`, ou cole as linhas do Excel, com estas colunas:
+Em **Cadastro → Importar colaboradores** (coluna da direita; o quadro abre com um clique), escolha um `.xlsx` ou `.csv`, ou cole as linhas do Excel, com estas colunas:
 
 ```
 Nome          Turno     CT
@@ -75,7 +75,7 @@ Carla Dias    Turno 3   01061008|01061009
 - **Turno**: 1, 2, 3, T1, "Turno 1" ou "1º turno".
 - **Vários CTs** para a mesma pessoa: na mesma célula, separados por `/`, `|`, `,` ou `;`; em várias colunas de CT (CT 1, CT 2…); ou repetindo o nome em outras linhas (as máquinas são somadas).
 - Quem já existe (mesmo nome, sem diferença de maiúsculas ou espaços) é **atualizado**: o turno muda se vier preenchido (em branco mantém o atual) e as máquinas são somadas, sem apagar as que a pessoa já tinha.
-- CT que está na planilha mas não no cadastro é criado (com o CT como nome, 1 vaga e o grupo escolhido em "Grupo dos CTs novos"); se não tiver seção, preencha depois ou importe os CTs antes. CT que o Excel gravou sem os zeros à esquerda (1061031) é reconhecido como 01061031.
+- CT que está na planilha mas não no cadastro é criado (com o CT como nome, 1 vaga e o grupo escolhido em "Grupo dos CTs novos", que fica em **Mais detalhes**); se não tiver seção, preencha depois ou importe os CTs antes. CT que o Excel gravou sem os zeros à esquerda (1061031) é reconhecido como 01061031.
 - A pré-visualização mostra novos, atualizações (com a mudança de turno e quantas máquinas entram) e erros: nome vazio, turno inválido ou ausente (para quem é novo), mesmo nome com turnos diferentes. Só as linhas válidas são importadas. No celular, cada pessoa vira um cartão.
 
 ## Buscar máquina: seção, grupo ou CT
@@ -83,40 +83,40 @@ Carla Dias    Turno 3   01061008|01061009
 Em todo lugar onde se escolhe máquina há a mesma **janela de busca**: um campo no alto e, abaixo, a lista em **Seção › Grupo de máquinas › CT**.
 
 - **Buscar**: digite parte do nome da seção, do grupo ou do CT (sem diferenciar maiúsculas e acentos). Várias palavras se combinam ("estria eixos b"). Letras soltas valem pelo começo da palavra, e 3 ou mais letras/números valem em qualquer trecho do CT ("031" acha 01061031). Um nome de seção ou de grupo digitado por inteiro ("eixos c") mostra só ele. A lista mostra até 500 máquinas; refine a busca para ver as demais.
-- **Adicionar máquinas a uma pessoa** (Cadastro → Colaboradores → **+ adicionar máquinas**): marque uma **seção inteira**, um **grupo inteiro** ou só os **CTs** que quiser; com a busca ativa, marcar uma seção ou grupo escolhe só o que está aparecendo. O que a pessoa já tem aparece como "já tem". A seleção continua ao mudar a busca, e o botão do rodapé confirma ("Adicionar N máquina(s)"). As máquinas novas entram em ordem de seção, grupo e CT, depois das que a pessoa já tinha (a primeira, com ★, é o posto padrão na escala).
-- **Novo colaborador**: o botão **+ Máquinas (opcional)** do formulário abre a mesma janela. O nome e o turno digitados ficam enquanto você escolhe.
-- **Tabela de colaboradores**: as máquinas de cada pessoa aparecem agrupadas por seção › grupo, com **remover grupo** para tirar um grupo inteiro de uma vez (pede confirmação). Cada pessoa ocupa uma linha larga; no celular os campos empilham.
-- **Filtrar as telas**: ao lado do seletor **Seção** (Escala, Calendário, Presença, Colaboradores e Cadastro) há o botão **Buscar máquina…**. Clique em uma seção, em um grupo ou em um CT e a tela mostra só ele (e as pessoas treinadas nele); uma etiqueta "Grupo …" ou "CT …" com **×** limpa o filtro. Com grupo ou CT filtrado, os grupos aparecem abertos (dá para recolher). A escolha fica lembrada no navegador. Trocar a seção no seletor limpa o grupo e o CT.
-- **Presença**: quando a pessoa tem máquinas em mais de um grupo, a lista "Vai trabalhar em" vem agrupada por seção › grupo.
+- **Adicionar máquinas a uma pessoa** (Cadastro → Colaboradores sem máquina → **+ Máquinas**, ou **+ adicionar máquinas** na aba Colaboradores): marque uma **seção inteira**, um **grupo inteiro** ou só os **CTs** que quiser; com a busca ativa, marcar uma seção ou grupo escolhe só o que está aparecendo. O que a pessoa já tem aparece como "já tem". A seleção continua ao mudar a busca, e o botão do rodapé confirma ("Adicionar N máquina(s)"). As máquinas novas entram em ordem de seção, grupo e CT, depois das que a pessoa já tinha (a primeira, com ★, é o posto padrão na escala).
+- **Novo colaborador**: o botão **+ Máquinas** do formulário abre a mesma janela. O nome e o turno digitados ficam enquanto você escolhe.
+- **Na aba Colaboradores**: as máquinas de cada pessoa aparecem agrupadas por seção › grupo, com **remover grupo** para tirar um grupo inteiro de uma vez (pede confirmação).
+- **Filtrar as telas**: ao lado do seletor **Seção** (Escala, Calendário, Presença e Colaboradores) há o botão **Buscar máquina…**. Clique em uma seção, em um grupo ou em um CT e a tela mostra só ele (e as pessoas treinadas nele); uma etiqueta "Grupo …" ou "CT …" com **×** limpa o filtro. Com grupo ou CT filtrado, os grupos aparecem abertos (dá para recolher). A escolha fica lembrada no navegador. Trocar a seção no seletor limpa o grupo e o CT.
+- **Presença**: quando a pessoa tem máquinas em mais de um grupo, a lista "Máquina" vem agrupada por seção › grupo.
 - A janela fecha com **Esc**, com o **×**, em **Cancelar** ou clicando fora. No celular ela sobe como uma folha na parte de baixo da tela.
 
 O seletor **Seção** mostra só as máquinas da seção e as pessoas treinadas nelas, e os contadores passam a valer só para o filtro. A seção da pessoa vem das máquinas em que ela é treinada. **(sem seção)** mostra as máquinas sem seção e as pessoas sem máquina. Se nenhuma máquina tiver seção, o seletor de seção não aparece (a busca por grupo e CT continua).
 
 ## Escala: seção › grupo de máquinas › máquinas
 
-A tela de escalar segue o mesmo desenho do calendário, para continuar curta mesmo com 100 CTs ou mais:
+No alto, uma **linha de resumo** (escalados, por turno, máquinas com operador e, se houver, conflitos) e o link **Como usar**, que abre 3 linhas de ajuda. A tela de escalar segue 3 níveis, para continuar curta mesmo com 100 CTs ou mais:
 
-1. **Seção** (por exemplo, Eixos D): uma linha com quantas pessoas estão escaladas e quantas máquinas da seção já têm operador. As seções começam abertas.
-2. **Grupo de máquinas** (por exemplo, CHOQUE TÉRMICO), dentro da seção. Começa **fechado**; a linha dele resume os escalados e as máquinas com operador, e mostra ⚠ se houver conflito dentro dele.
-3. **Máquinas**: ao abrir o grupo, aparece um cartão por CT, com as pessoas treinadas nela. Clique na pessoa para escalá-la naquela máquina (quem tem mais de uma máquina aparece em todas; clicar em outra troca o posto).
+1. **Seção** (por exemplo, Eixos D), aberta por padrão, com quantas pessoas estão escaladas.
+2. **Grupo de máquinas** (por exemplo, CHOQUE TÉRMICO), dentro da seção. Começa **fechado**; mostra ⚠ se houver conflito dentro dele.
+3. **Máquinas**: ao abrir o grupo, aparece um cartão por CT, com as pessoas treinadas nela. Toque na pessoa para escalá-la naquela máquina; toque de novo para tirar. Quem tem mais de uma máquina aparece em todas; tocar em outra troca o posto.
 
-Cada nível aparece **recuado para a direita** do anterior (o grupo sob a seção, e os cartões sob o grupo, com uma linha-guia ao lado), para ver de relance o que pertence a quê. **Expandir tudo** e **Recolher tudo** abrem e fecham tudo de uma vez. O que está aberto fica lembrado só no navegador de cada pessoa e é independente do calendário. O filtro **Seção** e os botões **Todos / T1 / T2 / T3** continuam valendo.
+Cada nível aparece **recuado para a direita** do anterior, com uma linha-guia. **Expandir tudo** e **Recolher tudo** (links no alto) abrem e fecham tudo. O que está aberto fica lembrado só no navegador de cada pessoa e é independente do calendário e do Cadastro. O filtro **Seção** e os botões **Todos / T1 / T2 / T3** continuam valendo.
 
-**Nem toda máquina precisa de operador.** Não existe lista de pendências "sem operador": uma máquina parada fica neutra, uma com gente escalada fica verde ("Com operador") e só o **conflito** (mais gente que vagas) aparece em vermelho e é contado no alto da tela. O indicador "Máquinas com operador" mostra quantas têm alguém, sem cobrar as demais.
+**Nem toda máquina precisa de operador.** Máquina parada fica neutra, com gente escalada fica verde ("Com operador") e só o **conflito** (mais gente que vagas) aparece em vermelho e é contado no resumo.
 
 ## Turnos no sábado e no domingo
 
 Sábado e domingo funcionam como qualquer outro dia: podem ter **os três turnos** trabalhando, cada pessoa com o turno do cadastro (T1, T2 ou T3), com os botões Todos / T1 / T2 / T3 e os indicadores por turno.
 
-## Calendário: seção, grupo de máquinas e CTs
+## Calendário: três jeitos de ver
 
-O calendário (semana ou mês) tem duas colunas fixas à esquerda: **Seção** e **Grupo de Máq · CT**. A estrutura abre nos mesmos três níveis da Escala:
+O Calendário abre no **Mês**, pensado para entender de relance. Os botões **Mês · Semana · Por máquina** trocam a visão (a escolha fica lembrada no navegador), e ◀ ▶ **Hoje** navegam.
 
-1. **Seção**: uma linha com o total de pessoas de cada dia e quantas máquinas têm operador. Clique em ▾/▸ para recolher ou abrir. As seções começam abertas; "(sem seção)" fica por último.
-2. **Grupo de máquinas**, dentro da seção. Começa fechado. O mesmo grupo em duas seções aparece separado em cada uma.
-3. **CT**: ao abrir o grupo, uma linha por CT, com o código em destaque, as vagas e as pessoas escaladas em cada dia, com turno e presença.
+- **Mês** (padrão): uma grade de calendário. Cada dia mostra o **número de pessoas escaladas**, os totais por turno (T1, T2, T3; no celular viram bolinhas coloridas) e **⚠** se houver conflito. Dia com gente fica verde, dia com conflito fica vermelho, hoje tem o número destacado. **Toque num dia** e, logo abaixo, aparece o **painel do dia**: quem trabalha em cada turno, em qual CT, presença (✓ presente, ✗ faltou) e o botão **Abrir escala** (ou **Montar escala**, se o dia está vazio).
+- **Semana**: sete cartões, um por dia, com os nomes de quem trabalha em cada turno. Toque no título do dia para abrir a escala dele.
+- **Por máquina**: a matriz detalhada, para quem quer ver CT por CT. Tem duas colunas fixas (**Seção** e **Grupo de Máq · CT**) que abrem nos mesmos três níveis da Escala (seção › grupo › CT, com ▾/▸), **7 dias** ou **Mês inteiro**, e **Expandir tudo / Recolher tudo**. Verde = tem operador, vermelho = conflito.
 
-**Expandir tudo** abre seções e grupos; **Recolher tudo** deixa só as linhas das seções. Cores: verde = tem operador escalado, vermelho = conflito; máquina sem ninguém fica sem cor. Se nenhuma máquina tiver seção, a coluna Seção não aparece.
+O filtro **Seção** e o botão **Buscar máquina…** valem para as três visões. Na impressão, a visão **Por máquina** abre todas as seções e grupos.
 
 ## Colaboradores: lista enxuta que abre e fecha
 
@@ -128,11 +128,15 @@ A aba **Colaboradores** mostra só quem **já tem máquina**, em uma linha por p
 
 No alto da aba: busca por **nome, seção ou CT** (digite um CT e veja quem é treinado nele), botões **Todos / T1 / T2 / T3**, o seletor **Seção** com **Buscar máquina…** e, acima da lista, **Expandir tudo** e **Recolher tudo**. As linhas que você deixou abertas ficam lembradas neste navegador. A lista mostra até 200 pessoas por vez (use a busca para achar as demais); na impressão todas as linhas saem abertas.
 
-**Quem está cadastrado mas ainda sem máquina não vai para esta aba**: continua no **Cadastro**, em "Sem máquina definida" (com **+ adicionar máquinas**), e na **Escala**, no bloco "Sem máquina definida". Assim que a pessoa ganha a primeira máquina ela passa para a aba Colaboradores, e se perder a última volta para o Cadastro (o site avisa).
+**Quem está cadastrado mas ainda sem máquina não vai para esta aba**: continua no **Cadastro**, em "Sem máquina definida" (com **+ Máquinas**), e na **Escala**, no bloco "Sem máquina definida". Assim que a pessoa ganha a primeira máquina ela passa para a aba Colaboradores, e se perder a última volta para o Cadastro (o site avisa).
 
 ## Cadastro: máquinas à esquerda, colaboradores à direita
 
-No computador o Cadastro tem **duas colunas**: **Máquinas** (cadastro e importação de CTs) na esquerda e **Colaboradores** (novo colaborador, quem está sem máquina e importação em lote) na direita. Os colaboradores que já têm máquina **não ficam em destaque aqui**: aparece só um resumo com o atalho para a aba Colaboradores. No celular vira **uma coluna** só, com cada máquina e cada colaborador sem máquina em um cartão com os campos legíveis.
+No computador o Cadastro tem **duas colunas**; no celular, uma só.
+
+- **Máquinas**: lista que abre e fecha, **Seção › Grupo › CT**, tudo fechado no começo (cada linha mostra só o nome e a contagem de CTs). Use a **busca** (seção, grupo ou CT; abre sozinha o que encontrar), **Expandir tudo / Recolher tudo**, **Editar** (seção, CT, grupo e vagas; **Pronto** fecha) e **Remover**. **+ Nova máquina** abre um formulário de três campos (Seção, CT, Grupo). O que está aberto fica lembrado neste navegador.
+- **Colaboradores**: formulário curto (nome, turno, **+ Máquinas**, Adicionar), um resumo ("N com máquina: veja na aba Colaboradores") e, logo abaixo, **Sem máquina** — quem ainda não tem máquina, com **+ Máquinas** e **Remover**. Os colaboradores que já têm máquina **não ficam em destaque aqui**: estão na aba Colaboradores.
+- **Importar CTs** e **Importar colaboradores** ficam **recolhidos**: clique no título para abrir; **Mais detalhes** mostra as colunas aceitas. O Cadastro não usa o filtro de seção das outras telas.
 
 ## Indicadores
 
@@ -153,7 +157,7 @@ Os gráficos se ajustam à largura da tela e, no celular, ficam em uma coluna.
 
 ## No celular e na impressão
 
-- **Presença e refeição** no celular vira uma lista de cartões, com os botões Presente e Faltou grandes e sem rolar para o lado.
+- **Presença** no celular vira uma lista de cartões, com os botões Presente e Faltou grandes e sem rolar para o lado.
 - **Imprimir** (Ctrl+P): a tela da Escala sai sem menu e botões, só com as máquinas que têm gente escalada e as pessoas de cada uma. Seções e grupos fechados na tela são abertos sozinhos só para a impressão (o Calendário também). A Presença imprime a tabela do dia, com os botões de check-in como caixas para marcar à mão.
 - **Remover** um CT ou uma pessoa do cadastro pede confirmação, porque a mudança vale para todos os gestores.
 - No Calendário, abrir ou fechar seções e grupos mantém a posição da rolagem.
@@ -172,15 +176,15 @@ O site é um **PWA**: dá para instalar no celular ou no computador, com ícone 
 
 **Como instalar**
 
-- **Android (Chrome)** e **computador (Chrome ou Edge)**: abra o site e clique em **Instalar aplicativo** (aparece no cabeçalho, ao lado de "Sincronizar agora"), ou use o menu do navegador → *Instalar aplicativo* / *Adicionar à tela inicial*.
+- **Android (Chrome)** e **computador (Chrome ou Edge)**: abra o site e clique em **Instalar aplicativo** (aparece no cabeçalho, ao lado de "Atualizar"), ou use o menu do navegador → *Instalar aplicativo* / *Adicionar à tela inicial*.
 - **iPhone/iPad (Safari)**: toque em **Compartilhar** → **Adicionar à Tela de Início**. (O botão "Instalar aplicativo" do cabeçalho mostra esse passo a passo.)
 
-Depois de instalado, o ícone também tem **atalhos** (pressione e segure no Android): Escala, Presença e refeição e Colaboradores.
+Depois de instalado, o ícone também tem **atalhos** (pressione e segure no Android): Escala, Presença e Colaboradores.
 
 **Sem internet**
 
-- O aplicativo **abre mesmo sem conexão**, com a **última cópia dos dados** que o aparelho sincronizou (a cada sincronização o site guarda uma cópia no aparelho). O cabeçalho avisa "Não sincronizado".
-- O que você alterar sem conexão fica **guardado no aparelho** e o cabeçalho mostra "N aguardando envio". Quando a conexão volta (o site tenta de novo sozinho a cada 8 segundos e assim que a internet retorna), as alterações são **enviadas ao servidor automaticamente**, mesmo se você fechar e abrir o aplicativo antes.
+- O aplicativo **abre mesmo sem conexão**, com a **última cópia dos dados** que o aparelho sincronizou (a cada sincronização o site guarda uma cópia no aparelho). O cabeçalho avisa "Sem sincronização".
+- O que você alterar sem conexão fica **guardado no aparelho** e o cabeçalho mostra "N a enviar". Quando a conexão volta (o site tenta de novo sozinho a cada 8 segundos e assim que a internet retorna), as alterações são **enviadas ao servidor automaticamente**, mesmo se você fechar e abrir o aplicativo antes.
 - Atenção: o envio funciona como as demais gravações do site, a **última gravação vale**. Se outro gestor mudou o mesmo cadastro (ou o mesmo dia) enquanto você estava sem conexão, o que você enviar depois substitui a versão dele. Para o dia a dia isso é raro; se for editar muito sem internet, avise os outros gestores.
 - Os dados nunca ficam no cache do aplicativo: a API (`/api/state`) sempre vai direto ao servidor.
 
@@ -190,14 +194,14 @@ Depois de instalado, o ícone também tem **atalhos** (pressione e segure no And
 
 ## O cabeçalho diz se está sincronizando
 
-Logo abaixo do título, o site mostra o estado da conexão com o servidor. O botão **Sincronizar agora** força uma nova tentativa.
+Logo abaixo do título, o site mostra o estado da conexão com o servidor em uma linha. O link **Atualizar** (ou **Tentar de novo**, quando há erro) força uma nova tentativa.
 
 | Mensagem | O que significa | O que fazer |
 | --- | --- | --- |
-| ● Dados compartilhados entre os gestores · sincronizado às HH:MM:SS | Funcionando. | Nada. |
-| ⚠ o banco D1 não está ligado ao Worker | O Worker roda, mas não encontra o binding `DB`. | Confira o bloco `d1_databases` do `wrangler.jsonc` (binding `DB`, nome e ID do banco), envie o commit e aguarde o deploy. |
-| ⚠ a API /api/state não foi encontrada | O site está no ar, mas o código da API não foi publicado (por exemplo, o projeto é Pages ou falta o `wrangler.jsonc`). | Confira se `wrangler.jsonc` e `src/worker.js` estão na raiz do repositório e se o `name` do arquivo é igual ao do Worker; veja o resultado do build. |
-| ⚠ código de acesso não informado ou incorreto | O `ACCESS_KEY` está definido e o navegador não tem o código certo. | Clique em **Sincronizar agora** e digite o código. |
-| ⚠ sem conexão com o servidor | Rede fora do ar ou erro no servidor. Suas alterações ficam salvas no aparelho ("N aguardando envio") e são enviadas quando a sincronização voltar. | Tente de novo; veja os logs do Worker em **Observability**. |
+| ● Sincronizado às HH:MM | Funcionando; os dados são compartilhados entre os gestores. | Nada. |
+| ⚠ Sem sincronização: banco de dados não ligado | O Worker roda, mas não encontra o binding `DB`. | Confira o bloco `d1_databases` do `wrangler.jsonc` (binding `DB`, nome e ID do banco), envie o commit e aguarde o deploy. |
+| ⚠ Sem sincronização: API não encontrada | O site está no ar, mas o código da API não foi publicado (por exemplo, o projeto é Pages ou falta o `wrangler.jsonc`). | Confira se `wrangler.jsonc` e `src/worker.js` estão na raiz do repositório e se o `name` do arquivo é igual ao do Worker; veja o resultado do build. |
+| ⚠ Sem sincronização: código de acesso incorreto | O `ACCESS_KEY` está definido e o navegador não tem o código certo. | Clique em **Tentar de novo** e digite o código. |
+| ⚠ Sem sincronização: sem conexão | Rede fora do ar ou erro no servidor. Suas alterações ficam salvas no aparelho ("N a enviar") e são enviadas quando a sincronização voltar. | Tente de novo; veja os logs do Worker em **Observability**. |
 
 Você também pode abrir `https://SEU-SITE.workers.dev/api/state` no navegador: `{"error":"storage_not_configured"}` indica binding ausente; `{"error":"unauthorized"}` indica que o banco está ligado e falta só o código; uma página 404 indica que a API não foi publicada.
