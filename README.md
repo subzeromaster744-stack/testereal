@@ -61,14 +61,15 @@ O administrador (quem tem o `ACCESS_KEY`) cria usuários que só enxergam e mexe
 | --- | --- |
 | Ver só as máquinas da(s) sua(s) seção(ões) e as pessoas treinadas nelas | Ver máquinas, CTs ou pessoas de outras seções |
 | Criar, editar e remover máquinas da sua seção e importar CTs (seção de fora é recusada) | Criar máquina em outra seção ou repetir um CT que já existe em outra |
-| Cadastrar pessoas e **alocá-las às máquinas da sua seção**, inclusive as pessoas **sem máquina** | Alterar nome, turno ou remover uma pessoa que também trabalha em outra seção (aparece "compartilhada") |
-| Remover as pessoas só da sua seção e as que ele mesmo criou sem máquina | Remover pessoa sem máquina criada por outro |
+| Cadastrar pessoas e **alocá-las às máquinas da sua seção**, inclusive as pessoas **sem máquina** da sua seção (e as sem seção nenhuma) | Alterar nome, turno ou remover uma pessoa que também trabalha em outra seção (aparece "compartilhada") |
+| Remover as pessoas só da sua seção e as sem máquina que são da sua seção | Remover pessoa sem máquina que não tem a seção dele (a pessoa sem seção nenhuma, só se foi ele quem criou) |
 | Montar a Escala, a Presença e o Calendário da sua seção | Escalar quem já está escalado em outra seção no mesmo dia (aparece bloqueado, "outra seção") |
 | Ver Indicadores só da sua seção | Criar ou ver usuários |
 
 Tudo isso é conferido **no servidor**: mesmo que alguém altere a página, os dados de outras seções nem chegam ao navegador e as gravações fora da seção são descartadas (o site avisa).
 
 **Para saber**
+- Uma pessoa **sem máquina** que tem outra seção de origem (veja Importar colaboradores) também não aparece para o chefe; já a pessoa sem máquina e **sem seção** aparece para todos os chefes.
 - Uma pessoa treinada **só em máquinas de outra seção** não aparece para o chefe; para alocá-la a uma máquina da sua seção, peça ao administrador.
 - Não existe "esqueci a senha" automático: o administrador define uma senha nova em **Editar**.
 - Depois de 8 tentativas erradas de senha para o mesmo usuário (ou 30 do mesmo endereço) em 10 minutos, o site pede para aguardar.
@@ -99,18 +100,21 @@ Eixos A   01061008    CHOQUE TÉRMICO
 Em **Cadastro → Importar colaboradores** (coluna da direita; o quadro abre com um clique), escolha um `.xlsx` ou `.csv`, ou cole as linhas do Excel, com estas colunas:
 
 ```
-Nome          Turno     CT
-Ana Souza     1         01061031/01061008
-Bruno Lima    T2        01061031
-Carla Dias    Turno 3   01061008|01061009
+Nome          Turno     Seção      CT
+Ana Souza     1         Eixos A    01061031/01061008
+Bruno Lima    T2        Eixos A    01061031
+Carla Dias    Turno 3   Eixos B
 ```
 
-- A primeira linha pode ser o cabeçalho; as colunas são achadas pelo título (**Nome** ou Colaborador, **Turno**, **CT** ou Máquina), em qualquer ordem, e outras colunas (como Matrícula) são ignoradas. Sem cabeçalho, vale a ordem Nome, Turno, CT.
+- A primeira linha pode ser o cabeçalho; as colunas são achadas pelo título (**Nome** ou Colaborador, **Turno**, **Seção**, **CT** ou Máquina), em qualquer ordem, e outras colunas (como Matrícula) são ignoradas. Sem cabeçalho, vale a ordem Nome, Turno e depois os CTs (a Seção só é lida com cabeçalho).
 - **Turno**: 1, 2, 3, T1, "Turno 1" ou "1º turno".
-- **Vários CTs** para a mesma pessoa: na mesma célula, separados por `/`, `|`, `,` ou `;`; em várias colunas de CT (CT 1, CT 2…); ou repetindo o nome em outras linhas (as máquinas são somadas).
-- Quem já existe (mesmo nome, sem diferença de maiúsculas ou espaços) é **atualizado**: o turno muda se vier preenchido (em branco mantém o atual) e as máquinas são somadas, sem apagar as que a pessoa já tinha.
-- CT que está na planilha mas não no cadastro é criado (com o CT como nome, 1 vaga e o grupo escolhido em "Grupo dos CTs novos", que fica em **Mais detalhes**); se não tiver seção, preencha depois ou importe os CTs antes. CT que o Excel gravou sem os zeros à esquerda (1061031) é reconhecido como 01061031.
-- A pré-visualização mostra novos, atualizações (com a mudança de turno e quantas máquinas entram) e erros: nome vazio, turno inválido ou ausente (para quem é novo), mesmo nome com turnos diferentes. Só as linhas válidas são importadas. No celular, cada pessoa vira um cartão.
+- **Seção** (opcional): a seção de origem da pessoa. Ela vale enquanto a pessoa **não tem máquina**: fica na lista "Sem máquina" daquela seção, e só o chefe dessa seção a vê (o administrador vê todas). Quando a pessoa ganha uma máquina, a seção passa a vir das máquinas dela. Sem Seção, a pessoa sem máquina aparece para todos os chefes. O nome da seção é reconhecido sem diferença de maiúsculas ou acento ("eixos a" vira "Eixos A"); um nome que não existe aparece como **nova** na pré-visualização.
+- **CT** (opcional): vários CTs para a mesma pessoa na mesma célula, separados por `/`, `|`, `,` ou `;`; em várias colunas de CT (CT 1, CT 2…); ou repetindo o nome em outras linhas (as máquinas são somadas).
+- Quem já existe (mesmo nome, sem diferença de maiúsculas ou espaços) é **atualizado**: o turno muda se vier preenchido (em branco mantém o atual), a seção é trocada se vier preenchida e as máquinas são somadas, sem apagar as que a pessoa já tinha. **O nome identifica a pessoa**: se duas pessoas têm o mesmo nome, diferencie na planilha (por exemplo, com a matrícula entre parênteses).
+- CT que está na planilha mas não no cadastro é criado na **Seção da linha** (com o CT como nome, 1 vaga e o grupo escolhido em "Grupo dos CTs novos", que fica em **Mais detalhes**); sem seção na linha, fica sem seção. CT que o Excel gravou sem os zeros à esquerda (1061031) é reconhecido como 01061031.
+- **Chefe de seção** importando: só entram as linhas da seção dele; linha de outra seção aparece com "Seção fora do seu acesso" e não é importada. Linha sem Seção entra na seção dele.
+- A pré-visualização mostra novos, atualizações (com a mudança de turno e quantas máquinas entram) e erros: nome vazio, turno inválido ou ausente (para quem é novo), mesmo nome com turnos ou seções diferentes, seção fora do acesso. Só as linhas válidas são importadas. No celular, cada pessoa vira um cartão.
+- A lista "Sem máquina" do Cadastro mostra 40 pessoas por vez ("Mostrar mais"), com busca pelo nome e filtro por seção. Na **Escala**, quem está sem máquina aparece dentro da seção dele, em "Sem máquina definida" (fechado até você abrir); quem não tem seção fica no fim da página.
 
 ## Buscar máquina: seção, grupo ou CT
 

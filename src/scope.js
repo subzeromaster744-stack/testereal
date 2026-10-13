@@ -3,7 +3,9 @@
 //
 // Regras:
 //  - O usuário enxerga só as máquinas das suas seções e as pessoas treinadas nelas, mais as
-//    pessoas sem nenhuma máquina (para poderem ser alocadas).
+//    pessoas sem nenhuma máquina (para poderem ser alocadas). A pessoa sem máquina pode ter uma
+//    "seção de origem" (campo sec): então só os usuários dessa seção a enxergam. Sem sec, todos veem.
+//    Com máquina, a seção da pessoa vem das máquinas e o sec não influencia nada.
 //  - Numa pessoa que também é treinada em outra seção, ele vê e mexe só nas máquinas da sua
 //    seção ("compartilhada": nome, turno e remoção ficam bloqueados).
 //  - Máquinas novas ficam sempre numa seção do usuário; um CT que já existe em outra seção não
@@ -24,13 +26,15 @@ function context(cfg, secs) {
   return { A, valid: new Set(ms.map((m) => m.id)), mine: new Set(ms.filter((m) => A.has(secOf(m))).map((m) => m.id)) };
 }
 
-// ms: máquinas que existem; inMine: as da seção do usuário; shared: tem máquina fora da seção
+// ms: máquinas que existem; inMine: as da seção do usuário; shared: tem máquina fora da seção;
+// home: a pessoa sem máquina é desta seção (ou não tem seção de origem)
 function info(e, cx) {
   const ms = arr(e.machines).filter((i) => cx.valid.has(i));
   const inMine = ms.filter((i) => cx.mine.has(i));
-  return { ms, inMine, orphan: ms.length === 0, shared: ms.length > inMine.length };
+  const es = txt(e.sec, 80);
+  return { ms, inMine, orphan: ms.length === 0, shared: ms.length > inMine.length, home: !es || cx.A.has(es) };
 }
-const seen = (x) => x.orphan || x.inMine.length > 0;
+const seen = (x) => (x.orphan && x.home) || x.inMine.length > 0;
 
 // máquina onde a pessoa trabalha no dia (igual ao site: a escolhida, senão a primeira); '' = sem máquina
 function wkOf(e, day, cx) {
@@ -46,8 +50,9 @@ export function filterCfg(cfg, secs) {
   for (const e of arr(cfg && cfg.employees)) {
     const x = info(e, cx);
     if (!seen(x)) continue;
-    const { machine, ...rest } = e;
-    employees.push({ ...rest, machines: x.inMine, shared: x.shared });
+    const { machine, sec, ...rest } = e;
+    const own = txt(sec, 80); // a seção de origem só aparece se for uma das dele (não vaza o nome de outra seção)
+    employees.push({ ...rest, ...(own && cx.A.has(own) ? { sec: own } : {}), machines: x.inMine, shared: x.shared });
   }
   return { machines, employees };
 }
@@ -153,7 +158,8 @@ export function mergeCfg(cur, sub, secs, uid) {
     if (!seen(x)) { employees.push({ ...e, machines: prune(e.machines) }); continue; } // não é da seção: intacta
     const s = subE.get(e.id);
     subE.delete(e.id);
-    const canDel = !x.shared && (!x.orphan || (!!e.cb && e.cb === uid));
+    const es = txt(e.sec, 80);
+    const canDel = !x.shared && (!x.orphan || (!!e.cb && e.cb === uid) || (!!es && A.has(es))); // sem máquina: só quem criou ou a seção de origem
     if (!s) { // o usuário tirou a pessoa da lista
       if (canDel) continue;
       if (x.shared) employees.push({ ...e, machines: prune(arr(e.machines).filter((i) => !mineBefore.has(i))) }); // só sai das máquinas da seção
@@ -172,7 +178,8 @@ export function mergeCfg(cur, sub, secs, uid) {
     if (cemp.has(id)) { dropped++; continue; } // id de pessoa de outra seção
     const name = txt(s.name, 80);
     if (!name || employees.length >= LIM) { dropped++; continue; }
-    employees.push({ id, name, shift: clampShift(s.shift, 1), machines: uniq(arr(s.machines).filter((i) => mineAfter.has(i))), cb: uid });
+    const ns = txt(s.sec, 80);
+    employees.push({ id, name, shift: clampShift(s.shift, 1), sec: A.has(ns) ? ns : first, machines: uniq(arr(s.machines).filter((i) => mineAfter.has(i))), cb: uid });
   }
   return { cfg: { ...C, machines, employees }, dropped };
 }

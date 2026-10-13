@@ -225,7 +225,7 @@ function showLogin(err){const e=$('#lg');document.body.classList.add('lgo');
  e.innerHTML=`<div class="pk-bg"></div><form class="pk lg" role="dialog" aria-modal="true" aria-labelledby="lgt"><h2 id="lgt">Entrar</h2>${lgAdm?`<label class="lf">Código de administrador<input id="lc" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false"></label>`:`<label class="lf">Usuário<input id="lu" autocomplete="username" autocapitalize="none" spellcheck="false"></label><label class="lf">Senha<input id="lp" type="password" autocomplete="current-password"></label>`}<div class="er-t" id="le" role="alert">${E(err)}</div><div class="bar"><button class="btn pr" type="submit">Entrar</button><button type="button" class="btn" data-a="lgx">Agora não</button><span style="flex:1"></span><button type="button" class="lk" data-a="lgmode">${lgAdm?'Entrar com usuário e senha':'Sou administrador'}</button></div></form>`;
  e.hidden=false;const f=$(lgAdm?'#lc':'#lu');if(f&&f.focus)f.focus()}
 function closeLogin(ok){const e=$('#lg');e.hidden=true;e.innerHTML='';document.body.classList.remove('lgo');const l=lgP;lgP=null;if(l)l.res(ok);if(ok){setSy();render()}}
-function wipe(){cfg={machines:[],employees:[]};days={};me=null;usr={list:null,ed:'',f:null,err:'',last:null,busy:false};pend={cfg:0,days:{}};ver='';secF='';grpF='';ctF='';imp=null;ctr=null;bk='';ctt='';edM='';addM=false;pk=null;ne={n:'',s:1,ms:[]};['cfg','days','pend','sec','grp','ct','openC','openE','openSE','open','openS','openM','openMS'].forEach(k=>ls.set(k,null))}
+function wipe(){cfg={machines:[],employees:[]};days={};me=null;usr={list:null,ed:'',f:null,err:'',last:null,busy:false};pend={cfg:0,days:{}};ver='';secF='';grpF='';ctF='';imp=null;ctr=null;bk='';ctt='';edM='';addM=false;oq='';os='';oLim=40;pk=null;ne={n:'',s:1,ms:[]};['cfg','days','pend','sec','grp','ct','openC','openE','openSE','open','openS','openM','openMS'].forEach(k=>ls.set(k,null))}
 function finishLogin(adm,code,j){const w=adm?'admin':'u:'+j.me.uid,prev=ls.get('who');if(prev?prev!==w:!adm)wipe(); // outra pessoa no mesmo navegador: não herda os dados da anterior
  if(adm){ls.set('key',code);ls.set('tok','')}else{ls.set('tok',j.token);ls.set('key','')}
  ls.set('who',w);me=j.me;call.no=false;closeLogin(true)}
@@ -273,7 +273,7 @@ const counts=d=>{const c={};cfg.employees.forEach(e=>{if(d.s.includes(e.id)){con
 const norm=()=>{cfg.machines=(cfg.machines||[]).map(m=>{m.sec=m.sec||'';m.ct=m.ct||'';m.proc=m.proc||'Outros';return m});cfg.employees=(cfg.employees||[]).map(e=>{if(!e.machines)e.machines=e.machine?[e.machine]:[];delete e.machine;return e})};
 // Seção: a máquina guarda a seção; a pessoa fica nas seções das máquinas em que é treinada. O filtro vale para Escala, Calendário, Presença e Cadastro.
 const SN='__none';let secF=ls.get('sec')||'',grpF=ls.get('grp')||'',ctF=ls.get('ct')||'';
-const secList=()=>[...new Set(cfg.machines.map(m=>m.sec).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+const secList=()=>[...new Set([...cfg.machines.map(m=>m.sec),...cfg.employees.filter(e=>!e.machines.some(i=>mac(i))).map(e=>e.sec)].filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
 const sec0=()=>{const l=secList();return secF&&(secF==SN?(l.length&&cfg.machines.some(m=>!m.sec)):l.includes(secF))?secF:''};
 const fg=()=>grpF&&cfg.machines.some(m=>(m.proc||'Outros')==grpF&&(!sec0()||(sec0()==SN?!m.sec:m.sec===sec0())))?grpF:'';
 const fc=()=>ctF&&cfg.machines.some(m=>m.id==ctF)?ctF:'';
@@ -281,7 +281,8 @@ const sf=()=>sec0()||(fg()||fc()?'*':''); // filtro ativo: a seção, ou '*' qua
 const sp=()=>!!(fg()||fc()); // filtro específico (grupo ou CT): abre os grupos que sobram
 const mIn=m=>{const s=sec0(),g=fg(),c=fc();return (!s||(s==SN?!m.sec:m.sec===s))&&(!g||(m.proc||'Outros')==g)&&(!c||m.id==c)};
 const eMs=e=>e.machines.map(mac).filter(Boolean);
-const eIn=e=>{const s=sf();if(!s)return true;const ms=eMs(e);return ms.length?ms.some(mIn):s==SN};
+const oIn=e=>{const s=sec0();return s==SN?!e.sec:!!s&&e.sec===s}; // pessoa sem máquina: vale a seção de origem dela
+const eIn=e=>{const s=sf();if(!s)return true;const ms=eMs(e);return ms.length?ms.some(mIn):oIn(e)};
 const gk=m=>(m.sec||'')+'|'+(m.proc||'Outros');
 const bySec=gs=>gs.sort((a,b)=>a.split('|')[0].localeCompare(b.split('|')[0],'pt-BR'));
 const mlb=m=>(m.sec?m.sec+' · ':'')+(m.proc||'Outros')+' · '+m.name;
@@ -299,18 +300,20 @@ function vEscala(){
  const d=D(date),S=new Set(d.s),cnt=counts(d),s0=sf(),ms0=cfg.machines.filter(mIn),ids=new Set(ms0.map(m=>m.id)),hasS=secList().length>0,bysh=(a,b)=>a.shift-b.shift||a.name.localeCompare(b.name,'pt-BR');
  // máquina sem operador é normal na hora extra: só importa o conflito (mais gente que vagas)
  const st=m=>{const n=cnt[m.id]||0;return n>(m.slots||1)?'cf':n?'ok':''};
- const sc=cfg.employees.filter(e=>S.has(e.id)&&(!s0||(wk(e,d)?ids.has(wk(e,d)):s0==SN)));
+ const sc=cfg.employees.filter(e=>S.has(e.id)&&(!s0||(wk(e,d)?ids.has(wk(e,d)):oIn(e))));
  const sh=[1,2,3].map(t=>sc.filter(e=>e.shift==t).length);
  const cf=ms0.filter(m=>st(m)=='cf').length,use=ms0.filter(m=>st(m)).length;
  const chip=(e,mid)=>{if((d.ox||[]).includes(e.id))return `<button class="chip alt" disabled title="Já escalada em outra seção"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">outra seção</span></button>`;const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return `<button class="chip ${here?'on':''} ${el?'alt':''}" aria-pressed="${here}" data-a="tog" data-id="${e.id}" data-v="${mid}"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
  const card=m=>{const s=st(m),es=cfg.employees.filter(e=>e.machines.includes(m.id)&&(!flt||e.shift==flt)).sort(bysh);return `<div class="m ${s}"><h4><span>${E(m.name)}${m.ct&&m.ct!==m.name?` <span class="mu">CT ${E(m.ct)}</span>`:''}</span>${s?`<span class="tag ${s}">${{cf:'Conflito',ok:'Com operador'}[s]}</span>`:''}</h4><div class="mu">Vagas: ${cnt[m.id]||0}/${m.slots||1}</div>${es.map(e=>chip(e,m.id)).join('')||`<div class="mu" style="margin-top:6px">Sem operadores</div>`}</div>`};
  const sum=ms=>{const c=ms.filter(m=>st(m)=='cf').length,n=ms.reduce((a,m)=>a+(cnt[m.id]||0),0);return `${n?`<span class="tag n">${n} escalado${n==1?'':'s'}</span>`:''}${c?` <span class="tag cf">⚠ ${c} conflito${c==1?'':'s'}</span>`:''}`};
- const secs=hasS?[...new Set(ms0.map(m=>m.sec||''))].sort((a,b)=>!a?1:!b?-1:a.localeCompare(b,'pt-BR')):[''];
+ const orphE=cfg.employees.filter(e=>!e.machines.some(i=>mac(i))&&(!flt||e.shift==flt)).sort(bysh),orBy=sec=>orphE.filter(e=>(e.sec||'')===sec),showO=sec=>!!sec&&!sp()&&(!s0||s0==sec);
+ const secs=hasS?[...new Set([...ms0.map(m=>m.sec||''),...orphE.map(e=>e.sec||'').filter(showO)])].sort((a,b)=>!a?1:!b?-1:a.localeCompare(b,'pt-BR')):[''];
  const body=secs.map(sec=>{const sm=ms0.filter(m=>(m.sec||'')==sec),key=sec||SN,open=!hasS||soE(key)||PR,gs=[...new Set(sm.map(gk))];
   const head=hasS?`<h2 class="sh"><button class="lk gt" data-a="opse" data-v="${E(key)}" aria-expanded="${open}" title="${open?'Recolher':'Expandir'} a seção">${open?'▾':'▸'} ${sec?E(sec):'(sem seção)'}</button> ${sum(sm)}</h2>`:'';
   const groups=open?gs.map(g=>{const ms=sm.filter(m=>gk(m)==g),o=(sp()?opnE[g]!==false:!!opnE[g])||PR;return `<section class="proc"><h3 class="gh"><button class="lk gt" data-a="opne" data-v="${E(g)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} as máquinas">${o?'▾':'▸'} ${E(ms[0].proc||'Outros')}</button> ${sum(ms)}</h3>${o?`<div class="grid">${ms.map(card).join('')}</div>`:''}</section>`}).join(''):'';
-  return `<div class="sec ${hasS?'in':''}">${head}${groups}</div>`}).join('');
- const orphan=cfg.employees.filter(e=>!e.machines.some(i=>mac(i))&&(!flt||e.shift==flt)).sort(bysh);
+  const ol=open?orBy(sec):[],og=ol.length&&showO(sec)?(k=>{const o=!!opnE[k]||PR;return `<section class="proc"><h3 class="gh"><button class="lk gt" data-a="opne" data-v="${E(k)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} a lista">${o?'▾':'▸'} Sem máquina definida</button> <span class="tag vz">${ol.length}</span></h3>${o?`<div class="grid"><div class="m">${ol.map(e=>chip(e,'')).join('')}</div></div>`:''}</section>`})(sec+'|__orph'):'';
+  return `<div class="sec ${hasS?'in':''}">${head}${groups}${og}</div>`}).join('');
+ const orphan=orphE.filter(e=>!e.sec);
  const flb=s0?`<div class="mu" style="margin-bottom:8px">Filtro: ${s0=='*'?'':s0==SN?'sem seção':'<b>'+E(s0)+'</b>'}${fg()?(s0=='*'?'':' › ')+'<b>'+E(fg())+'</b>':''}${fc()?' › <b>'+E(mname(mac(fc())))+'</b>':''} · ${ms0.length} máq. · ${cfg.employees.filter(eIn).length} pessoas</div>`:'';
  return dbar(1)+`<div class="cl-x"><button class="lk" data-a="how" aria-expanded="${how}">${how?'Ocultar ajuda':'Como usar'}</button><span style="flex:1"></span><button class="lk" data-a="opene">Expandir tudo</button><button class="lk" data-a="closee">Recolher tudo</button></div>`+(how?`<div class="card how"><ol><li>Abra a seção e o grupo (▸) para ver as máquinas.</li><li>Toque no nome para escalar a pessoa; toque de novo para tirar.</li><li>Quem treina em mais de uma máquina aparece em todas: toque na máquina onde vai trabalhar.</li></ol></div>`:'')+flb+
  pills([[sc.length,'escalados'],...sh.map((n,i)=>[n,'T'+(i+1),'t'+(i+1)]),[use,'máq. com operador'],...(cf?[[cf,cf==1?'conflito':'conflitos','cf']]:[])])+
@@ -319,7 +322,7 @@ function vEscala(){
  ((!s0||s0==SN)&&orphan.length?`<section class="proc"><h3 class="gh">Sem máquina definida</h3><div class="grid"><div class="m">${orphan.map(e=>chip(e,'')).join('')}</div></div></section>`:'')}
 
 function vPres(){
- const d=D(date),c=counts(d),s0=sf(),ids=new Set(cfg.machines.filter(mIn).map(m=>m.id)),l=d.s.map(emp).filter(Boolean).filter(e=>!s0||(wk(e,d)?ids.has(wk(e,d)):s0==SN)).sort((a,b)=>a.shift-b.shift||a.name.localeCompare(b.name));
+ const d=D(date),c=counts(d),s0=sf(),ids=new Set(cfg.machines.filter(mIn).map(m=>m.id)),l=d.s.map(emp).filter(Boolean).filter(e=>!s0||(wk(e,d)?ids.has(wk(e,d)):oIn(e))).sort((a,b)=>a.shift-b.shift||a.name.localeCompare(b.name));
  const p=l.filter(e=>d.a[e.id]=='p').length,f=l.filter(e=>d.a[e.id]=='f').length,r=l.filter(e=>d.m[e.id]).length;
  return dbar()+pills([[l.length,'escalados'],[p,p==1?'presente':'presentes','ok'],...(f?[[f,f==1?'falta':'faltas','cf']]:[]),[l.length-p-f,l.length-p-f==1?'pendente':'pendentes'],[r,r==1?'refeição':'refeições']])+
  (l.length?`<div class="card sc"><table class="pt"><tr class="h"><th>Turno</th><th>Colaborador</th><th>Máquina</th><th>Refeição</th><th>Presença</th></tr>${l.map(e=>{const a=d.a[e.id],w=wk(e,d),m=mac(w),cf=m&&c[w]>(m.slots||1);return `<tr><td><span class="t t${e.shift}">T${e.shift}</span></td><td>${E(e.name)}</td><td>${e.machines.length>1?`<select data-a="wk" data-id="${e.id}" aria-label="Máquina de ${E(e.name)}">${ogs(e.machines,w)}</select>`:m?E(m.name):'—'} ${cf?'<span class="tag cf">conflito</span>':''}</td><td><label><input type="checkbox" data-a="meal" data-id="${e.id}" ${d.m[e.id]?'checked':''}> Reservada</label></td><td><button class="btn ${a=='p'?'ok':''}" aria-pressed="${a=='p'}" data-a="att" data-v="p" data-id="${e.id}">Presente</button> <button class="btn ${a=='f'?'cf':''}" aria-pressed="${a=='f'}" data-a="att" data-v="f" data-id="${e.id}">Faltou</button></td></tr>`}).join('')}</table></div>`:`<div class="card empty mu">Ninguém escalado neste dia${s0?' (neste filtro)':''}. Monte a escala na aba Escala.</div>`)}
@@ -330,7 +333,7 @@ function vInd(){
  Object.keys(days).filter(k=>k>=lim).sort().forEach(k=>{const d=days[k],o=z();let ml=0;
   (d.s||[]).forEach(id=>{const e=emp(id),v=(d.a||{})[id];if(!e)return; // colaborador removido do cadastro não entra nos indicadores
    add(T,v);add(o,v);add(EM[id]=EM[id]||z(),v);
-   {if(SH[e.shift])add(SH[e.shift],v);const m=mac(wk(e,d)),sc=m?m.sec||'(sem seção)':'Sem máquina',gr=m?m.proc||'Outros':'Sem máquina';add(SC[sc]=SC[sc]||z(),v);add(GR[gr]=GR[gr]||z(),v)}
+   {if(SH[e.shift])add(SH[e.shift],v);const m=mac(wk(e,d)),sc=m?m.sec||'(sem seção)':e.sec||'Sem máquina',gr=m?m.proc||'Outros':'Sem máquina';add(SC[sc]=SC[sc]||z(),v);add(GR[gr]=GR[gr]||z(),v)}
    if((d.m||{})[id])ml++});
   if(!o.e)return;ML+=ml;const w=WD[new Date(k+'T12:00').getDay()];w.e+=o.e;w.p+=o.p;w.f+=o.f;w.n++;DA.push([k,o,ml])});
  const DY=DA.slice().reverse(),CD=DA.slice(-120),N=CD.length,rows=Object.entries(EM).sort((a,b)=>b[1].f-a[1].f||b[1].e-a[1].e);
@@ -384,29 +387,32 @@ const nmx=n=>!!findM(n);
 const shOf=c=>{c=String(c||'').trim();if(!c)return 0;const d=c.match(/\d/g)||[];return d.length==1&&/[1-3]/.test(d[0])?+d[0]:-1}; // 1, T1, "Turno 1", "1º turno"
 // Importar colaboradores: Nome, Turno e CT(s) — de .xlsx, .csv ou linhas coladas; o mesmo nome em várias linhas soma as máquinas
 function parse(){
- const ex=new Map(cfg.employees.map(e=>[nk(e.name),e])),rows=ctText(bk),ix={n:0,t:1,m:null},h=rows[0]||[];let hd=false;
- if(h.some(x=>/^(nome|colaborador|funcion[aá]rio|operador|turno|cts?\b|m[aá]quinas?|centro|c[oó]digo)/i.test(x))){
+ const ex=new Map(cfg.employees.map(e=>[nk(e.name),e])),rows=ctText(bk),ix={n:0,t:1,s:-1,m:null},h=rows[0]||[];let hd=false;
+ const pool=isU()?me.sections:secList(),cs=x=>{x=String(x||'').replace(/\s+/g,' ').trim();if(!x)return {v:'',nw:false};const f=pool.find(y=>nz(y)==nz(x));return f?{v:f,nw:false}:{v:x,nw:true}};
+ if(h.some(x=>/^(nome|colaborador|funcion[aá]rio|operador|turno|se[cç][aã]o|cts?\b|m[aá]quinas?|centro|c[oó]digo)/i.test(x))){
   hd=true;const a=h.findIndex(x=>/^(nome|colaborador|funcion[aá]rio|operador)/i.test(x)),b=h.findIndex(x=>/^turno/i.test(x)),c=h.map((x,i)=>/^(cts?\b|m[aá]quinas?|centros?|c[oó]digo)/i.test(x)?i:-1).filter(i=>i>=0);
-  ix.n=a>=0?a:0;ix.t=b;ix.m=c.length?c:null;rows.shift()}
+  ix.n=a>=0?a:0;ix.t=b;ix.s=h.findIndex(x=>/^se[cç][aã]o/i.test(x));ix.m=c.length?c:null;rows.shift()}
  const by=new Map(),out=[];
  rows.forEach(r=>{if(!r.some(Boolean))return;
-  const n=(r[ix.n]||'').replace(/\s+/g,' ').trim(),k=n.toLowerCase(),sh=ix.t>=0?shOf(r[ix.t]):0,
+  const n=(r[ix.n]||'').replace(/\s+/g,' ').trim(),k=n.toLowerCase(),sh=ix.t>=0?shOf(r[ix.t]):0,sc=ix.s>=0?cs(r[ix.s]):{v:'',nw:false},
    cols=ix.m||(hd?[]:r.map((_,i)=>i).filter(i=>i>1)),seen=new Set(),ms=[];
   cols.forEach(i=>String(r[i]||'').split(/[,;|/]/).forEach(x=>{x=x.trim();if(x&&!seen.has(x.toLowerCase())){seen.add(x.toLowerCase());ms.push(x)}}));
   const p=n?by.get(k):null;
   if(p){ms.forEach(x=>{if(!p.ms.some(y=>y.toLowerCase()==x.toLowerCase()))p.ms.push(x)});p.lines++;
+   if(sc.v){if(p.sec&&p.sec!=sc.v&&!p.err)p.err='Seções diferentes para o mesmo nome';else{p.sec=sc.v;p.nw=sc.nw}}
    if(sh<0&&!p.err)p.err='Turno inválido (use 1, 2 ou 3)';else if(sh>0){if(p.sh>0&&p.sh!=sh&&!p.err)p.err='Turnos diferentes para o mesmo nome';else p.sh=sh}return}
-  const o={n,sh:Math.max(sh,0),ms,old:n?ex.get(k)||null:null,err:'',lines:1};
-  if(!n)o.err='Nome vazio';else if(sh<0)o.err='Turno inválido (use 1, 2 ou 3)';
+  const o={n,sh:Math.max(sh,0),ms,sec:sc.v,nw:sc.nw,old:n?ex.get(k)||null:null,err:'',lines:1};
+  if(isU()){if(!o.sec)o.sec=me.sections[0];else if(o.nw){o.err='Seção fora do seu acesso';o.nw=false}}
+  if(!n)o.err='Nome vazio';else if(sh<0&&!o.err)o.err='Turno inválido (use 1, 2 ou 3)';
   if(n)by.set(k,o);out.push(o)});
  out.forEach(o=>{if(!o.err&&!o.sh&&!o.old)o.err='Turno não informado (1, 2 ou 3)'});
  imp=out}
 function prevHtml(){
  if(!imp.length)return '<div class="mu" style="margin-top:10px">Nenhuma linha encontrada.</div>';
  const ok=imp.filter(r=>!r.err),nm=new Set(),nw=ok.filter(r=>!r.old).length;ok.forEach(r=>r.ms.forEach(n=>{if(!nmx(n))nm.add(n.toLowerCase())}));
- const secs=r=>[...new Set(r.ms.map(findM).filter(Boolean).map(m=>m.sec).filter(Boolean))].join(', ')||'—',
+ const secs=r=>r.sec?E(r.sec)+(r.nw?' <span class="tag vz">nova</span>':''):E([...new Set(r.ms.map(findM).filter(Boolean).map(m=>m.sec).filter(Boolean))].join(', '))||'—',
   note=r=>{if(!r.old)return '';const p=[];if(r.sh&&r.sh!=r.old.shift)p.push('T'+r.old.shift+'→T'+r.sh);const a=r.ms.filter(n=>{const m=findM(n);return !m||!r.old.machines.includes(m.id)}).length;if(a)p.push('+'+a+' máq.');return p.join(' · ')||'sem mudanças'};
- return `<div style="margin-top:12px"><b>${nw} novo(s) · ${ok.length-nw} atualização(ões) · ${imp.length-ok.length} com erro</b>${nm.size?` <span class="mu">· ${nm.size} CT/máquina(s) não cadastrado(s) serão criados no grupo "${E(bp)}"</span>`:''}<div class="sc tall" style="max-height:340px;overflow:auto"><table class="rt rv ve"><tr class="h"><th>Nome</th><th>Turno</th><th>Seção</th><th>CT / máquinas</th><th>Ação</th></tr>${imp.slice(0,300).map(r=>`<tr><td data-l="Nome">${E(r.n)||'—'}</td><td data-l="Turno">${r.sh?'T'+r.sh:r.old?'T'+r.old.shift+' <span class="mu">(mantém)</span>':'—'}</td><td class="mc" data-l="Seção">${E(secs(r))}</td><td class="mc" data-l="CT / máquinas">${r.ms.map(n=>E(n)+(nmx(n)?'':' <span class="tag vz">nova</span>')).join(', ')||'—'}</td><td data-l="Ação">${r.err?`<span class="tag cf">${r.err}</span>`:(r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>')+(note(r)?` <span class="mu">${E(note(r))}</span>`:'')}</td></tr>`).join('')}</table></div>${imp.length>300?`<div class="mu">Mostrando as 300 primeiras de ${imp.length} linhas; todas as válidas serão importadas.</div>`:''}<div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="apply" ${ok.length?'':'disabled'}>Importar ${ok.length} colaborador(es)</button><button class="btn" data-a="cancel">Cancelar</button></div></div>`}
+ return `<div style="margin-top:12px"><b>${nw} novo(s) · ${ok.length-nw} atualização(ões) · ${imp.length-ok.length} com erro</b>${nm.size?` <span class="mu">· ${nm.size} CT/máquina(s) não cadastrado(s) serão criados no grupo "${E(bp)}"</span>`:''}<div class="sc tall" style="max-height:340px;overflow:auto"><table class="rt rv ve"><tr class="h"><th>Nome</th><th>Turno</th><th>Seção</th><th>CT / máquinas</th><th>Ação</th></tr>${imp.slice(0,300).map(r=>`<tr><td data-l="Nome">${E(r.n)||'—'}</td><td data-l="Turno">${r.sh?'T'+r.sh:r.old?'T'+r.old.shift+' <span class="mu">(mantém)</span>':'—'}</td><td class="mc" data-l="Seção">${secs(r)}</td><td class="mc" data-l="CT / máquinas">${r.ms.map(n=>E(n)+(nmx(n)?'':' <span class="tag vz">nova</span>')).join(', ')||'—'}</td><td data-l="Ação">${r.err?`<span class="tag cf">${r.err}</span>`:(r.old?'<span class="tag vz">Atualizar</span>':'<span class="tag ok">Novo</span>')+(note(r)?` <span class="mu">${E(note(r))}</span>`:'')}</td></tr>`).join('')}</table></div>${imp.length>300?`<div class="mu">Mostrando as 300 primeiras de ${imp.length} linhas; todas as válidas serão importadas.</div>`:''}<div class="bar" style="margin:10px 0 0"><button class="btn pr" data-a="apply" ${ok.length?'':'disabled'}>Importar ${ok.length} colaborador(es)</button><button class="btn" data-a="cancel">Cancelar</button></div></div>`}
 
 // ---- Importar CTs (Seção, CT, Grupo de Máq) de .xlsx, .csv ou texto colado
 const decX=s=>String(s).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&#x([0-9a-f]+);/gi,(_,h)=>String.fromCodePoint(parseInt(h,16))).replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(+n)).replace(/&amp;/g,'&');
@@ -503,9 +509,13 @@ const mcell=e=>{const by=new Map();eMs(e).forEach(m=>{const k=gk(m);(by.get(k)||
  return [...by].map(([k,l])=>`<div class="mg"><span class="mu">${E((l[0].sec?l[0].sec+' › ':'')+(l[0].proc||'Outros'))}</span> ${l.map(m=>`<span class="tag ok" style="display:inline-block;margin:0 4px 4px 0">${m.id==e.machines[0]?'<span title="Posto padrão na escala">★</span> ':''}${E(m.name)} <button class="lk" data-a="rm" data-id="${e.id}" data-v="${m.id}" title="Remover ${E(m.name)}" aria-label="Remover ${E(m.name)} de ${E(e.name)}">×</button></span>`).join('')}${l.length>1?` <button class="lk mu" data-a="rmg" data-id="${e.id}" data-v="${E(k)}" title="Remover todas as máquinas deste grupo">remover grupo</button>`:''}</div>`).join('')+`<button class="btn" data-a="pka" data-id="${e.id}">+ adicionar máquinas</button>`};
 const esec=e=>[...new Set(eMs(e).map(m=>m.sec).filter(Boolean))].join(', ')||'—';
 // ---- Colaboradores: lista enxuta de quem já tem máquina; cada pessoa abre e fecha. Quem está sem máquina fica no Cadastro (e na Escala, em "Sem máquina definida").
-const canDel=e=>!isU()||(!e.shared&&(e.machines.length>0||e.cb===me.uid)); // usuário de seção só remove pessoa só da seção (ou sem máquina criada por ele)
+const canDel=e=>!isU()||(!e.shared&&(e.machines.length>0||e.cb===me.uid||(!!e.sec&&me.sections.includes(e.sec)))); // usuário de seção só remove pessoa só da seção (ou sem máquina criada por ele)
 const orph=e=>!e.machines.some(i=>mac(i)),byNome=(a,b)=>a.name.localeCompare(b.name,'pt-BR');
-let colQ='',cflt=0,opnC=ls.get('openC')||{};
+let colQ='',cflt=0,opnC=ls.get('openC')||{},oq='',os='',oLim=40;
+const oSecs=()=>[...new Set(cfg.employees.filter(orph).map(e=>e.sec||''))].sort((a,b)=>!a?1:!b?-1:a.localeCompare(b,'pt-BR'));
+const oRows=()=>{const tk=nz(oq).split(/\s+/).filter(Boolean);return cfg.employees.filter(e=>orph(e)&&(!os||(os==SN?!e.sec:e.sec===os))&&(!tk.length||tk.every(t=>nz(e.name).includes(t)))).sort(byNome)};
+const oList=()=>{const all=oRows(),l=all.slice(0,oLim),ms=oSecs().length>1;
+ return (l.map(e=>`<div class="ol"><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}" aria-label="Nome"><select data-a="ef" data-f="shift" data-id="${e.id}" aria-label="Turno">${shOpt(e.shift)}</select>${ms&&e.sec?`<span class="tag vz" title="Seção de origem">${E(e.sec)}</span>`:''}<button class="btn" data-a="pka" data-id="${e.id}">+ Máquinas</button>${canDel(e)?`<button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover</button>`:''}</div>`).join('')||'<div class="mu" style="padding:8px 0">Ninguém encontrado.</div>')+(all.length>l.length?`<button class="btn" data-a="omore" style="margin:8px 0">Mostrar mais (${all.length-l.length} restantes)</button>`:'')};
 const CMAX=200;
 const csum=e=>{const ms=eMs(e),s=esec(e);return s!='—'?s:ms.slice(0,2).map(mname).join(', ')+(ms.length>2?' +'+(ms.length-2):'')};
 const colRows=()=>{const tk=nz(colQ).split(/\s+/).filter(Boolean);return cfg.employees.filter(e=>!orph(e)&&eIn(e)&&(!cflt||e.shift==cflt)&&(!tk.length||(h=>tk.every(t=>h.includes(t)))(nz(e.name+' '+eMs(e).map(m=>[m.sec,m.proc,m.ct,m.name].join(' ')).join(' '))))).sort(byNome)};
@@ -570,9 +580,9 @@ function vCad(){
  ${impBox('ct','Importar CTs','Planilha com Seção, CT e Grupo',`<div class="bar"><label class="btn">Escolher planilha<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="ctfile" hidden></label><button class="btn" data-a="ctex">Exemplo</button>${mais('ct')}</div>${impH.ct?`<div class="mu" style="margin-bottom:8px">Colunas: <b>Seção</b>, <b>CT</b>, <b>Grupo de Máq</b> (a 1ª linha pode ser o título). Aceita .xlsx, .csv ou linhas coladas do Excel. CT que já existe é atualizado (as vagas ficam); os novos entram com 1 vaga.</div>`:''}<textarea id="ctk" rows="4" style="width:100%;margin-bottom:8px" placeholder="Ou cole aqui:&#10;Eixos D&#9;01061031&#9;CHOQUE TÉRMICO">${E(ctt)}</textarea><button class="btn pr" data-a="ctprev">Pré-visualizar</button>${ctr?ctPrev():''}`)}</div>
  <div class="col"><div class="card"><h2>Colaboradores <span class="tag n">${cfg.employees.length}</span></h2><div class="bar nf"><input id="en" placeholder="Nome" aria-label="Nome do colaborador" value="${E(ne.n)}"><select id="es" aria-label="Turno">${shOpt(ne.s)}</select><button class="btn" data-a="pkn" aria-haspopup="dialog">${ne.ms.length?ne.ms.length+' máq. · alterar':'+ Máquinas'}</button><button class="btn pr" data-a="adde">Adicionar</button></div>${ne.ms.length?`<div class="mu" style="margin:-4px 0 8px">${ne.ms.slice(0,6).map(i=>E(mname(mac(i)))).join(', ')}${ne.ms.length>6?' e mais '+(ne.ms.length-6):''}</div>`:''}
   ${com?`<div class="mu" style="margin:2px 0 4px">${com} com máquina: veja na aba <button class="lk" data-a="tab" data-v="col">Colaboradores</button>.</div>`:''}
-  ${orp.length?`<h3 class="gh" style="margin:12px 0 2px">Sem máquina <span class="tag vz">${orp.length}</span></h3><div class="mu" style="margin-bottom:2px">Adicione as máquinas para passarem à aba Colaboradores.</div>${orp.map(e=>`<div class="ol"><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}" aria-label="Nome"><select data-a="ef" data-f="shift" data-id="${e.id}" aria-label="Turno">${shOpt(e.shift)}</select><button class="btn" data-a="pka" data-id="${e.id}">+ Máquinas</button>${canDel(e)?`<button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover</button>`:''}</div>`).join('')}`:''}</div>
+  ${orp.length?`<h3 class="gh" style="margin:12px 0 2px">Sem máquina <span class="tag vz">${orp.length}</span></h3><div class="mu" style="margin-bottom:2px">Adicione as máquinas para passarem à aba Colaboradores.</div>${orp.length>8?`<div class="bar" style="margin:6px 0"><input id="oq" type="search" autocomplete="off" placeholder="Buscar pelo nome…" aria-label="Buscar pessoa sem máquina" value="${E(oq)}" style="flex:1 1 140px;min-width:0">${oSecs().length>1?`<select id="os" aria-label="Seção"><option value="">Todas as seções</option>${oSecs().map(x=>`<option value="${x?E(x):SN}" ${os==(x||SN)?'selected':''}>${x?E(x):'(sem seção)'}</option>`).join('')}</select>`:''}</div>`:''}<div id="ol">${oList()}</div>`:''}</div>
  ${me&&me.role=='admin'?impBox('usr','Usuários de seção',usr.list?usr.list.length+' usuário(s)':'Cada um acessa só as seções liberadas',usrBody()):''}
- ${impBox('col','Importar colaboradores','Planilha com Nome, Turno e CT',`<div class="bar"><label class="btn">Escolher planilha<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Exemplo</button>${mais('col')}</div>${impH.col?`<div class="mu" style="margin-bottom:8px">Colunas: <b>Nome</b>, <b>Turno</b> (1, 2, 3 ou T1) e <b>CT</b>. Vários CTs: separe com / ou | ou repita o nome em outra linha. Quem já existe é atualizado (máquinas somadas; turno em branco mantém o atual).</div><div class="bar"><label>Grupo dos CTs novos: <input id="bp" list="pl" value="${E(bp)}"></label></div>`:''}<textarea id="bk" rows="4" style="width:100%;margin-bottom:8px" placeholder="Ou cole aqui:&#10;Ana Souza&#9;1&#9;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}`)}</div></div>`}
+ ${impBox('col','Importar colaboradores','Planilha com Nome, Turno, Seção e CT',`<div class="bar"><label class="btn">Escolher planilha<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Exemplo</button>${mais('col')}</div>${impH.col?`<div class="mu" style="margin-bottom:8px">Colunas: <b>Nome</b>, <b>Turno</b> (1, 2, 3 ou T1), <b>Seção</b> e <b>CT</b> (Seção e CT são opcionais). Quem ainda não tem CT fica na lista "Sem máquina" da seção. Vários CTs: separe com / ou | ou repita o nome em outra linha. Quem já existe é atualizado (máquinas somadas; turno em branco mantém o atual).</div><div class="bar"><label>Grupo dos CTs novos: <input id="bp" list="pl" value="${E(bp)}"></label></div>`:''}<textarea id="bk" rows="4" style="width:100%;margin-bottom:8px" placeholder="Ou cole aqui:&#10;Ana Souza&#9;1&#9;Eixos A&#9;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}`)}</div></div>`}
 
 let calRef=iso(new Date()),calMode='w',calView=['mes','sem','maq'].includes(ls.get('calView'))?ls.get('calView'):'mes',calSel=iso(new Date()),opn=ls.get('open')||{},opnS=ls.get('openS')||{};
 const so=k=>opnS[k]!==false;
@@ -584,7 +594,7 @@ const WK7=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
 const calF=()=>({s0:sf(),ids:new Set(cfg.machines.filter(mIn).map(m=>m.id))});
 const dlong=k=>{const x=wd(k);return cap(x.toLocaleDateString('pt-BR',{weekday:'long'}))+', '+x.getDate()+' de '+x.toLocaleDateString('pt-BR',{month:'long'})};
 function dstat(k,F){const d=days[k]||{s:[],a:{},m:{},w:{}},by={},list=[],a=d.a||{};
- (d.s||[]).forEach(id=>{const e=emp(id);if(!e)return;const w=wk(e,d);if(F.s0&&!(w?F.ids.has(w):F.s0==SN))return;list.push(e);(by[w]=by[w]||[]).push(e)});
+ (d.s||[]).forEach(id=>{const e=emp(id);if(!e)return;const w=wk(e,d);if(F.s0&&!(w?F.ids.has(w):oIn(e)))return;list.push(e);(by[w]=by[w]||[]).push(e)});
  return {k,d,by,list,n:list.length,sh:[1,2,3].map(t=>list.filter(e=>e.shift==t).length),conf:Object.keys(by).filter(w=>{const m=mac(w);return m&&by[w].length>(m.slots||1)}).length,p:list.filter(e=>a[e.id]=='p').length,f:list.filter(e=>a[e.id]=='f').length}}
 function calDia(st){ // painel do dia: quem trabalha, por turno
  const head=`<div class="dp-h"><b>${dlong(st.k)}</b><span class="mu">${st.n?st.n+(st.n==1?' escalado':' escalados'):'ninguém escalado'}${st.p||st.f?' · ✓ '+st.p+' ✗ '+st.f:''}</span>${st.conf?`<span class="tag cf">⚠ ${st.conf} conflito(s)</span>`:''}<span style="flex:1"></span><button class="btn pr" data-a="goto" data-v="${st.k}">${st.n?'Abrir escala':'Montar escala'}</button></div>`;
@@ -614,7 +624,7 @@ function vCal(){
 function calMaq(){
  const ds=calDays(),td=iso(new Date()),s0=sf(),MS=cfg.machines.filter(mIn),hasS=secList().length>0;
  const info=ds.map(k=>{const d=days[k]||{s:[],a:{},w:{}},by={};d.s.forEach(id=>{const e=emp(id);if(e){const w=wk(e,d);(by[w]=by[w]||[]).push(e)}});
-  const tot=s0?MS.reduce((a,m)=>a+(by[m.id]||[]).length,0)+(s0==SN?(by['']||[]).length:0):Object.values(by).reduce((a,l)=>a+l.length,0);return {k,d,by,tot}});
+  const tot=s0?MS.reduce((a,m)=>a+(by[m.id]||[]).length,0)+(by['']||[]).filter(oIn).length:Object.values(by).reduce((a,l)=>a+l.length,0);return {k,d,by,tot}});
  const st=(m,I)=>{const n=(I.by[m.id]||[]).length;return n>(m.slots||1)?'cf':n?'ok':''};
  // resumo de um conjunto de máquinas (seção ou grupo) em um dia
  const sum=(ms,I)=>{const sts=ms.map(m=>st(m,I)),n=ms.reduce((a,m)=>a+(I.by[m.id]||[]).length,0),cov=sts.filter(Boolean).length,cls=sts.includes('cf')?'cf':n?'ok':'';return `<td class="c ${cls}" data-a="goto" data-v="${I.k}"><b>${n||'·'}</b>${n?`<div class="mu">${cov}/${ms.length} máq.</div>`:''}</td>`};
@@ -652,6 +662,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='clsca'){opnC={};ls.set('openC',opnC);render()}
  else if(a=='cflt'){cflt=+v;render()}
  else if(a=='opn'){opn[v]=!(sp()?opn[v]!==false:!!opn[v]);ls.set('open',opn);render()}
+ else if(a=='omore'){oLim+=40;render()}
  else if(a=='opne'){opnE[v]=!(sp()?opnE[v]!==false:!!opnE[v]);ls.set('openE',opnE);render()}
  else if(a=='opse'){opnSE[v]=!soE(v);ls.set('openSE',opnSE);render()}
  else if(a=='how'){how=!how;ls.set('how',how);render()}
@@ -691,7 +702,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='ctprev'){ctt=$('#ctk').value;ctr=ctRows(ctText(ctt));impO.ct=true;render()}
  else if(a=='ctcancel'){ctr=null;delete impO.ct;render()}
  else if(a=='ctapply'){let n=0,u=0;ctr.filter(r=>!r.err).forEach(r=>{const k=r.ct.toLowerCase(),m=cfg.machines.find(m=>(m.ct&&m.ct.toLowerCase()==k)||m.name.toLowerCase()==k);if(m){m.ct=r.ct;if(r.sec)m.sec=r.sec;m.proc=r.grp||m.proc;u++}else{cfg.machines.push({id:uid(),name:r.ct,ct:r.ct,sec:r.sec,proc:r.grp||'Outros',slots:1});n++}});saveCfg();ctr=null;ctt='';delete impO.ct;render();toast(n+' CT(s) novo(s), '+u+' atualizado(s)')}
- else if(a=='adde'){const n=g('#en')||ne.n.trim();if(!n)return toast('Informe o nome do colaborador');const sh=+($('#es').value||ne.s)||1;const ms=ne.ms.filter(i=>mac(i));cfg.employees.push({id:uid(),name:n,shift:sh,machines:ms,...(isU()&&me?{cb:me.uid}:{})});saveCfg();ne={n:'',s:sh,ms:[]};render();toast(ms.length?n+' adicionado(a)':n+' adicionado(a) sem máquina (veja abaixo)')}
+ else if(a=='adde'){const n=g('#en')||ne.n.trim();if(!n)return toast('Informe o nome do colaborador');const sh=+($('#es').value||ne.s)||1;const ms=ne.ms.filter(i=>mac(i));cfg.employees.push({id:uid(),name:n,shift:sh,machines:ms,...(isU()&&me?{cb:me.uid,sec:me.sections[0]}:{})});saveCfg();ne={n:'',s:sh,ms:[]};render();toast(ms.length?n+' adicionado(a)':n+' adicionado(a) sem máquina (veja abaixo)')}
  else if(a=='pka'){if(emp(id))pkOpen({mode:'add',id})}
  else if(a=='pkn')pkOpen({mode:'new',sel:new Set(ne.ms)})
  else if(a=='pkf')pkOpen({mode:'flt'})
@@ -713,10 +724,10 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='delm'){const m=mac(id);if(m&&!confirm('Remover o CT "'+(m.ct||m.name)+'"? Quem treina nele perde esse treinamento. Vale para todos os gestores.'))return;cfg.machines=cfg.machines.filter(m=>m.id!==id);cfg.employees.forEach(e=>e.machines=e.machines.filter(i=>i!==id));saveCfg();render()}
  else if(a=='dele'){const e=emp(id);if(e&&!confirm('Remover '+e.name+'? Some da escala e dos indicadores. Vale para todos os gestores.'))return;cfg.employees=cfg.employees.filter(e=>e.id!==id);saveCfg();render()}
  else if(a=='rm'){const e=emp(id);if(!e)return;e.machines=e.machines.filter(i=>i!==v);saveCfg();render();if(orph(e))toast(e.name+' ficou sem máquina: passou para o Cadastro')}
- else if(a=='ex'){bk='Nome\tTurno\tCT\nAna Souza\t1\t01061031/01061008\nBruno Lima\tT2\t01061031\nCarlos Dias\tTurno 3\t01061008|01061009';parse();impO.col=true;render()}
+ else if(a=='ex'){bk='Nome\tTurno\tSeção\tCT\nAna Souza\t1\tEixos A\t01061031/01061008\nBruno Lima\tT2\tEixos A\t01061031\nCarlos Dias\tTurno 3\tEixos B\t';parse();impO.col=true;render()}
  else if(a=='prev'){bk=$('#bk').value;bp=(($('#bp')||{value:bp}).value||'').trim()||'Outros';parse();impO.col=true;render()}
  else if(a=='cancel'){imp=null;delete impO.col;render()}
- else if(a=='apply'){let n=0,u=0;imp.filter(r=>!r.err).forEach(r=>{const ids=r.ms.map(nm=>{let m=findM(nm);if(!m){m={id:uid(),name:nm,ct:/^\d+$/.test(nm)?nm:'',sec:isU()?me.sections[0]:'',proc:bp||'Outros',slots:1};cfg.machines.push(m)}return m.id});const e=cfg.employees.find(e=>nk(e.name)==nk(r.n));if(e){if(r.sh)e.shift=r.sh;e.machines=[...new Set([...e.machines,...ids])];u++}else{cfg.employees.push({id:uid(),name:r.n,shift:r.sh,machines:ids});n++}});saveCfg();imp=null;bk='';delete impO.col;render();toast(n+' novo(s), '+u+' atualizado(s)')}
+ else if(a=='apply'){let n=0,u=0;imp.filter(r=>!r.err).forEach(r=>{const ids=r.ms.map(nm=>{let m=findM(nm);if(!m){m={id:uid(),name:nm,ct:/^\d+$/.test(nm)?nm:'',sec:r.sec||(isU()?me.sections[0]:''),proc:bp||'Outros',slots:1};cfg.machines.push(m)}return m.id});const e=cfg.employees.find(e=>nk(e.name)==nk(r.n));if(e){if(r.sh)e.shift=r.sh;if(r.sec&&!isU())e.sec=r.sec;e.machines=[...new Set([...e.machines,...ids])];u++}else{cfg.employees.push({id:uid(),name:r.n,shift:r.sh,machines:ids,...(r.sec?{sec:r.sec}:{})});n++}});saveCfg();imp=null;bk='';delete impO.col;render();toast(n+' novo(s), '+u+' atualizado(s)')}
  else if(a=='demo'){const G=[['Retificadora','Eixos A','Ret 01','Ret 02','Ret 03'],['Estria','Eixos D','Estria 01','Estria 02'],['Fresadora','Eixos D','Fres 01','Fres 02']];G.forEach(g=>g.slice(2).forEach(n=>cfg.machines.push({id:uid(),name:n,ct:'',sec:g[1],proc:g[0],slots:1})));const M=cfg.machines,L=M.length;
   'Ana Souza,Bruno Lima,Carlos Dias,Daniela Rocha,Eduardo Alves,Fernanda Reis,Gustavo Melo,Helena Costa,Igor Santos,Julia Prado,Kleber Nunes,Larissa Moura,Marcos Pinto,Nadia Freitas,Otávio Ramos,Paula Vieira'.split(',').forEach((n,i)=>cfg.employees.push({id:uid(),name:n,shift:i%3+1,machines:[M[i%L].id,...(i%3==0?[M[(i+1)%L].id]:[])]}));saveCfg();render()}
 });
@@ -729,13 +740,14 @@ document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dat
   if(h){h.querySelector('.cl-n b').textContent=e.name;const x=h.querySelector('.cl-n .t');x.textContent='T'+e.shift;x.className='t t'+e.shift;const c=$('#cs');if(c)c.innerHTML=colSum();if(f=='shift'&&cflt){const l=$('#cl');if(l)l.innerHTML=colList()}}}}
  else if(a=='usec'&&usr.f){const v=t.dataset.v,l=usr.f.secs;if(t.checked){if(!l.includes(v))l.push(v)}else usr.f.secs=l.filter(x=>x!==v)}
  else if(t.id=='es')ne.s=+t.value
+ else if(t.id=='os'){os=t.value;oLim=40;render()}
  else if(a=='mf'){const m=mac(id);if(m){const v=t.value.trim();if(f=='slots')m.slots=Math.max(1,+t.value||1);else if(f=='ct'){if(v){if(!m.ct||m.name===m.ct)m.name=v;m.ct=v}}else if(f=='sec')m.sec=v;else m[f]=v||m[f];saveCfg();soft()}}
  else if(a=='sec'){secF=t.value;grpF='';ctF='';ls.set('sec',secF);ls.set('grp','');ls.set('ct','');render()}
  else if(a=='ctfile'&&t.files[0]){fileText(t.files[0]).then(tx=>{ctt=tx;ctr=ctRows(ctText(ctt));impO.ct=true;render()}).catch(e=>toast('Não consegui ler o arquivo: '+(e.message||e)));t.value=''}
  else if(a=='file'&&t.files[0]){fileText(t.files[0]).then(tx=>{bk=tx;bp=($('#bp')||{}).value||bp;parse();impO.col=true;render()}).catch(e=>toast('Não consegui ler o arquivo: '+(e.message||e)));t.value=''}
 });
 document.addEventListener('keydown',ev=>{if(ev.key=='Escape'&&pk)pkClose()});
-document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='pkq'&&pk){pk.q=t.value;pkUp()}if(t.id=='cq'){colQ=t.value;const l=$('#cl');if(l)l.innerHTML=colList()}if(t.id=='mq'){mq=t.value;const l=$('#ml');if(l)l.innerHTML=machList()}if(t.id=='en')ne.n=t.value;if(t.dataset.u&&usr.f)usr.f[t.dataset.u]=t.value;if(t.id=='bk')bk=t.value;if(t.id=='ctk')ctt=t.value;if(t.id=='bp')bp=t.value});
+document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='pkq'&&pk){pk.q=t.value;pkUp()}if(t.id=='cq'){colQ=t.value;const l=$('#cl');if(l)l.innerHTML=colList()}if(t.id=='mq'){mq=t.value;const l=$('#ml');if(l)l.innerHTML=machList()}if(t.id=='oq'){oq=t.value;oLim=40;const l=$('#ol');if(l)l.innerHTML=oList()}if(t.id=='en')ne.n=t.value;if(t.dataset.u&&usr.f)usr.f[t.dataset.u]=t.value;if(t.id=='bk')bk=t.value;if(t.id=='ctk')ctt=t.value;if(t.id=='bp')bp=t.value});
 
 // ---- PWA: instalar como aplicativo e abrir sem internet
 let ip=null; // evento beforeinstallprompt (Chrome, Edge, Android)
