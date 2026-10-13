@@ -40,7 +40,41 @@ A cada `git push` no branch `main` o Cloudflare publica de novo.
 
 ## 4. Código de acesso
 
-No projeto, abra **Settings → Variables and Secrets → Add**: nome `ACCESS_KEY`, tipo **Secret**, valor com um código que só os gestores conheçam. Secrets não são apagados pelos deploys. Cada gestor digita o código uma vez, na primeira abertura, e o navegador o guarda.
+No projeto, abra **Settings → Variables and Secrets → Add**: nome `ACCESS_KEY`, tipo **Secret**, valor com um código que só os gestores conheçam. Secrets não são apagados pelos deploys. O administrador digita o código uma vez (janela **Entrar → Sou administrador**) e o navegador o guarda. Esse mesmo código também é necessário para criar usuários por seção (próxima seção).
+
+## Usuários por seção (cada chefe só vê e cadastra a sua seção)
+
+O administrador (quem tem o `ACCESS_KEY`) cria usuários que só enxergam e mexem em uma ou mais seções.
+
+**Criar um usuário**
+1. Entre como administrador (**Entrar → Sou administrador** e digite o `ACCESS_KEY`).
+2. Abra **Cadastro → Usuários de seção → + Novo usuário**.
+3. Informe nome, usuário (só letras minúsculas, números, ponto, traço; 3 a 30 caracteres) e marque a(s) seção(ões). Dá para criar uma seção nova digitando o nome.
+4. Use a senha sugerida ou digite outra (mínimo de 6 caracteres) e clique em **Salvar**.
+5. A tela mostra **usuário e senha uma única vez**: anote e envie ao chefe. A senha não é guardada em texto; depois só dá para trocar.
+
+**Trocar a senha, mudar seções ou remover**: no mesmo cartão, **Editar** ou **Remover**. Ao trocar a senha, a sessão antiga da pessoa termina e ela entra de novo; ao mudar as seções, a tela dela se ajusta sozinha em até 8 segundos.
+
+**O que o usuário de seção vê e faz**
+
+| Pode | Não pode |
+| --- | --- |
+| Ver só as máquinas da(s) sua(s) seção(ões) e as pessoas treinadas nelas | Ver máquinas, CTs ou pessoas de outras seções |
+| Criar, editar e remover máquinas da sua seção e importar CTs (seção de fora é recusada) | Criar máquina em outra seção ou repetir um CT que já existe em outra |
+| Cadastrar pessoas e **alocá-las às máquinas da sua seção**, inclusive as pessoas **sem máquina** | Alterar nome, turno ou remover uma pessoa que também trabalha em outra seção (aparece "compartilhada") |
+| Remover as pessoas só da sua seção e as que ele mesmo criou sem máquina | Remover pessoa sem máquina criada por outro |
+| Montar a Escala, a Presença e o Calendário da sua seção | Escalar quem já está escalado em outra seção no mesmo dia (aparece bloqueado, "outra seção") |
+| Ver Indicadores só da sua seção | Criar ou ver usuários |
+
+Tudo isso é conferido **no servidor**: mesmo que alguém altere a página, os dados de outras seções nem chegam ao navegador e as gravações fora da seção são descartadas (o site avisa).
+
+**Para saber**
+- Uma pessoa treinada **só em máquinas de outra seção** não aparece para o chefe; para alocá-la a uma máquina da sua seção, peça ao administrador.
+- Não existe "esqueci a senha" automático: o administrador define uma senha nova em **Editar**.
+- Depois de 8 tentativas erradas de senha para o mesmo usuário (ou 30 do mesmo endereço) em 10 minutos, o site pede para aguardar.
+- A sessão dura 14 dias. **Sair** (no cabeçalho) apaga do navegador os dados guardados, então outra pessoa pode usar o mesmo computador sem ver nada do chefe anterior.
+- Se o `ACCESS_KEY` for apagado depois de criar usuários, **todos** ficam sem acesso até defini-lo de novo.
+- Quem já usava o site como administrador continua entrando normalmente, sem refazer nada.
 
 ## Cadastrar os CTs (planilha) e filtrar por seção
 
@@ -164,7 +198,7 @@ Os gráficos se ajustam à largura da tela e, no celular, ficam em uma coluna.
 
 ## Observações
 
-- **Sem `ACCESS_KEY`**, qualquer pessoa com o link vê e edita a escala, que contém nomes de colaboradores.
+- **Sem `ACCESS_KEY`**, qualquer pessoa com o link vê e edita a escala, que contém nomes de colaboradores (e não dá para criar usuários por seção).
 - **Sem o binding `DB`**, o site abre, mas cada navegador guarda os dados só para si, e o cabeçalho mostra o motivo (veja a tabela abaixo).
 - Os dados cadastrados em outras versões (claude.ai, Vercel) não vêm junto: recadastre ou use **Cadastro → Importar em lote**. Se o servidor estiver vazio e o navegador já tiver dados locais, o site os envia na primeira abertura. Se o servidor já tiver dados, eles substituem os do navegador; por isso, abra primeiro no computador cujos dados valem.
 - **Dois gestores editando o mesmo dia ao mesmo tempo**: vale a última gravação. O site se atualiza sozinho a cada 8 segundos (e ao voltar para a aba), então o risco é só quando duas pessoas mexem no mesmo dia dentro desse intervalo.
@@ -201,7 +235,8 @@ Logo abaixo do título, o site mostra o estado da conexão com o servidor em uma
 | ● Sincronizado às HH:MM | Funcionando; os dados são compartilhados entre os gestores. | Nada. |
 | ⚠ Sem sincronização: banco de dados não ligado | O Worker roda, mas não encontra o binding `DB`. | Confira o bloco `d1_databases` do `wrangler.jsonc` (binding `DB`, nome e ID do banco), envie o commit e aguarde o deploy. |
 | ⚠ Sem sincronização: API não encontrada | O site está no ar, mas o código da API não foi publicado (por exemplo, o projeto é Pages ou falta o `wrangler.jsonc`). | Confira se `wrangler.jsonc` e `src/worker.js` estão na raiz do repositório e se o `name` do arquivo é igual ao do Worker; veja o resultado do build. |
-| ⚠ Sem sincronização: código de acesso incorreto | O `ACCESS_KEY` está definido e o navegador não tem o código certo. | Clique em **Tentar de novo** e digite o código. |
+| ⚠ Entre para continuar | O `ACCESS_KEY` está definido e o navegador ainda não entrou, ou a sessão terminou (senha trocada, 14 dias). | Clique em **Entrar** e use usuário e senha (ou **Sou administrador** e o código). |
+| ⚠ Muitas tentativas, aguarde | Senha ou código errados várias vezes seguidas. | Espere alguns minutos e tente de novo. |
 | ⚠ Sem sincronização: sem conexão | Rede fora do ar ou erro no servidor. Suas alterações ficam salvas no aparelho ("N a enviar") e são enviadas quando a sincronização voltar. | Tente de novo; veja os logs do Worker em **Observability**. |
 
 Você também pode abrir `https://SEU-SITE.workers.dev/api/state` no navegador: `{"error":"storage_not_configured"}` indica binding ausente; `{"error":"unauthorized"}` indica que o banco está ligado e falta só o código; uma página 404 indica que a API não foi publicada.

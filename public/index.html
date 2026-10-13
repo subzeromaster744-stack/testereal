@@ -184,6 +184,13 @@ main.nar{max-width:940px}
 .pills{display:flex;flex-wrap:wrap;gap:6px 8px;margin-bottom:12px}.pi{background:var(--card);border:1px solid var(--bd);border-radius:99px;padding:3px 12px;font-size:13px;color:var(--mu)}.pi b{font-size:15px;color:var(--tx)}
 .pi.t1 b{color:var(--t1)}.pi.t2 b{color:var(--t2)}.pi.t3 b{color:var(--t3)}.pi.ok{background:var(--okb);border-color:transparent}.pi.ok b{color:var(--ok)}.pi.cf{background:var(--erb);border-color:var(--er);color:var(--er)}.pi.cf b{color:var(--er)}
 .how{padding:8px 12px 8px 16px}.how ol{margin:0;padding-left:18px;font-size:13px;line-height:1.6}
+.pk.lg{width:min(380px,100%)}.lf{display:block;margin:8px 0 2px;font-size:13px;color:var(--mu)}.lf input{display:block;width:100%;margin-top:3px;font-size:16px;color:var(--tx)}#le{min-height:20px;margin:6px 0;font-size:13px}
+body.lgo #app{visibility:hidden}
+@media(max-width:640px){.pk.lg{width:100%}}
+.ur{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;padding:8px 0;border-top:1px solid var(--bd)}.ur-n{flex:1 1 150px;min-width:0;overflow-wrap:anywhere}.ur-s{display:flex;flex-wrap:wrap;gap:4px}
+.uf{margin-top:12px;padding-top:4px;border-top:1px solid var(--bd)}.ur-p{display:flex;gap:10px;align-items:center}.ur-p input{flex:1;min-width:0}.us{display:flex;flex-wrap:wrap;gap:6px 14px;margin:4px 0 10px}.chk{display:flex;gap:6px;align-items:center;font-size:14px;color:var(--tx)}.chk input{width:auto}
+.ukey{background:var(--okb);border-color:var(--ok);margin:8px 0}
+@media(max-width:640px){.ur .btn{flex:1 1 40%}.ur-s{flex-basis:100%}}
 @media(pointer:coarse){.btn,.tab,.chip{min-height:42px}}
 @media print{
  #cq,.cl-x,.cl-b button{display:none!important}.cl{break-inside:avoid}
@@ -196,7 +203,7 @@ main.nar{max-width:940px}
  .sc{overflow:visible}.cal .first{position:static}
  .lk{color:#000;text-decoration:none}
 }
-</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div><div id="pk" class="pkw" hidden></div>
+</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div><div id="pk" class="pkw" hidden></div><div id="lg" class="pkw" hidden></div>
 <script>
 const $=s=>document.querySelector(s),E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,8),iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),fmt=k=>k.split('-').reverse().join('/');
@@ -205,40 +212,61 @@ const ls={get(k){try{return JSON.parse(localStorage.getItem('escalaHE:'+k))}catc
 const D=d=>days[d]||{s:[],a:{},m:{}},emp=id=>cfg.employees.find(e=>e.id===id),mac=id=>cfg.machines.find(m=>m.id===id);
 function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>e.style.display='none',3200)}
 let ver='',busy=0;
-const hd=()=>({'content-type':'application/json','x-key':ls.get('key')||''});
-let sync={s:'wait'};
-async function call(body,q,tried){const r=await fetch('/api/state'+(q||''),body?{method:'POST',headers:hd(),body:JSON.stringify(body)}:{headers:hd(),cache:'no-store'});
- if(r.status==401){if(!call.no){const k=prompt(tried?'Código incorreto. Digite novamente (ou cancele):':'Código de acesso:');if(k){ls.set('key',k.trim());return call(body,q,1)}call.no=true}throw 401}
+const hd=()=>{const h={'content-type':'application/json'},k=ls.get('key'),t=ls.get('tok');if(k)h['x-key']=k;if(t)h['x-token']=t;return h};
+let sync={s:'wait'},me=null; // me: quem está usando (vem do servidor): {role:'admin'|'user', name, sections, uid, canUsers}
+const isU=()=>!!me&&me.role=='user';
+async function call(body,q,path){const r=await fetch((path||'/api/state')+(q||''),body?{method:'POST',headers:hd(),body:JSON.stringify(body)}:{headers:hd(),cache:'no-store'});
+ if(r.status==401){if(!call.no){if(await askLogin())return call(body,q,path);call.no=true}throw 401}
  if(!r.ok)throw r.status;return r.json()}
-function syl(){const x=sync,b=' <button class="lk" data-a="sync">'+(x.s=='ok'?'Atualizar':'Tentar de novo')+'</button>'+ib();
- if(x.s=='ok')return '<span style="color:var(--ok)">●</span> Sincronizado às '+x.t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+b;
+// ---- Entrar: usuário e senha, ou o código de administrador (ACCESS_KEY)
+let lgP=null,lgAdm=false;
+function askLogin(){if(lgP)return lgP.p;let res;const p=new Promise(r=>res=r);lgP={p,res};lgAdm=!!ls.get('key');showLogin('');return p}
+function showLogin(err){const e=$('#lg');document.body.classList.add('lgo');
+ e.innerHTML=`<div class="pk-bg"></div><form class="pk lg" role="dialog" aria-modal="true" aria-labelledby="lgt"><h2 id="lgt">Entrar</h2>${lgAdm?`<label class="lf">Código de administrador<input id="lc" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false"></label>`:`<label class="lf">Usuário<input id="lu" autocomplete="username" autocapitalize="none" spellcheck="false"></label><label class="lf">Senha<input id="lp" type="password" autocomplete="current-password"></label>`}<div class="er-t" id="le" role="alert">${E(err)}</div><div class="bar"><button class="btn pr" type="submit">Entrar</button><button type="button" class="btn" data-a="lgx">Agora não</button><span style="flex:1"></span><button type="button" class="lk" data-a="lgmode">${lgAdm?'Entrar com usuário e senha':'Sou administrador'}</button></div></form>`;
+ e.hidden=false;const f=$(lgAdm?'#lc':'#lu');if(f&&f.focus)f.focus()}
+function closeLogin(ok){const e=$('#lg');e.hidden=true;e.innerHTML='';document.body.classList.remove('lgo');const l=lgP;lgP=null;if(l)l.res(ok);if(ok){setSy();render()}}
+function wipe(){cfg={machines:[],employees:[]};days={};me=null;usr={list:null,ed:'',f:null,err:'',last:null,busy:false};pend={cfg:0,days:{}};ver='';secF='';grpF='';ctF='';imp=null;ctr=null;bk='';ctt='';edM='';addM=false;pk=null;ne={n:'',s:1,ms:[]};['cfg','days','pend','sec','grp','ct','openC','openE','openSE','open','openS','openM','openMS'].forEach(k=>ls.set(k,null))}
+function finishLogin(adm,code,j){const w=adm?'admin':'u:'+j.me.uid,prev=ls.get('who');if(prev?prev!==w:!adm)wipe(); // outra pessoa no mesmo navegador: não herda os dados da anterior
+ if(adm){ls.set('key',code);ls.set('tok','')}else{ls.set('tok',j.token);ls.set('key','')}
+ ls.set('who',w);me=j.me;call.no=false;closeLogin(true)}
+document.addEventListener('submit',async ev=>{const f=ev.target;if(!(f.closest&&f.closest('#lg')))return;ev.preventDefault();
+ const b=f.querySelector('[type=submit]'),er=m=>{$('#le').textContent=m;b.disabled=false},body=lgAdm?{code:($('#lc').value||'').trim()}:{login:($('#lu').value||'').trim(),password:$('#lp').value||''};
+ if(lgAdm?!body.code:!body.login||!body.password)return er(lgAdm?'Digite o código.':'Digite o usuário e a senha.');
+ b.disabled=true;
+ try{const r=await fetch('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}),j=await r.json().catch(()=>({}));
+  if(r.ok&&j.ok)finishLogin(lgAdm,body.code,j);else er(r.status==429?'Muitas tentativas. Aguarde alguns minutos.':r.status==503?'O servidor não está pronto (banco de dados).':lgAdm?'Código incorreto.':'Usuário ou senha incorretos.')}
+ catch{er('Sem conexão. Tente de novo.')}});
+function syl(){const x=sync,b=' <button class="lk" data-a="sync">'+(x.s=='ok'?'Atualizar':x.s=='e401'?'Entrar':'Tentar de novo')+'</button>'+ib();
+ const w=isU()?` · <b>${E(me.name)}</b> <span class="mu">(${E(me.sections.join(', '))})</span> <button class="lk" data-a="logout">Sair</button>`:me&&me.canUsers&&ls.get('key')?' · Administrador <button class="lk" data-a="logout">Sair</button>':'';
+ if(x.s=='ok')return '<span style="color:var(--ok)">●</span> Sincronizado às '+x.t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+b+w;
  if(x.s=='wait')return 'Conectando…'+ib();
- const m={e503:'banco de dados não ligado',e404:'API não encontrada',e401:'código de acesso incorreto'}[x.s]||'sem conexão';
- return '<span style="color:var(--er)">⚠ Sem sincronização: '+m+'.</span> '+(np()?'<b>'+np()+' a enviar</b> · ':'')+'Suas alterações ficam salvas neste aparelho.'+b}
+ const m={e503:'banco de dados não ligado',e404:'API não encontrada',e401:'entre para continuar',e429:'muitas tentativas, aguarde'}[x.s]||'sem conexão';
+ return '<span style="color:var(--er)">⚠ Sem sincronização: '+m+'.</span> '+(np()?'<b>'+np()+' a enviar</b> · ':'')+(x.s=='e401'?'':'Suas alterações ficam salvas neste aparelho.')+b+w}
 function setSy(){const e=$('#sy');if(e)e.innerHTML=syl()}
 // Alterações que ainda não chegaram ao servidor (sem conexão) ficam guardadas neste aparelho e são reenviadas quando a sincronização volta.
 let pend=ls.get('pend')||{cfg:0,days:{}},sq=0;if(!pend.days)pend.days={};
 const savePend=()=>ls.set('pend',pend),np=()=>(pend.cfg?1:0)+Object.keys(pend.days).length;
-const fail=e=>{sync={s:e===401?'e401':e===503?'e503':e===404?'e404':'err',c:e}};
+const fail=e=>{sync={s:e===401?'e401':e===429?'e429':e===503?'e503':e===404?'e404':'err',c:e}};
 async function saveCfg(){ls.set('cfg',cfg);const n=pend.cfg=++sq;savePend();if(!db)return setSy();busy++;
- try{await call({t:'cfg',data:cfg});if(pend.cfg===n){pend.cfg=0;savePend()}}catch(e){fail(e);toast('Sem conexão: salvo neste aparelho, será enviado depois')}busy--;setSy()}
+ try{const r=await call({t:'cfg',data:cfg});if(pend.cfg===n){pend.cfg=0;savePend()}if(r&&r.dropped)toast('Parte da alteração não foi salva: fora da sua seção')}catch(e){fail(e);toast('Sem conexão: salvo neste aparelho, será enviado depois')}busy--;setSy()}
 async function saveDay(d){ls.set('days',days);const n=pend.days[d]=++sq;savePend();if(!db)return setSy();busy++;
- try{await call({t:'day',date:d,data:days[d]});if(pend.days[d]===n){delete pend.days[d];savePend()}}catch(e){fail(e);toast('Sem conexão: salvo neste aparelho, será enviado depois')}busy--;setSy()}
+ try{const r=await call({t:'day',date:d,data:days[d]});if(pend.days[d]===n){delete pend.days[d];savePend()}if(r&&r.dropped)toast('Parte da alteração não foi salva: a pessoa é de outra seção')}catch(e){fail(e);toast('Sem conexão: salvo neste aparelho, será enviado depois')}busy--;setSy()}
 async function flush(){busy++;try{const c=pend.cfg;if(c){await call({t:'cfg',data:cfg});if(pend.cfg===c)pend.cfg=0}
  for(const d of Object.keys(pend.days)){const n=pend.days[d];if(days[d])await call({t:'day',date:d,data:days[d]});if(pend.days[d]===n)delete pend.days[d]}return true}catch{return false}finally{savePend();busy--}}
 async function pull(manual){if(busy)return;if(manual===true)call.no=false;
  try{const r=await call(null,ver?'?v='+encodeURIComponent(ver):''),first=!db;db=true;call.no=false;sync={s:'ok',t:new Date()};
+  {const w=r.me?(r.me.role=='user'?'u:'+r.me.uid:'admin'):'admin',prev=ls.get('who');if(prev&&prev!==w){wipe();ls.set('who',w);me=r.me||null;return pull()}ls.set('who',w);me=r.me||null}
   if(np()){if(!await flush())throw Error('as alterações feitas sem conexão ainda não foram enviadas');ver='';return pull()}
   if(r.same)return setSy();ver=r.v;
  if(first&&!r.cfg&&(cfg.machines.length||cfg.employees.length)){saveCfg();Object.keys(days).forEach(saveDay);return render()}
  cfg=r.cfg||{machines:[],employees:[]};norm();days=r.days||{};ls.set('cfg',cfg);ls.set('days',days);rr();setSy()}
- catch(e){fail(e);setSy()}}
+ catch(e){fail(e);setSy();if(e===401)render()}}
 function upd(d,fn){const x=JSON.parse(JSON.stringify(D(d)));fn(x);days[d]=x;saveDay(d);render()}
 const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
 const shiftDate=n=>{const x=new Date(date+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
 
 function dbar(f){return `<div class="bar"><button class="btn" data-a="dd" data-v="-1" aria-label="Dia anterior">◀</button><input type="date" data-a="date" value="${date}" aria-label="Data"><button class="btn" data-a="dd" data-v="1" aria-label="Próximo dia">▶</button><button class="btn" data-a="today">Hoje</button><b>${cap(new Date(date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long'}))}</b>${secSel()}${f?`<span style="flex:1"></span>${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn ${flt==x[0]?'pr':''}" aria-pressed="${flt==x[0]}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}`:''}</div>`}
-function noData(){if(sync.s=='wait')return `<div class="card empty"><h2>Carregando…</h2></div>`;return `<div class="card empty"><h2>Comece pelo Cadastro</h2><p class="mu">Cadastre as máquinas e os colaboradores para montar a escala.</p><button class="btn pr" data-a="tab" data-v="cad">Ir para o Cadastro</button> <button class="btn" data-a="demo">Carregar exemplo</button></div>`}
+function noData(){if(sync.s=='wait')return `<div class="card empty"><h2>Carregando…</h2></div>`;return `<div class="card empty"><h2>Comece pelo Cadastro</h2><p class="mu">Cadastre as máquinas e os colaboradores ${isU()?'da sua seção ':''}para montar a escala.</p><button class="btn pr" data-a="tab" data-v="cad">Ir para o Cadastro</button>${isU()?'':' <button class="btn" data-a="demo">Carregar exemplo</button>'}</div>`}
 
 const wk=(e,d)=>{const w=(d.w||{})[e.id];return e.machines.includes(w)?w:(e.machines[0]||'')};
 const counts=d=>{const c={};cfg.employees.forEach(e=>{if(d.s.includes(e.id)){const w=wk(e,d);c[w]=(c[w]||0)+1}});return c};
@@ -259,7 +287,7 @@ const bySec=gs=>gs.sort((a,b)=>a.split('|')[0].localeCompare(b.split('|')[0],'pt
 const mlb=m=>(m.sec?m.sec+' · ':'')+(m.proc||'Outros')+' · '+m.name;
 const mname=m=>m?m.ct||m.name:'';
 function secSel(){if(!cfg.machines.length)return '';const l=secList(),s=sec0(),g=fg(),c=fc();
- return (l.length?`<label class="mu">Seção: <select data-a="sec"><option value="">Todas</option>${l.map(x=>`<option value="${E(x)}" ${s===x?'selected':''}>${E(x)}</option>`).join('')}${cfg.machines.some(m=>!m.sec)?`<option value="${SN}" ${s==SN?'selected':''}>(sem seção)</option>`:''}</select></label>`:'')+
+ return (l.length&&!(isU()&&l.length<2)?`<label class="mu">Seção: <select data-a="sec"><option value="">Todas</option>${l.map(x=>`<option value="${E(x)}" ${s===x?'selected':''}>${E(x)}</option>`).join('')}${cfg.machines.some(m=>!m.sec)?`<option value="${SN}" ${s==SN?'selected':''}>(sem seção)</option>`:''}</select></label>`:'')+
  `<button class="btn" data-a="pkf" aria-haspopup="dialog" title="Filtrar por seção, grupo ou CT">Buscar máquina…</button>`+
  (g||c?`<span class="tag n">${c?'CT '+E(mname(mac(c))):'Grupo '+E(g)} <button class="lk" data-a="clrf" aria-label="Limpar o filtro de ${c?'CT':'grupo'}" title="Limpar">×</button></span>`:'')}
 let opnE=ls.get('openE')||{},opnSE=ls.get('openSE')||{},how=ls.get('how')===true;
@@ -274,7 +302,7 @@ function vEscala(){
  const sc=cfg.employees.filter(e=>S.has(e.id)&&(!s0||(wk(e,d)?ids.has(wk(e,d)):s0==SN)));
  const sh=[1,2,3].map(t=>sc.filter(e=>e.shift==t).length);
  const cf=ms0.filter(m=>st(m)=='cf').length,use=ms0.filter(m=>st(m)).length;
- const chip=(e,mid)=>{const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return `<button class="chip ${here?'on':''} ${el?'alt':''}" aria-pressed="${here}" data-a="tog" data-id="${e.id}" data-v="${mid}"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
+ const chip=(e,mid)=>{if((d.ox||[]).includes(e.id))return `<button class="chip alt" disabled title="Já escalada em outra seção"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">outra seção</span></button>`;const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return `<button class="chip ${here?'on':''} ${el?'alt':''}" aria-pressed="${here}" data-a="tog" data-id="${e.id}" data-v="${mid}"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
  const card=m=>{const s=st(m),es=cfg.employees.filter(e=>e.machines.includes(m.id)&&(!flt||e.shift==flt)).sort(bysh);return `<div class="m ${s}"><h4><span>${E(m.name)}${m.ct&&m.ct!==m.name?` <span class="mu">CT ${E(m.ct)}</span>`:''}</span>${s?`<span class="tag ${s}">${{cf:'Conflito',ok:'Com operador'}[s]}</span>`:''}</h4><div class="mu">Vagas: ${cnt[m.id]||0}/${m.slots||1}</div>${es.map(e=>chip(e,m.id)).join('')||`<div class="mu" style="margin-top:6px">Sem operadores</div>`}</div>`};
  const sum=ms=>{const c=ms.filter(m=>st(m)=='cf').length,n=ms.reduce((a,m)=>a+(cnt[m.id]||0),0);return `${n?`<span class="tag n">${n} escalado${n==1?'':'s'}</span>`:''}${c?` <span class="tag cf">⚠ ${c} conflito${c==1?'':'s'}</span>`:''}`};
  const secs=hasS?[...new Set(ms0.map(m=>m.sec||''))].sort((a,b)=>!a?1:!b?-1:a.localeCompare(b,'pt-BR')):[''];
@@ -425,6 +453,7 @@ function ctRows(rows){
  out.forEach(o=>{const k=o.ct.toLowerCase();
   if(!o.ct)o.err='CT vazio';else if(seen.has(k))o.err='CT repetido na planilha';
   if(o.ct)seen.add(k);
+  if(!o.err&&isU()){const lc=o.sec.toLowerCase(),hit=me.sections.find(x=>x.toLowerCase()==lc);if(!o.sec){if(me.sections.length==1)o.sec=me.sections[0];else o.err='Informe a seção'}else if(hit)o.sec=hit;else o.err='Seção fora do seu acesso'}
   if(!o.err){o.grp=o.grp||'Outros';o.old=cfg.machines.find(m=>(m.ct&&m.ct.toLowerCase()==k)||m.name.toLowerCase()==k)||null}});
  return out}
 const splitL=(l,d)=>{if(!l.includes('"'))return l.split(d).map(x=>x.trim());const o=[];let c='',q=false;for(let i=0;i<l.length;i++){const ch=l[i];if(q){if(ch=='"'){if(l[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}else if(ch=='"'&&!c.trim())q=true;else if(ch==d){o.push(c.trim());c=''}else c+=ch}o.push(c.trim());return o}; // divide a linha respeitando "aspas"
@@ -474,6 +503,7 @@ const mcell=e=>{const by=new Map();eMs(e).forEach(m=>{const k=gk(m);(by.get(k)||
  return [...by].map(([k,l])=>`<div class="mg"><span class="mu">${E((l[0].sec?l[0].sec+' › ':'')+(l[0].proc||'Outros'))}</span> ${l.map(m=>`<span class="tag ok" style="display:inline-block;margin:0 4px 4px 0">${m.id==e.machines[0]?'<span title="Posto padrão na escala">★</span> ':''}${E(m.name)} <button class="lk" data-a="rm" data-id="${e.id}" data-v="${m.id}" title="Remover ${E(m.name)}" aria-label="Remover ${E(m.name)} de ${E(e.name)}">×</button></span>`).join('')}${l.length>1?` <button class="lk mu" data-a="rmg" data-id="${e.id}" data-v="${E(k)}" title="Remover todas as máquinas deste grupo">remover grupo</button>`:''}</div>`).join('')+`<button class="btn" data-a="pka" data-id="${e.id}">+ adicionar máquinas</button>`};
 const esec=e=>[...new Set(eMs(e).map(m=>m.sec).filter(Boolean))].join(', ')||'—';
 // ---- Colaboradores: lista enxuta de quem já tem máquina; cada pessoa abre e fecha. Quem está sem máquina fica no Cadastro (e na Escala, em "Sem máquina definida").
+const canDel=e=>!isU()||(!e.shared&&(e.machines.length>0||e.cb===me.uid)); // usuário de seção só remove pessoa só da seção (ou sem máquina criada por ele)
 const orph=e=>!e.machines.some(i=>mac(i)),byNome=(a,b)=>a.name.localeCompare(b.name,'pt-BR');
 let colQ='',cflt=0,opnC=ls.get('openC')||{};
 const CMAX=200;
@@ -482,7 +512,7 @@ const colRows=()=>{const tk=nz(colQ).split(/\s+/).filter(Boolean);return cfg.emp
 const colSum=()=>{const all=cfg.employees.filter(e=>!orph(e)),no=cfg.employees.length-all.length,n=t=>all.filter(e=>e.shift==t).length;
  return `<b>${all.length}</b> com máquina · T1 ${n(1)} · T2 ${n(2)} · T3 ${n(3)}${no?` · <button class="lk" data-a="tab" data-v="cad">${no} sem máquina (Cadastro)</button>`:''}`};
 const colRow=e=>{const o=!!opnC[e.id]||PR,n=eMs(e).length;
- return `<div class="cl ${o?'open':''}"><button class="cl-h" data-a="opnc" data-v="${e.id}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'}"><span class="cl-v" aria-hidden="true">${o?'▾':'▸'}</span><span class="cl-n"><b>${E(e.name)}</b><span class="t t${e.shift}">T${e.shift}</span></span><span class="cl-s">${E(csum(e))}</span><span class="tag n">${n} máq.</span></button>${o?`<div class="cl-b"><div class="cl-ed"><label class="nm">Nome<input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"></label><label>Turno<select data-a="ef" data-f="shift" data-id="${e.id}">${shOpt(e.shift)}</select></label><button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover colaborador</button></div>${mcell(e)}</div>`:''}</div>`};
+ return `<div class="cl ${o?'open':''}"><button class="cl-h" data-a="opnc" data-v="${e.id}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'}"><span class="cl-v" aria-hidden="true">${o?'▾':'▸'}</span><span class="cl-n"><b>${E(e.name)}</b><span class="t t${e.shift}">T${e.shift}</span></span><span class="cl-s">${E(csum(e))}</span><span class="tag n">${n} máq.</span></button>${o?`<div class="cl-b"><div class="cl-ed"><label class="nm">Nome<input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"${isU()&&e.shared?' disabled':''}></label><label>Turno<select data-a="ef" data-f="shift" data-id="${e.id}"${isU()&&e.shared?' disabled':''}>${shOpt(e.shift)}</select></label>${canDel(e)?`<button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover colaborador</button>`:''}</div>${isU()&&e.shared?`<div class="mu" style="margin-bottom:8px">Também treinada em outra seção: nome, turno e remoção só com o administrador.</div>`:''}${mcell(e)}</div>`:''}</div>`};
 function colList(){
  const all=cfg.employees.filter(e=>!orph(e));
  if(!all.length)return `<div class="card empty"><h2>Nenhum colaborador com máquina</h2><p class="mu">Adicione as máquinas de cada pessoa no Cadastro.</p><button class="btn pr" data-a="tab" data-v="cad">Ir para o Cadastro</button></div>`;
@@ -497,10 +527,28 @@ function vCol(){
  <div class="mu" id="cs" style="margin-bottom:10px">${colSum()}</div><div id="cl">${colList()}</div>`}
 // ---- Cadastro: máquinas numa lista que abre e fecha (seção › grupo › CT), colaboradores e importações recolhidas
 let mq='',opnM=ls.get('openM')||{},opnMS=ls.get('openMS')||{},edM='',addM=false,impO={},impH={};
-const iOpen=k=>impO[k]!==undefined?impO[k]:!!(k=='ct'?ctr:imp);
+const iOpen=k=>impO[k]!==undefined?impO[k]:k=='ct'?!!ctr:k=='col'?!!imp:false;
+// ---- Usuários de seção (só o administrador): login, senha e as seções que cada um pode acessar
+let usr={list:null,ed:'',f:null,err:'',last:null,busy:false};
+const UE={bad_name:'Informe o nome.',bad_login:'Usuário: 3 a 30 letras minúsculas, números, ponto, hífen ou _.',login_taken:'Esse usuário já existe.',bad_password:'Senha: de 6 a 100 caracteres.',bad_sections:'Marque ao menos uma seção.',forbidden:'Só o administrador pode fazer isso.',access_key_required:'Defina o ACCESS_KEY no Cloudflare para criar usuários.',not_found:'Usuário não encontrado.'};
+const genPw=()=>{const al='abcdefghjkmnpqrstuvwxyz23456789',a=crypto.getRandomValues(new Uint8Array(8));return [...a].map(b=>al[b%al.length]).join('').replace(/(.{4})/,'$1-')};
+async function ucall(body){const r=await fetch('/api/users',{method:body?'POST':'GET',headers:hd(),body:body?JSON.stringify(body):undefined,cache:'no-store'}),j=await r.json().catch(()=>({}));
+ if(r.status==401){if(await askLogin())return ucall(body);throw 401}if(!r.ok)throw j.error||r.status;return j}
+async function usrLoad(){try{usr.list=(await ucall()).users;usr.err=''}catch(e){usr.list=usr.list||[];usr.err=UE[e]||'Não consegui carregar os usuários.'}render()}
+async function usrSend(body,ok){usr.busy=true;render();try{const r=await ucall(body);usr.list=r.users;usr.err='';ok&&ok()}catch(e){usr.err=UE[e]||'Não consegui salvar. Tente de novo.'}usr.busy=false;render()}
+function usrForm(){const f=usr.f,all=[...new Set([...secList(),...f.secs])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ return `<div class="uf"><h3 class="gh">${usr.ed=='new'?'Novo usuário':'Editar usuário'}</h3><label class="lf">Nome<input data-u="name" value="${E(f.name)}"></label><label class="lf">Usuário (para entrar)<input data-u="login" value="${E(f.login)}" autocapitalize="none" spellcheck="false"></label><label class="lf">Senha${usr.ed=='new'?'':' (em branco = mantém)'}<span class="ur-p"><input data-u="password" value="${E(f.password)}" autocomplete="off" spellcheck="false"><button type="button" class="lk" data-a="ugen">Gerar</button></span></label><div class="lf">Seções que ele pode acessar</div><div class="us">${all.map(x=>`<label class="chk"><input type="checkbox" data-a="usec" data-v="${E(x)}" ${f.secs.includes(x)?'checked':''}> ${E(x)}</label>`).join('')||'<span class="mu">Nenhuma seção cadastrada ainda. Digite abaixo.</span>'}</div><div class="bar nf"><input data-u="ns" placeholder="Outra seção (nova)" value="${E(f.ns)}"><button class="btn" data-a="uaddsec">Adicionar seção</button></div>${usr.err?`<div class="er-t">${E(usr.err)}</div>`:''}<div class="bar"><button class="btn pr" data-a="usave" ${usr.busy?'disabled':''}>Salvar</button><button class="btn" data-a="ucancel">Cancelar</button></div></div>`}
+function usrBody(){
+ if(me&&(me.open||!me.canUsers))return `<div class="mu">Para criar usuários, defina o <b>ACCESS_KEY</b> no Cloudflare e entre com esse código (veja o README).</div>`;
+ if(usr.list===null)return `<div class="mu">Carregando…</div>`;
+ return (!usr.f&&usr.err?`<div class="er-t">${E(usr.err)}</div>`:'')+(usr.last?`<div class="card ukey">Salvo. Usuário <b>${E(usr.last.login)}</b> · senha <b>${E(usr.last.password)}</b><br><span class="mu">Anote e envie ao usuário; a senha não aparece de novo.</span></div>`:'')+
+  (usr.list.length?usr.list.map(u=>`<div class="ur"><span class="ur-n"><b>${E(u.name)}</b> <span class="mu">${E(u.login)}</span></span><span class="ur-s">${u.sections.map(x=>`<span class="tag n">${E(x)}</span>`).join(' ')}</span><button class="btn" data-a="uedit" data-v="${u.id}">Editar</button><button class="btn er" data-a="udel" data-v="${u.id}">Remover</button></div>`).join(''):'<div class="mu">Nenhum usuário ainda.</div>')+
+  (usr.f?usrForm():`<div style="margin-top:10px"><button class="btn pr" data-a="unew">+ Novo usuário</button></div>`)}
 const mRows=()=>{const tk=nz(mq).split(/\s+/).filter(Boolean);return cfg.machines.filter(m=>!tk.length||(h=>tk.every(t=>h.includes(t)))(nz([m.sec,m.proc,m.ct,m.name].join(' ')))).sort(mcmp)};
+const secFld=m=>!isU()?`<label>Seção<input list="sl" data-a="mf" data-f="sec" data-id="${m.id}" value="${E(m.sec)}"></label>`:me.sections.length<2?'':`<label>Seção<select data-a="mf" data-f="sec" data-id="${m.id}">${me.sections.map(x=>`<option ${x===m.sec?'selected':''}>${E(x)}</option>`).join('')}</select></label>`; // usuário de seção: só as seções dele
+const secAdd=()=>!isU()?`<input id="msec" list="sl" placeholder="Seção" aria-label="Seção">`:me.sections.length<2?`<span class="mu">Seção ${E(me.sections[0])}</span>`:`<select id="msec" aria-label="Seção">${me.sections.map(x=>`<option>${E(x)}</option>`).join('')}</select>`;
 const mRow=m=>m.id==edM
- ?`<div class="mr ed"><label>Seção<input list="sl" data-a="mf" data-f="sec" data-id="${m.id}" value="${E(m.sec)}"></label><label>CT<input data-a="mf" data-f="ct" data-id="${m.id}" value="${E(mname(m))}"></label><label>Grupo<input list="pl" data-a="mf" data-f="proc" data-id="${m.id}" value="${E(m.proc)}"></label><label>Vagas<input type="number" min="1" style="width:70px" data-a="mf" data-f="slots" data-id="${m.id}" value="${m.slots||1}"></label><button class="btn pr" data-a="medit" data-v="">Pronto</button></div>`
+ ?`<div class="mr ed">${secFld(m)}<label>CT<input data-a="mf" data-f="ct" data-id="${m.id}" value="${E(mname(m))}"></label><label>Grupo<input list="pl" data-a="mf" data-f="proc" data-id="${m.id}" value="${E(m.proc)}"></label><label>Vagas<input type="number" min="1" style="width:70px" data-a="mf" data-f="slots" data-id="${m.id}" value="${m.slots||1}"></label><button class="btn pr" data-a="medit" data-v="">Pronto</button></div>`
  :`<div class="mr"><span class="mr-n"><b>${E(mname(m))}</b>${m.name&&m.name!==mname(m)?` <span class="mu">${E(m.name)}</span>`:''}</span><span class="mu">${m.slots||1} ${(m.slots||1)==1?'vaga':'vagas'}</span><button class="btn" data-a="medit" data-v="${m.id}">Editar</button><button class="btn er" data-a="delm" data-id="${m.id}" aria-label="Remover ${E(mname(m))}">Remover</button></div>`;
 function machList(){
  if(!cfg.machines.length)return '<div class="mu" style="padding:6px 2px">Nenhuma máquina ainda. Adicione uma ou importe uma planilha.</div>';
@@ -516,13 +564,14 @@ function vCad(){
  const ms=cfg.machines,ps=[...new Set(ms.map(m=>m.proc))],orp=cfg.employees.filter(orph).sort(byNome),com=cfg.employees.length-orp.length;
  const mais=k=>`<button class="lk" data-a="imph" data-v="${k}">${impH[k]?'Menos':'Mais detalhes'}</button>`;
  return `<div class="cols"><div class="col"><div class="card"><h2>Máquinas <span class="tag n">${ms.length}</span></h2><div class="bar"><input id="mq" type="search" autocomplete="off" placeholder="Buscar seção, grupo ou CT…" aria-label="Buscar máquina" value="${E(mq)}" style="flex:1 1 200px;min-width:0"><button class="btn ${addM?'':'pr'}" data-a="addmt" aria-expanded="${addM}">${addM?'Fechar':'+ Nova máquina'}</button></div>
- ${addM?`<div class="bar nf"><input id="msec" list="sl" placeholder="Seção" aria-label="Seção"><input id="mc" placeholder="CT" aria-label="CT"><input id="mp" list="pl" placeholder="Grupo" aria-label="Grupo de máquinas"><button class="btn pr" data-a="addm">Adicionar</button></div>`:''}
+ ${addM?`<div class="bar nf">${secAdd()}<input id="mc" placeholder="CT" aria-label="CT"><input id="mp" list="pl" placeholder="Grupo" aria-label="Grupo de máquinas"><button class="btn pr" data-a="addm">Adicionar</button></div>`:''}
  <datalist id="pl">${ps.map(p=>`<option value="${E(p)}">`).join('')}</datalist><datalist id="sl">${secList().map(p=>`<option value="${E(p)}">`).join('')}</datalist>
  <div id="ml">${machList()}</div></div>
  ${impBox('ct','Importar CTs','Planilha com Seção, CT e Grupo',`<div class="bar"><label class="btn">Escolher planilha<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="ctfile" hidden></label><button class="btn" data-a="ctex">Exemplo</button>${mais('ct')}</div>${impH.ct?`<div class="mu" style="margin-bottom:8px">Colunas: <b>Seção</b>, <b>CT</b>, <b>Grupo de Máq</b> (a 1ª linha pode ser o título). Aceita .xlsx, .csv ou linhas coladas do Excel. CT que já existe é atualizado (as vagas ficam); os novos entram com 1 vaga.</div>`:''}<textarea id="ctk" rows="4" style="width:100%;margin-bottom:8px" placeholder="Ou cole aqui:&#10;Eixos D&#9;01061031&#9;CHOQUE TÉRMICO">${E(ctt)}</textarea><button class="btn pr" data-a="ctprev">Pré-visualizar</button>${ctr?ctPrev():''}`)}</div>
  <div class="col"><div class="card"><h2>Colaboradores <span class="tag n">${cfg.employees.length}</span></h2><div class="bar nf"><input id="en" placeholder="Nome" aria-label="Nome do colaborador" value="${E(ne.n)}"><select id="es" aria-label="Turno">${shOpt(ne.s)}</select><button class="btn" data-a="pkn" aria-haspopup="dialog">${ne.ms.length?ne.ms.length+' máq. · alterar':'+ Máquinas'}</button><button class="btn pr" data-a="adde">Adicionar</button></div>${ne.ms.length?`<div class="mu" style="margin:-4px 0 8px">${ne.ms.slice(0,6).map(i=>E(mname(mac(i)))).join(', ')}${ne.ms.length>6?' e mais '+(ne.ms.length-6):''}</div>`:''}
   ${com?`<div class="mu" style="margin:2px 0 4px">${com} com máquina: veja na aba <button class="lk" data-a="tab" data-v="col">Colaboradores</button>.</div>`:''}
-  ${orp.length?`<h3 class="gh" style="margin:12px 0 2px">Sem máquina <span class="tag vz">${orp.length}</span></h3><div class="mu" style="margin-bottom:2px">Adicione as máquinas para passarem à aba Colaboradores.</div>${orp.map(e=>`<div class="ol"><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}" aria-label="Nome"><select data-a="ef" data-f="shift" data-id="${e.id}" aria-label="Turno">${shOpt(e.shift)}</select><button class="btn" data-a="pka" data-id="${e.id}">+ Máquinas</button><button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover</button></div>`).join('')}`:''}</div>
+  ${orp.length?`<h3 class="gh" style="margin:12px 0 2px">Sem máquina <span class="tag vz">${orp.length}</span></h3><div class="mu" style="margin-bottom:2px">Adicione as máquinas para passarem à aba Colaboradores.</div>${orp.map(e=>`<div class="ol"><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}" aria-label="Nome"><select data-a="ef" data-f="shift" data-id="${e.id}" aria-label="Turno">${shOpt(e.shift)}</select><button class="btn" data-a="pka" data-id="${e.id}">+ Máquinas</button>${canDel(e)?`<button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover</button>`:''}</div>`).join('')}`:''}</div>
+ ${me&&me.role=='admin'?impBox('usr','Usuários de seção',usr.list?usr.list.length+' usuário(s)':'Cada um acessa só as seções liberadas',usrBody()):''}
  ${impBox('col','Importar colaboradores','Planilha com Nome, Turno e CT',`<div class="bar"><label class="btn">Escolher planilha<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Exemplo</button>${mais('col')}</div>${impH.col?`<div class="mu" style="margin-bottom:8px">Colunas: <b>Nome</b>, <b>Turno</b> (1, 2, 3 ou T1) e <b>CT</b>. Vários CTs: separe com / ou | ou repita o nome em outra linha. Quem já existe é atualizado (máquinas somadas; turno em branco mantém o atual).</div><div class="bar"><label>Grupo dos CTs novos: <input id="bp" list="pl" value="${E(bp)}"></label></div>`:''}<textarea id="bk" rows="4" style="width:100%;margin-bottom:8px" placeholder="Ou cole aqui:&#10;Ana Souza&#9;1&#9;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}`)}</div></div>`}
 
 let calRef=iso(new Date()),calMode='w',calView=['mes','sem','maq'].includes(ls.get('calView'))?ls.get('calView'):'mes',calSel=iso(new Date()),opn=ls.get('open')||{},opnS=ls.get('openS')||{};
@@ -589,13 +638,13 @@ function calMaq(){
 const TABS=[['escala','Escala'],['cal','Calendário'],['pres','Presença'],['ind','Indicadores'],['col','Colaboradores'],['cad','Cadastro']],T0=TABS.map(t=>t[0]);
 function render(){const keep=render.t==tab?[...document.querySelectorAll('#app [data-sk]')].map(e=>[e.dataset.sk,e.scrollLeft,e.scrollTop]):[];render.t=tab;
  const T=TABS;
- $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu" id="sy">${syl()}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" ${tab==t[0]?'aria-current="page"':''} data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main class="${tab=='cad'?'wide':tab=='col'?'nar':''}">${({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,col:vCol,cad:vCad})[tab]()}</main>`;keep.forEach(([k,l,t])=>{const e=document.querySelector('#app [data-sk="'+k+'"]');if(e){e.scrollLeft=l;e.scrollTop=t}})}
+ $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu" id="sy">${syl()}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" ${tab==t[0]?'aria-current="page"':''} data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main class="${tab=='cad'?'wide':tab=='col'?'nar':''}">${sync.s=='e401'?`<div class="card empty"><h2>Entre para continuar</h2><button class="btn pr" data-a="sync">Entrar</button></div>`:({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,col:vCol,cad:vCad})[tab]()}</main>`;keep.forEach(([k,l,t])=>{const e=document.querySelector('#app [data-sk="'+k+'"]');if(e){e.scrollLeft=l;e.scrollTop=t}})}
 const soft=()=>setTimeout(()=>{const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest&&a.closest('#app')))render()},0);
 function rr(){const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest('#app')&&!/date|checkbox/.test(a.type))return;render()}
 
 document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(!b||/INPUT|SELECT/.test(b.tagName))return;const a=b.dataset.a,id=b.dataset.id,v=b.dataset.v,g=i=>($(i).value||'').trim();
  if(a=='tab'){tab=v;render()}
- else if(a=='tog')upd(date,x=>{x.w=x.w||{};const cur=wk(emp(id),x);if(!x.s.includes(id)){x.s.push(id);x.w[id]=v}else if(cur==v){x.s=x.s.filter(i=>i!=id);delete x.a[id];delete x.m[id];delete x.w[id]}else x.w[id]=v})
+ else if(a=='tog'){if((D(date).ox||[]).includes(id))return toast('Essa pessoa já está escalada em outra seção');upd(date,x=>{x.w=x.w||{};const cur=wk(emp(id),x);if(!x.s.includes(id)){x.s.push(id);x.w[id]=v}else if(cur==v){x.s=x.s.filter(i=>i!=id);delete x.a[id];delete x.m[id];delete x.w[id]}else x.w[id]=v})}
  else if(a=='att')upd(date,x=>{if(x.a[id]==v)delete x.a[id];else x.a[id]=v})
  else if(a=='flt'){flt=+v;render()}
  else if(a=='opnc'){if(opnC[v])delete opnC[v];else opnC[v]=1;ls.set('openC',opnC);render();const f=document.querySelector('.cl-h[data-v="'+v+'"]');if(f&&f.focus)f.focus()}
@@ -616,23 +665,33 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='cnav'){const mensal=calView=='mes'||(calView=='maq'&&calMode=='m');if(!mensal)calRef=cd(calRef,7*v);else{const r=wd(calRef);r.setDate(1);r.setMonth(r.getMonth()+ +v);calRef=iso(r)}render()}
  else if(a=='dd'){date=shiftDate(+v);render()}
  else if(a=='today'){date=iso(new Date());render()}
- else if(a=='sync'){sync={s:'wait'};setSy();pull(true)}
+ else if(a=='sync'){sync={s:'wait'};setSy();render();pull(true)}
+ else if(a=='lgx')closeLogin(false)
+ else if(a=='lgmode'){lgAdm=!lgAdm;showLogin('')}
+ else if(a=='logout'){const n=np();if(n&&!confirm('Há '+n+' alteração(ões) ainda não enviada(s). Se sair, elas serão descartadas. Sair mesmo?'))return;wipe();ls.set('key','');ls.set('tok','');ls.set('who',null);tab='escala';sync={s:'wait'};render();call.no=false;pull(true)}
  else if(a=='install'){if(ip){const e=ip;ip=null;setSy();e.prompt();Promise.resolve(e.userChoice).catch(()=>{}).then(()=>setSy())}else if(ios())alert('No iPhone/iPad: toque em Compartilhar e escolha "Adicionar à Tela de Início".')}
  else if(a=='goto'){date=v;calSel=v;tab='escala';render()}
- else if(a=='addm'){const ct=g('#mc');if(!ct)return toast('Informe o CT');const m={id:uid(),name:ct,ct,sec:g('#msec'),proc:g('#mp')||'Outros',slots:1};cfg.machines.push(m);opnM[gk(m)]=1;opnMS[m.sec||SN]=1;ls.set('openM',opnM);ls.set('openMS',opnMS);saveCfg();render();toast('CT '+ct+' adicionado')}
+ else if(a=='addm'){const ct=g('#mc');if(!ct)return toast('Informe o CT');const m={id:uid(),name:ct,ct,sec:isU()?(me.sections.length>1?g('#msec'):me.sections[0]):g('#msec'),proc:g('#mp')||'Outros',slots:1};cfg.machines.push(m);opnM[gk(m)]=1;opnMS[m.sec||SN]=1;ls.set('openM',opnM);ls.set('openMS',opnMS);saveCfg();render();toast('CT '+ct+' adicionado')}
  else if(a=='addmt'){addM=!addM;render();if(addM){const f=$('#msec');if(f&&f.focus)f.focus()}}
  else if(a=='medit'){edM=v;render();if(v){const f=document.querySelector('.mr.ed input[data-f="ct"]');if(f&&f.focus)f.focus()}}
  else if(a=='opnm'){opnM[v]=!opnM[v];ls.set('openM',opnM);$('#ml').innerHTML=machList();const f=document.querySelector('.cl-h[data-v="'+CSS.escape(v)+'"]');if(f&&f.focus)f.focus()}
  else if(a=='opnms'){opnMS[v]=!opnMS[v];ls.set('openMS',opnMS);$('#ml').innerHTML=machList();const f=document.querySelector('.cl-h[data-v="'+CSS.escape(v)+'"]');if(f&&f.focus)f.focus()}
  else if(a=='opnma'){mRows().forEach(m=>{opnM[gk(m)]=1;opnMS[m.sec||SN]=1});ls.set('openM',opnM);ls.set('openMS',opnMS);$('#ml').innerHTML=machList()}
  else if(a=='clsma'){opnM={};opnMS={};ls.set('openM',opnM);ls.set('openMS',opnMS);$('#ml').innerHTML=machList()}
- else if(a=='timp'){impO[v]=!iOpen(v);render()}
+ else if(a=='timp'){impO[v]=!iOpen(v);render();if(v=='usr'&&impO.usr&&usr.list===null)usrLoad()}
+ else if(a=='unew'){usr.ed='new';usr.f={name:'',login:'',password:genPw(),secs:[],ns:''};usr.last=null;usr.err='';render()}
+ else if(a=='uedit'){const u=(usr.list||[]).find(x=>x.id==v);if(u){usr.ed=u.id;usr.f={name:u.name,login:u.login,password:'',secs:[...u.sections],ns:''};usr.last=null;usr.err='';render()}}
+ else if(a=='ugen'){usr.f.password=genPw();render()}
+ else if(a=='uaddsec'){const x=(usr.f.ns||'').trim();if(x&&!usr.f.secs.includes(x))usr.f.secs.push(x);usr.f.ns='';render()}
+ else if(a=='ucancel'){usr.f=null;usr.ed='';usr.err='';render()}
+ else if(a=='usave'){const f=usr.f;if(usr.busy)return;usr.last=null;usrSend({act:'save',id:usr.ed=='new'?undefined:usr.ed,name:f.name,login:f.login,password:f.password||undefined,sections:f.secs},()=>{usr.last=f.password?{login:f.login.trim().toLowerCase(),password:f.password}:null;usr.f=null;usr.ed=''})}
+ else if(a=='udel'){const u=(usr.list||[]).find(x=>x.id==v);if(!u||!confirm('Remover o usuário '+u.name+'? Ele perde o acesso na hora.'))return;usr.last=null;usrSend({act:'del',id:v})}
  else if(a=='imph'){impH[v]=!impH[v];render()}
  else if(a=='ctex'){ctt='Seção\tCT\tGrupo de Máq\nEixos D\t01061031\tCHOQUE TÉRMICO\nEixos A\t01061008\tCHOQUE TÉRMICO';ctr=ctRows(ctText(ctt));impO.ct=true;render()}
  else if(a=='ctprev'){ctt=$('#ctk').value;ctr=ctRows(ctText(ctt));impO.ct=true;render()}
  else if(a=='ctcancel'){ctr=null;delete impO.ct;render()}
  else if(a=='ctapply'){let n=0,u=0;ctr.filter(r=>!r.err).forEach(r=>{const k=r.ct.toLowerCase(),m=cfg.machines.find(m=>(m.ct&&m.ct.toLowerCase()==k)||m.name.toLowerCase()==k);if(m){m.ct=r.ct;if(r.sec)m.sec=r.sec;m.proc=r.grp||m.proc;u++}else{cfg.machines.push({id:uid(),name:r.ct,ct:r.ct,sec:r.sec,proc:r.grp||'Outros',slots:1});n++}});saveCfg();ctr=null;ctt='';delete impO.ct;render();toast(n+' CT(s) novo(s), '+u+' atualizado(s)')}
- else if(a=='adde'){const n=g('#en')||ne.n.trim();if(!n)return toast('Informe o nome do colaborador');const sh=+($('#es').value||ne.s)||1;const ms=ne.ms.filter(i=>mac(i));cfg.employees.push({id:uid(),name:n,shift:sh,machines:ms});saveCfg();ne={n:'',s:sh,ms:[]};render();toast(ms.length?n+' adicionado(a)':n+' adicionado(a) sem máquina (veja abaixo)')}
+ else if(a=='adde'){const n=g('#en')||ne.n.trim();if(!n)return toast('Informe o nome do colaborador');const sh=+($('#es').value||ne.s)||1;const ms=ne.ms.filter(i=>mac(i));cfg.employees.push({id:uid(),name:n,shift:sh,machines:ms,...(isU()&&me?{cb:me.uid}:{})});saveCfg();ne={n:'',s:sh,ms:[]};render();toast(ms.length?n+' adicionado(a)':n+' adicionado(a) sem máquina (veja abaixo)')}
  else if(a=='pka'){if(emp(id))pkOpen({mode:'add',id})}
  else if(a=='pkn')pkOpen({mode:'new',sel:new Set(ne.ms)})
  else if(a=='pkf')pkOpen({mode:'flt'})
@@ -657,7 +716,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='ex'){bk='Nome\tTurno\tCT\nAna Souza\t1\t01061031/01061008\nBruno Lima\tT2\t01061031\nCarlos Dias\tTurno 3\t01061008|01061009';parse();impO.col=true;render()}
  else if(a=='prev'){bk=$('#bk').value;bp=(($('#bp')||{value:bp}).value||'').trim()||'Outros';parse();impO.col=true;render()}
  else if(a=='cancel'){imp=null;delete impO.col;render()}
- else if(a=='apply'){let n=0,u=0;imp.filter(r=>!r.err).forEach(r=>{const ids=r.ms.map(nm=>{let m=findM(nm);if(!m){m={id:uid(),name:nm,ct:/^\d+$/.test(nm)?nm:'',sec:'',proc:bp||'Outros',slots:1};cfg.machines.push(m)}return m.id});const e=cfg.employees.find(e=>nk(e.name)==nk(r.n));if(e){if(r.sh)e.shift=r.sh;e.machines=[...new Set([...e.machines,...ids])];u++}else{cfg.employees.push({id:uid(),name:r.n,shift:r.sh,machines:ids});n++}});saveCfg();imp=null;bk='';delete impO.col;render();toast(n+' novo(s), '+u+' atualizado(s)')}
+ else if(a=='apply'){let n=0,u=0;imp.filter(r=>!r.err).forEach(r=>{const ids=r.ms.map(nm=>{let m=findM(nm);if(!m){m={id:uid(),name:nm,ct:/^\d+$/.test(nm)?nm:'',sec:isU()?me.sections[0]:'',proc:bp||'Outros',slots:1};cfg.machines.push(m)}return m.id});const e=cfg.employees.find(e=>nk(e.name)==nk(r.n));if(e){if(r.sh)e.shift=r.sh;e.machines=[...new Set([...e.machines,...ids])];u++}else{cfg.employees.push({id:uid(),name:r.n,shift:r.sh,machines:ids});n++}});saveCfg();imp=null;bk='';delete impO.col;render();toast(n+' novo(s), '+u+' atualizado(s)')}
  else if(a=='demo'){const G=[['Retificadora','Eixos A','Ret 01','Ret 02','Ret 03'],['Estria','Eixos D','Estria 01','Estria 02'],['Fresadora','Eixos D','Fres 01','Fres 02']];G.forEach(g=>g.slice(2).forEach(n=>cfg.machines.push({id:uid(),name:n,ct:'',sec:g[1],proc:g[0],slots:1})));const M=cfg.machines,L=M.length;
   'Ana Souza,Bruno Lima,Carlos Dias,Daniela Rocha,Eduardo Alves,Fernanda Reis,Gustavo Melo,Helena Costa,Igor Santos,Julia Prado,Kleber Nunes,Larissa Moura,Marcos Pinto,Nadia Freitas,Otávio Ramos,Paula Vieira'.split(',').forEach((n,i)=>cfg.employees.push({id:uid(),name:n,shift:i%3+1,machines:[M[i%L].id,...(i%3==0?[M[(i+1)%L].id]:[])]}));saveCfg();render()}
 });
@@ -668,6 +727,7 @@ document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dat
  else if(a=='wk')upd(date,x=>{x.w=x.w||{};x.w[id]=t.value})
  else if(a=='ef'){const e=emp(id);if(e){e[f]=f=='shift'?+t.value:t.value.trim()||e[f];if(f=='name')t.value=e.name;saveCfg();const h=document.querySelector('.cl-h[data-v="'+id+'"]');
   if(h){h.querySelector('.cl-n b').textContent=e.name;const x=h.querySelector('.cl-n .t');x.textContent='T'+e.shift;x.className='t t'+e.shift;const c=$('#cs');if(c)c.innerHTML=colSum();if(f=='shift'&&cflt){const l=$('#cl');if(l)l.innerHTML=colList()}}}}
+ else if(a=='usec'&&usr.f){const v=t.dataset.v,l=usr.f.secs;if(t.checked){if(!l.includes(v))l.push(v)}else usr.f.secs=l.filter(x=>x!==v)}
  else if(t.id=='es')ne.s=+t.value
  else if(a=='mf'){const m=mac(id);if(m){const v=t.value.trim();if(f=='slots')m.slots=Math.max(1,+t.value||1);else if(f=='ct'){if(v){if(!m.ct||m.name===m.ct)m.name=v;m.ct=v}}else if(f=='sec')m.sec=v;else m[f]=v||m[f];saveCfg();soft()}}
  else if(a=='sec'){secF=t.value;grpF='';ctF='';ls.set('sec',secF);ls.set('grp','');ls.set('ct','');render()}
@@ -675,7 +735,7 @@ document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dat
  else if(a=='file'&&t.files[0]){fileText(t.files[0]).then(tx=>{bk=tx;bp=($('#bp')||{}).value||bp;parse();impO.col=true;render()}).catch(e=>toast('Não consegui ler o arquivo: '+(e.message||e)));t.value=''}
 });
 document.addEventListener('keydown',ev=>{if(ev.key=='Escape'&&pk)pkClose()});
-document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='pkq'&&pk){pk.q=t.value;pkUp()}if(t.id=='cq'){colQ=t.value;const l=$('#cl');if(l)l.innerHTML=colList()}if(t.id=='mq'){mq=t.value;const l=$('#ml');if(l)l.innerHTML=machList()}if(t.id=='en')ne.n=t.value;if(t.id=='bk')bk=t.value;if(t.id=='ctk')ctt=t.value;if(t.id=='bp')bp=t.value});
+document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='pkq'&&pk){pk.q=t.value;pkUp()}if(t.id=='cq'){colQ=t.value;const l=$('#cl');if(l)l.innerHTML=colList()}if(t.id=='mq'){mq=t.value;const l=$('#ml');if(l)l.innerHTML=machList()}if(t.id=='en')ne.n=t.value;if(t.dataset.u&&usr.f)usr.f[t.dataset.u]=t.value;if(t.id=='bk')bk=t.value;if(t.id=='ctk')ctt=t.value;if(t.id=='bp')bp=t.value});
 
 // ---- PWA: instalar como aplicativo e abrir sem internet
 let ip=null; // evento beforeinstallprompt (Chrome, Edge, Android)
