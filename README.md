@@ -108,20 +108,20 @@ Carla Dias    Turno 3   Eixos B
 
 - A primeira linha pode ser o cabeçalho; as colunas são achadas pelo título (**Nome** ou Colaborador, **Turno**, **Seção**, **CT** ou Máquina), em qualquer ordem, e outras colunas (como Matrícula) são ignoradas. Sem cabeçalho, vale a ordem Nome, Turno e depois os CTs (a Seção só é lida com cabeçalho).
 - **Turno**: 1, 2, 3, T1, "Turno 1" ou "1º turno".
-- **Seção** (opcional): a seção de origem da pessoa. Ela vale enquanto a pessoa **não tem máquina**: fica na lista "Sem máquina" daquela seção, e só o chefe dessa seção a vê (o administrador vê todas). Quando a pessoa ganha uma máquina, a seção passa a vir das máquinas dela. Sem Seção, a pessoa sem máquina aparece para todos os chefes. O nome da seção é reconhecido sem diferença de maiúsculas ou acento ("eixos a" vira "Eixos A"); um nome que não existe aparece como **nova** na pré-visualização.
+- **Seção** (opcional): a seção de origem da pessoa. Ela vale enquanto a pessoa **não tem máquina**: fica no bloco "Sem máquina" (aba Colaboradores) daquela seção, e só o chefe dessa seção a vê (o administrador vê todas). Quando a pessoa ganha uma máquina, a seção passa a vir das máquinas dela. Sem Seção, a pessoa sem máquina aparece para todos os chefes. O nome da seção é reconhecido sem diferença de maiúsculas ou acento ("eixos a" vira "Eixos A"); um nome que não existe aparece como **nova** na pré-visualização.
 - **CT** (opcional): vários CTs para a mesma pessoa na mesma célula, separados por `/`, `|`, `,` ou `;`; em várias colunas de CT (CT 1, CT 2…); ou repetindo o nome em outras linhas (as máquinas são somadas).
 - Quem já existe (mesmo nome, sem diferença de maiúsculas ou espaços) é **atualizado**: o turno muda se vier preenchido (em branco mantém o atual), a seção é trocada se vier preenchida e as máquinas são somadas, sem apagar as que a pessoa já tinha. **O nome identifica a pessoa**: se duas pessoas têm o mesmo nome, diferencie na planilha (por exemplo, com a matrícula entre parênteses).
 - CT que está na planilha mas não no cadastro é criado na **Seção da linha** (com o CT como nome, 1 vaga e o grupo escolhido em "Grupo dos CTs novos", que fica em **Mais detalhes**); sem seção na linha, fica sem seção. CT que o Excel gravou sem os zeros à esquerda (1061031) é reconhecido como 01061031.
 - **Chefe de seção** importando: só entram as linhas da seção dele; linha de outra seção aparece com "Seção fora do seu acesso" e não é importada. Linha sem Seção entra na seção dele.
 - A pré-visualização mostra novos, atualizações (com a mudança de turno e quantas máquinas entram) e erros: nome vazio, turno inválido ou ausente (para quem é novo), mesmo nome com turnos ou seções diferentes, seção fora do acesso. Só as linhas válidas são importadas. No celular, cada pessoa vira um cartão.
-- A lista "Sem máquina" do Cadastro mostra 40 pessoas por vez ("Mostrar mais"), com busca pelo nome e filtro por seção. Na **Escala**, quem está sem máquina aparece dentro da seção dele, em "Sem máquina definida" (fechado até você abrir); quem não tem seção fica no fim da página.
+- Depois de importar, vá à aba **Colaboradores**: o bloco **Sem máquina** mostra 40 pessoas por vez ("Mostrar mais"), com a busca, o turno e a seção do alto da aba (veja "Alocar máquinas em massa"). Na **Escala**, quem está sem máquina aparece dentro da seção dele, em "Sem máquina definida" (fechado até você abrir); quem não tem seção fica no fim da página.
 
 ## Buscar máquina: seção, grupo ou CT
 
 Em todo lugar onde se escolhe máquina há a mesma **janela de busca**: um campo no alto e, abaixo, a lista em **Seção › Grupo de máquinas › CT**.
 
 - **Buscar**: digite parte do nome da seção, do grupo ou do CT (sem diferenciar maiúsculas e acentos). Várias palavras se combinam ("estria eixos b"). Letras soltas valem pelo começo da palavra, e 3 ou mais letras/números valem em qualquer trecho do CT ("031" acha 01061031). Um nome de seção ou de grupo digitado por inteiro ("eixos c") mostra só ele. A lista mostra até 500 máquinas; refine a busca para ver as demais.
-- **Adicionar máquinas a uma pessoa** (Cadastro → Colaboradores sem máquina → **+ Máquinas**, ou **+ adicionar máquinas** na aba Colaboradores): marque uma **seção inteira**, um **grupo inteiro** ou só os **CTs** que quiser; com a busca ativa, marcar uma seção ou grupo escolhe só o que está aparecendo. O que a pessoa já tem aparece como "já tem". A seleção continua ao mudar a busca, e o botão do rodapé confirma ("Adicionar N máquina(s)"). As máquinas novas entram em ordem de seção, grupo e CT, depois das que a pessoa já tinha (a primeira, com ★, é o posto padrão na escala).
+- **Adicionar máquinas a uma pessoa** (**+ adicionar máquinas** na linha da pessoa na aba Colaboradores, ou **+ Máquinas** ao cadastrar uma pessoa nova; para muita gente de uma vez use o bloco **Sem máquina**, abaixo): marque uma **seção inteira**, um **grupo inteiro** ou só os **CTs** que quiser; com a busca ativa, marcar uma seção ou grupo escolhe só o que está aparecendo. O que a pessoa já tem aparece como "já tem". A seleção continua ao mudar a busca, e o botão do rodapé confirma ("Adicionar N máquina(s)"). As máquinas novas entram em ordem de seção, grupo e CT, depois das que a pessoa já tinha (a primeira, com ★, é o posto padrão na escala).
 - **Novo colaborador**: o botão **+ Máquinas** do formulário abre a mesma janela. O nome e o turno digitados ficam enquanto você escolhe.
 - **Na aba Colaboradores**: as máquinas de cada pessoa aparecem agrupadas por seção › grupo, com **remover grupo** para tirar um grupo inteiro de uma vez (pede confirmação).
 - **Filtrar as telas**: ao lado do seletor **Seção** (Escala, Calendário, Presença e Colaboradores) há o botão **Buscar máquina…**. Clique em uma seção, em um grupo ou em um CT e a tela mostra só ele (e as pessoas treinadas nele); uma etiqueta "Grupo …" ou "CT …" com **×** limpa o filtro. Com grupo ou CT filtrado, os grupos aparecem abertos (dá para recolher). A escolha fica lembrada no navegador. Trocar a seção no seletor limpa o grupo e o CT.
@@ -166,14 +166,27 @@ A aba **Colaboradores** mostra só quem **já tem máquina**, em uma linha por p
 
 No alto da aba: busca por **nome, seção ou CT** (digite um CT e veja quem é treinado nele), botões **Todos / T1 / T2 / T3**, o seletor **Seção** com **Buscar máquina…** e, acima da lista, **Expandir tudo** e **Recolher tudo**. As linhas que você deixou abertas ficam lembradas neste navegador. A lista mostra até 200 pessoas por vez (use a busca para achar as demais); na impressão todas as linhas saem abertas.
 
-**Quem está cadastrado mas ainda sem máquina não vai para esta aba**: continua no **Cadastro**, em "Sem máquina definida" (com **+ Máquinas**), e na **Escala**, no bloco "Sem máquina definida". Assim que a pessoa ganha a primeira máquina ela passa para a aba Colaboradores, e se perder a última volta para o Cadastro (o site avisa).
+**Quem está cadastrado mas ainda sem máquina não entra nesta lista**: fica no bloco **Sem máquina** logo acima dela (veja abaixo) e na **Escala**, em "Sem máquina definida". Assim que a pessoa ganha a primeira máquina ela passa para a lista, e se perder a última volta para o bloco.
+
+### Alocar máquinas em massa (bloco "Sem máquina")
+
+No alto da aba Colaboradores, o bloco **Sem máquina** (com o total ao lado do nome) reúne todas as pessoas que ainda não têm máquina. Ele abre sozinho enquanto ninguém tem máquina e depois fica fechado; clique no título para abrir ou fechar (o site lembra a sua escolha).
+
+1. **Máquinas**: clique em **Escolher máquinas** e marque na janela uma **seção inteira**, um **grupo inteiro** ou só os **CTs** (a mesma busca de sempre). As escolhidas aparecem como etiquetas; **Alterar** muda a escolha e **limpar** tira tudo.
+2. **Pessoas**: toque no nome para marcar (o ✓ aparece). Use a **busca**, os botões **T1/T2/T3** e o seletor **Seção** do alto da aba para achar quem interessa; **Marcar todas (N)** marca todas as que estão na lista filtrada e **Limpar marcação** desmarca. A marcação continua ao trocar a busca. **Editar**, na linha, abre nome, turno e remoção.
+3. **Adicionar N máq. a N pessoa(s)**: o botão fixo no rodapé do bloco dá as máquinas escolhidas a todas as pessoas marcadas, de uma vez, e salva.
+
+- Se alguma pessoa marcada tem **seção de origem diferente** da seção das máquinas escolhidas, o site pergunta antes ("Alocar mesmo assim?"). Quem não tem seção de origem não gera pergunta.
+- Logo depois de aplicar aparece uma faixa verde com **Desfazer**: ele tira **só as máquinas que esse lote acrescentou** (o que a pessoa ganhou depois, por outro caminho, fica).
+- Quem recebeu máquina sai do bloco e aparece na lista de colaboradores com máquina.
+- **Chefe de seção**: o bloco só mostra as pessoas da seção dele (e as sem seção), e a janela só oferece as máquinas dele.
 
 ## Cadastro: máquinas à esquerda, colaboradores à direita
 
 No computador o Cadastro tem **duas colunas**; no celular, uma só.
 
 - **Máquinas**: lista que abre e fecha, **Seção › Grupo › CT**, tudo fechado no começo (cada linha mostra só o nome e a contagem de CTs). Use a **busca** (seção, grupo ou CT; abre sozinha o que encontrar), **Expandir tudo / Recolher tudo**, **Editar** (seção, CT, grupo e vagas; **Pronto** fecha) e **Remover**. **+ Nova máquina** abre um formulário de três campos (Seção, CT, Grupo). O que está aberto fica lembrado neste navegador.
-- **Colaboradores**: formulário curto (nome, turno, **+ Máquinas**, Adicionar), um resumo ("N com máquina: veja na aba Colaboradores") e, logo abaixo, **Sem máquina** — quem ainda não tem máquina, com **+ Máquinas** e **Remover**. Os colaboradores que já têm máquina **não ficam em destaque aqui**: estão na aba Colaboradores.
+- **Colaboradores**: formulário curto (nome, turno, **+ Máquinas**, Adicionar), e um resumo ("N com máquina e N sem máquina: veja e aloque na aba Colaboradores"). Os colaboradores, com ou sem máquina, **não ficam listados aqui**: estão na aba Colaboradores.
 - **Importar CTs** e **Importar colaboradores** ficam **recolhidos**: clique no título para abrir; **Mais detalhes** mostra as colunas aceitas. O Cadastro não usa o filtro de seção das outras telas.
 
 ## Indicadores

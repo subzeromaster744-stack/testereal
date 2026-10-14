@@ -148,7 +148,10 @@ main.nar{max-width:940px}
 .cl-ed{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-end;margin-bottom:10px}.cl-ed label{display:block;font-size:11px;color:var(--mu)}.cl-ed label input,.cl-ed label select{display:block;margin-top:2px;font-size:14px;color:var(--tx)}
 .cl-ed .nm{flex:1 1 200px;min-width:0}.cl-ed .nm input{width:100%}
 #cq{flex:1 1 220px;min-width:0}.cl-x{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;margin:0 0 8px}.cl-x .lk{font-size:12px}
-.ol{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd)}.ol input{flex:1 1 150px;min-width:0}
+.ob{margin:0 0 12px}.ob-s{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:0 0 10px}.ob-ch{display:flex;flex-wrap:wrap;gap:4px}
+.or-h{display:flex;align-items:center;gap:6px;padding-right:10px}.or-c{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-align:left;border:0;background:none;padding:8px 12px;min-height:42px;color:var(--tx);cursor:pointer}.or-h:hover{background:var(--bg);border-radius:9px}.cl.or.open .or-h:hover{border-radius:9px 9px 0 0}.or-c .tag{margin-left:auto}.or-h>.lk{flex:none;font-size:12px}
+.ob-f{position:sticky;bottom:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--card);border-top:1px solid var(--bd);padding:10px 0 2px;margin-top:8px}.ob-f .mu{flex:1 1 auto}
+.ob-u{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;background:var(--okb);color:var(--ok);border-radius:8px;padding:8px 10px;margin:8px 0 4px;font-size:13px}
 @media(max-width:640px){
  .cl-h{grid-template-columns:16px minmax(0,1fr) auto;padding:8px 10px}.cl-s{grid-column:2/-1;grid-row:2;text-align:left}
  .cl-b{padding:10px 10px 12px}.ol .btn{flex:1 1 auto;white-space:nowrap}#cq{flex-basis:100%}.tb{flex:1}
@@ -193,7 +196,7 @@ body.lgo #app{visibility:hidden}
 @media(max-width:640px){.ur .btn{flex:1 1 40%}.ur-s{flex-basis:100%}}
 @media(pointer:coarse){.btn,.tab,.chip{min-height:42px}}
 @media print{
- #cq,.cl-x,.cl-b button{display:none!important}.cl{break-inside:avoid}
+ #cq,.cl-x,.cl-b button,.ob{display:none!important}.cl{break-inside:avoid}
  body{background:#fff;color:#000}
  nav,#sy,#toast,#pk,.bar button,.bar select,.bar label,button.chip:not(.on),.chip.alt{display:none!important}
  header{border:0;padding:0 0 8px}main{padding:0}
@@ -225,7 +228,7 @@ function showLogin(err){const e=$('#lg');document.body.classList.add('lgo');
  e.innerHTML=`<div class="pk-bg"></div><form class="pk lg" role="dialog" aria-modal="true" aria-labelledby="lgt"><h2 id="lgt">Entrar</h2>${lgAdm?`<label class="lf">Código de administrador<input id="lc" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false"></label>`:`<label class="lf">Usuário<input id="lu" autocomplete="username" autocapitalize="none" spellcheck="false"></label><label class="lf">Senha<input id="lp" type="password" autocomplete="current-password"></label>`}<div class="er-t" id="le" role="alert">${E(err)}</div><div class="bar"><button class="btn pr" type="submit">Entrar</button><button type="button" class="btn" data-a="lgx">Agora não</button><span style="flex:1"></span><button type="button" class="lk" data-a="lgmode">${lgAdm?'Entrar com usuário e senha':'Sou administrador'}</button></div></form>`;
  e.hidden=false;const f=$(lgAdm?'#lc':'#lu');if(f&&f.focus)f.focus()}
 function closeLogin(ok){const e=$('#lg');e.hidden=true;e.innerHTML='';document.body.classList.remove('lgo');const l=lgP;lgP=null;if(l)l.res(ok);if(ok){setSy();render()}}
-function wipe(){cfg={machines:[],employees:[]};days={};me=null;usr={list:null,ed:'',f:null,err:'',last:null,busy:false};pend={cfg:0,days:{}};ver='';secF='';grpF='';ctF='';imp=null;ctr=null;bk='';ctt='';edM='';addM=false;oq='';os='';oLim=40;pk=null;ne={n:'',s:1,ms:[]};['cfg','days','pend','sec','grp','ct','openC','openE','openSE','open','openS','openM','openMS'].forEach(k=>ls.set(k,null))}
+function wipe(){cfg={machines:[],employees:[]};days={};me=null;usr={list:null,ed:'',f:null,err:'',last:null,busy:false};pend={cfg:0,days:{}};ver='';secF='';grpF='';ctF='';imp=null;ctr=null;bk='';ctt='';edM='';addM=false;oLim=40;obk={ms:[],sel:new Set(),undo:null};pk=null;ne={n:'',s:1,ms:[]};['cfg','days','pend','sec','grp','ct','openC','openO','openE','openSE','open','openS','openM','openMS'].forEach(k=>ls.set(k,null))}
 function finishLogin(adm,code,j){const w=adm?'admin':'u:'+j.me.uid,prev=ls.get('who');if(prev?prev!==w:!adm)wipe(); // outra pessoa no mesmo navegador: não herda os dados da anterior
  if(adm){ls.set('key',code);ls.set('tok','')}else{ls.set('tok',j.token);ls.set('key','')}
  ls.set('who',w);me=j.me;call.no=false;closeLogin(true)}
@@ -495,8 +498,8 @@ function pkList(){
  (total>shown?`<div class="mu" style="padding:10px">Mostrando ${shown} de ${total}. Refine a busca.</div>`:'')}
 function pkFoot(){const n=pk.sel?pk.sel.size:0;
  if(pk.mode=='flt')return `<span style="flex:1"></span><button class="btn" data-a="pkclose">Cancelar</button>`;
- return `<span class="mu">${n} selecionada(s)${n?` · <button class="lk" data-a="pkclr">limpar</button>`:''}</span><span style="flex:1"></span><button class="btn" data-a="pkclose">Cancelar</button><button class="btn pr" data-a="pkok" ${n?'':'disabled'}>${pk.mode=='new'?'Usar':'Adicionar'} ${n} máquina(s)</button>`}
-function pkShell(){const e=pk.mode=='add'?emp(pk.id):null,ti=pk.mode=='add'?'Máquinas de '+E(e?e.name:''):pk.mode=='new'?'Máquinas do novo colaborador':'Filtrar por máquina';
+ return `<span class="mu">${n} selecionada(s)${n?` · <button class="lk" data-a="pkclr">limpar</button>`:''}</span><span style="flex:1"></span><button class="btn" data-a="pkclose">Cancelar</button><button class="btn pr" data-a="pkok" ${n?'':'disabled'}>${pk.mode=='add'?'Adicionar':'Usar'} ${n} máquina(s)</button>`}
+function pkShell(){const e=pk.mode=='add'?emp(pk.id):null,ti=pk.mode=='add'?'Máquinas de '+E(e?e.name:''):pk.mode=='new'?'Máquinas do novo colaborador':pk.mode=='bulk'?'Máquinas para alocar':'Filtrar por máquina';
  return `<div class="pk-bg" data-a="pkclose"></div><div class="pk" role="dialog" aria-modal="true" aria-labelledby="pkt"><div class="pk-h"><h2 id="pkt">${ti}</h2><button class="btn" data-a="pkclose" aria-label="Fechar">×</button></div><input id="pkq" type="search" autocomplete="off" placeholder="Buscar seção, grupo ou CT…" aria-label="Buscar máquina" value="${E(pk.q)}"><div class="mu" style="margin:6px 0 2px">${pk.mode=='flt'?'Toque numa seção, grupo ou CT para ver só ele.':'Marque a seção, o grupo ou só os CTs.'}</div><div class="pk-l" id="pkl">${pkList()}</div><div class="pk-f" id="pkf">${pkFoot()}</div></div>`}
 function pkOpen(o){pk={q:'',sel:new Set(),...o};const e=$('#pk');e.innerHTML=pkShell();e.hidden=false;const q=$('#pkq');if(q&&q.focus)q.focus()}
 function pkClose(){pk=null;const e=$('#pk');e.hidden=true;e.innerHTML=''}
@@ -511,20 +514,36 @@ const esec=e=>[...new Set(eMs(e).map(m=>m.sec).filter(Boolean))].join(', ')||'�
 // ---- Colaboradores: lista enxuta de quem já tem máquina; cada pessoa abre e fecha. Quem está sem máquina fica no Cadastro (e na Escala, em "Sem máquina definida").
 const canDel=e=>!isU()||(!e.shared&&(e.machines.length>0||e.cb===me.uid||(!!e.sec&&me.sections.includes(e.sec)))); // usuário de seção só remove pessoa só da seção (ou sem máquina criada por ele)
 const orph=e=>!e.machines.some(i=>mac(i)),byNome=(a,b)=>a.name.localeCompare(b.name,'pt-BR');
-let colQ='',cflt=0,opnC=ls.get('openC')||{},oq='',os='',oLim=40;
-const oSecs=()=>[...new Set(cfg.employees.filter(orph).map(e=>e.sec||''))].sort((a,b)=>!a?1:!b?-1:a.localeCompare(b,'pt-BR'));
-const oRows=()=>{const tk=nz(oq).split(/\s+/).filter(Boolean);return cfg.employees.filter(e=>orph(e)&&(!os||(os==SN?!e.sec:e.sec===os))&&(!tk.length||tk.every(t=>nz(e.name).includes(t)))).sort(byNome)};
-const oList=()=>{const all=oRows(),l=all.slice(0,oLim),ms=oSecs().length>1;
- return (l.map(e=>`<div class="ol"><input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}" aria-label="Nome"><select data-a="ef" data-f="shift" data-id="${e.id}" aria-label="Turno">${shOpt(e.shift)}</select>${ms&&e.sec?`<span class="tag vz" title="Seção de origem">${E(e.sec)}</span>`:''}<button class="btn" data-a="pka" data-id="${e.id}">+ Máquinas</button>${canDel(e)?`<button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover</button>`:''}</div>`).join('')||'<div class="mu" style="padding:8px 0">Ninguém encontrado.</div>')+(all.length>l.length?`<button class="btn" data-a="omore" style="margin:8px 0">Mostrar mais (${all.length-l.length} restantes)</button>`:'')};
+let colQ='',cflt=0,opnC=ls.get('openC')||{},oLim=40,obk={ms:[],sel:new Set(),undo:null};
+const obOpen=()=>{const v=ls.get('openO');return v===null||v===undefined?!cfg.employees.some(e=>!orph(e)):v===true}; // sem preferência salva: abre sozinho enquanto ninguém tem máquina
+const oRows=()=>{const tk=nz(colQ).split(/\s+/).filter(Boolean);return cfg.employees.filter(e=>orph(e)&&eIn(e)&&(!cflt||e.shift==cflt)&&(!tk.length||tk.every(t=>nz(e.name+' '+(e.sec||'')).includes(t)))).sort(byNome)}; // mesma busca, turno e seção do topo da aba
 const CMAX=200;
 const csum=e=>{const ms=eMs(e),s=esec(e);return s!='—'?s:ms.slice(0,2).map(mname).join(', ')+(ms.length>2?' +'+(ms.length-2):'')};
 const colRows=()=>{const tk=nz(colQ).split(/\s+/).filter(Boolean);return cfg.employees.filter(e=>!orph(e)&&eIn(e)&&(!cflt||e.shift==cflt)&&(!tk.length||(h=>tk.every(t=>h.includes(t)))(nz(e.name+' '+eMs(e).map(m=>[m.sec,m.proc,m.ct,m.name].join(' ')).join(' '))))).sort(byNome)};
 const colSum=()=>{const all=cfg.employees.filter(e=>!orph(e)),no=cfg.employees.length-all.length,n=t=>all.filter(e=>e.shift==t).length;
- return `<b>${all.length}</b> com máquina · T1 ${n(1)} · T2 ${n(2)} · T3 ${n(3)}${no?` · <button class="lk" data-a="tab" data-v="cad">${no} sem máquina (Cadastro)</button>`:''}`};
+ return `<b>${all.length}</b> com máquina · T1 ${n(1)} · T2 ${n(2)} · T3 ${n(3)}${no?` · ${no} sem máquina`:''}`};
+const colBody=e=>`<div class="cl-b"><div class="cl-ed"><label class="nm">Nome<input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"${isU()&&e.shared?' disabled':''}></label><label>Turno<select data-a="ef" data-f="shift" data-id="${e.id}"${isU()&&e.shared?' disabled':''}>${shOpt(e.shift)}</select></label>${canDel(e)?`<button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover colaborador</button>`:''}</div>${isU()&&e.shared?`<div class="mu" style="margin-bottom:8px">Também treinada em outra seção: nome, turno e remoção só com o administrador.</div>`:''}${mcell(e)}</div>`;
 const colRow=e=>{const o=!!opnC[e.id]||PR,n=eMs(e).length;
- return `<div class="cl ${o?'open':''}"><button class="cl-h" data-a="opnc" data-v="${e.id}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'}"><span class="cl-v" aria-hidden="true">${o?'▾':'▸'}</span><span class="cl-n"><b>${E(e.name)}</b><span class="t t${e.shift}">T${e.shift}</span></span><span class="cl-s">${E(csum(e))}</span><span class="tag n">${n} máq.</span></button>${o?`<div class="cl-b"><div class="cl-ed"><label class="nm">Nome<input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"${isU()&&e.shared?' disabled':''}></label><label>Turno<select data-a="ef" data-f="shift" data-id="${e.id}"${isU()&&e.shared?' disabled':''}>${shOpt(e.shift)}</select></label>${canDel(e)?`<button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover colaborador</button>`:''}</div>${isU()&&e.shared?`<div class="mu" style="margin-bottom:8px">Também treinada em outra seção: nome, turno e remoção só com o administrador.</div>`:''}${mcell(e)}</div>`:''}</div>`};
+ return `<div class="cl ${o?'open':''}"><button class="cl-h" data-a="opnc" data-v="${e.id}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'}"><span class="cl-v" aria-hidden="true">${o?'▾':'▸'}</span><span class="cl-n"><b>${E(e.name)}</b><span class="t t${e.shift}">T${e.shift}</span></span><span class="cl-s">${E(csum(e))}</span><span class="tag n">${n} máq.</span></button>${o?colBody(e):''}</div>`};
+
+// ---- Colaboradores sem máquina: escolhe as máquinas uma vez, marca as pessoas e aplica a todas (com "Desfazer")
+const obMs=()=>obk.ms.map(mac).filter(Boolean);
+const orow=(e,mu)=>{const on=obk.sel.has(e.id),x=!!opnC[e.id];
+ return `<div class="cl or ${x?'open':''}"><div class="or-h"><button class="or-c" data-a="osel" data-v="${e.id}" role="checkbox" aria-checked="${on}" aria-label="Marcar ${E(e.name)}"><span class="cb ${on?'on':''}" aria-hidden="true"></span><span class="cl-n"><b>${E(e.name)}</b><span class="t t${e.shift}">T${e.shift}</span></span>${mu&&e.sec?`<span class="tag vz" title="Seção de origem">${E(e.sec)}</span>`:''}</button><button class="lk" data-a="opnc" data-v="${e.id}" aria-expanded="${x}">${x?'Fechar':'Editar'}</button></div>${x?colBody(e):''}</div>`};
+function obList(){
+ const rows=oRows(),l=rows.slice(0,oLim),n=obk.sel.size,ms=obMs(),mu=new Set(cfg.employees.filter(orph).map(e=>e.sec||'')).size>1;
+ return `<div class="cl-x"><span class="mu">${rows.length} na lista</span><span style="flex:1"></span><button class="lk" data-a="oall">Marcar todas (${rows.length})</button><button class="lk" data-a="oclr">Limpar marcação</button></div>`+
+  (l.map(e=>orow(e,mu)).join('')||'<div class="mu" style="padding:8px 2px">Ninguém encontrado.</div>')+
+  (rows.length>l.length?`<button class="btn" data-a="omore" style="margin:6px 0">Mostrar mais (${rows.length-l.length} restantes)</button>`:'')+
+  `<div class="ob-f"><span class="mu">${n} marcada(s)</span><button class="btn pr" data-a="obgo" ${n&&ms.length?'':'disabled'}>${!ms.length?'Escolha as máquinas':!n?'Marque as pessoas':'Adicionar '+ms.length+' máq. a '+n+' pessoa(s)'}</button></div>`}
+function obBlock(){
+ const all=cfg.employees.filter(orph),u=obk.undo?`<div class="ob-u"><span>${E(obk.undo.txt)}</span> <button class="lk" data-a="obundo">Desfazer</button></div>`:'';
+ if(!all.length)return u?`<div class="card ob">${u}</div>`:'';
+ const o=obOpen()||PR,ms=obMs(),ch=ms.length?`<span class="ob-ch">${ms.slice(0,8).map(m=>`<span class="tag ok">${E(mname(m))}</span>`).join('')}${ms.length>8?`<span class="mu">e mais ${ms.length-8}</span>`:''}</span>`:'<span class="mu">nenhuma escolhida</span>';
+ return `<div class="card ib ob"><button class="ib-h" data-a="obt" aria-expanded="${o}"><span class="cl-v" aria-hidden="true">${o?'▾':'▸'}</span><span><b>Sem máquina <span class="tag vz">${all.length}</span></b><span class="mu">Escolha as máquinas e marque quem pode trabalhar nelas</span></span></button>${u}${o?`<div class="ib-b"><div class="ob-s"><b>1. Máquinas</b><button class="btn" data-a="obm">${ms.length?'Alterar':'Escolher máquinas'}</button>${ch}${ms.length?'<button class="lk" data-a="obmx">limpar</button>':''}</div><div class="ob-s"><b>2. Pessoas</b><span class="mu">Filtre com a busca, o turno e a seção acima. Toque no nome para marcar.</span></div><div id="ol">${obList()}</div></div>`:''}</div>`}
 function colList(){
  const all=cfg.employees.filter(e=>!orph(e));
+ if(!all.length&&cfg.employees.length)return `<div class="mu" style="padding:14px 2px">Ninguém tem máquina ainda. Aloque pelo bloco "Sem máquina" acima.</div>`;
  if(!all.length)return `<div class="card empty"><h2>Nenhum colaborador com máquina</h2><p class="mu">Adicione as máquinas de cada pessoa no Cadastro.</p><button class="btn pr" data-a="tab" data-v="cad">Ir para o Cadastro</button></div>`;
  const rows=colRows();
  if(!rows.length)return `<div class="mu" style="padding:14px 2px">Nada encontrado.</div>`;
@@ -534,7 +553,7 @@ function vCol(){
  if(!cfg.machines.length&&!cfg.employees.length)return noData();
  return `<div class="bar"><input id="cq" type="search" autocomplete="off" placeholder="Buscar nome, seção ou CT…" aria-label="Buscar colaborador" value="${E(colQ)}">${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn tb ${cflt==x[0]?'pr':''}" aria-pressed="${cflt==x[0]}" data-a="cflt" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>
  <div class="bar">${secSel()}</div>
- <div class="mu" id="cs" style="margin-bottom:10px">${colSum()}</div><div id="cl">${colList()}</div>`}
+ <div class="mu" id="cs" style="margin-bottom:10px">${colSum()}</div>${obBlock()}<div id="cl">${colList()}</div>`}
 // ---- Cadastro: máquinas numa lista que abre e fecha (seção › grupo › CT), colaboradores e importações recolhidas
 let mq='',opnM=ls.get('openM')||{},opnMS=ls.get('openMS')||{},edM='',addM=false,impO={},impH={};
 const iOpen=k=>impO[k]!==undefined?impO[k]:k=='ct'?!!ctr:k=='col'?!!imp:false;
@@ -579,8 +598,8 @@ function vCad(){
  <div id="ml">${machList()}</div></div>
  ${impBox('ct','Importar CTs','Planilha com Seção, CT e Grupo',`<div class="bar"><label class="btn">Escolher planilha<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="ctfile" hidden></label><button class="btn" data-a="ctex">Exemplo</button>${mais('ct')}</div>${impH.ct?`<div class="mu" style="margin-bottom:8px">Colunas: <b>Seção</b>, <b>CT</b>, <b>Grupo de Máq</b> (a 1ª linha pode ser o título). Aceita .xlsx, .csv ou linhas coladas do Excel. CT que já existe é atualizado (as vagas ficam); os novos entram com 1 vaga.</div>`:''}<textarea id="ctk" rows="4" style="width:100%;margin-bottom:8px" placeholder="Ou cole aqui:&#10;Eixos D&#9;01061031&#9;CHOQUE TÉRMICO">${E(ctt)}</textarea><button class="btn pr" data-a="ctprev">Pré-visualizar</button>${ctr?ctPrev():''}`)}</div>
  <div class="col"><div class="card"><h2>Colaboradores <span class="tag n">${cfg.employees.length}</span></h2><div class="bar nf"><input id="en" placeholder="Nome" aria-label="Nome do colaborador" value="${E(ne.n)}"><select id="es" aria-label="Turno">${shOpt(ne.s)}</select><button class="btn" data-a="pkn" aria-haspopup="dialog">${ne.ms.length?ne.ms.length+' máq. · alterar':'+ Máquinas'}</button><button class="btn pr" data-a="adde">Adicionar</button></div>${ne.ms.length?`<div class="mu" style="margin:-4px 0 8px">${ne.ms.slice(0,6).map(i=>E(mname(mac(i)))).join(', ')}${ne.ms.length>6?' e mais '+(ne.ms.length-6):''}</div>`:''}
-  ${com?`<div class="mu" style="margin:2px 0 4px">${com} com máquina: veja na aba <button class="lk" data-a="tab" data-v="col">Colaboradores</button>.</div>`:''}
-  ${orp.length?`<h3 class="gh" style="margin:12px 0 2px">Sem máquina <span class="tag vz">${orp.length}</span></h3><div class="mu" style="margin-bottom:2px">Adicione as máquinas para passarem à aba Colaboradores.</div>${orp.length>8?`<div class="bar" style="margin:6px 0"><input id="oq" type="search" autocomplete="off" placeholder="Buscar pelo nome…" aria-label="Buscar pessoa sem máquina" value="${E(oq)}" style="flex:1 1 140px;min-width:0">${oSecs().length>1?`<select id="os" aria-label="Seção"><option value="">Todas as seções</option>${oSecs().map(x=>`<option value="${x?E(x):SN}" ${os==(x||SN)?'selected':''}>${x?E(x):'(sem seção)'}</option>`).join('')}</select>`:''}</div>`:''}<div id="ol">${oList()}</div>`:''}</div>
+  ${cfg.employees.length?`<div class="mu" style="margin:2px 0 4px">${com} com máquina${orp.length?' e <b>'+orp.length+' sem máquina</b>':''}: veja e aloque na aba <button class="lk" data-a="tab" data-v="col">Colaboradores</button>.</div>`:''}
+</div>
  ${me&&me.role=='admin'?impBox('usr','Usuários de seção',usr.list?usr.list.length+' usuário(s)':'Cada um acessa só as seções liberadas',usrBody()):''}
  ${impBox('col','Importar colaboradores','Planilha com Nome, Turno, Seção e CT',`<div class="bar"><label class="btn">Escolher planilha<input type="file" accept=".xlsx,.csv,.txt,.tsv" data-a="file" hidden></label><button class="btn" data-a="ex">Exemplo</button>${mais('col')}</div>${impH.col?`<div class="mu" style="margin-bottom:8px">Colunas: <b>Nome</b>, <b>Turno</b> (1, 2, 3 ou T1), <b>Seção</b> e <b>CT</b> (Seção e CT são opcionais). Quem ainda não tem CT fica na lista "Sem máquina" da seção. Vários CTs: separe com / ou | ou repita o nome em outra linha. Quem já existe é atualizado (máquinas somadas; turno em branco mantém o atual).</div><div class="bar"><label>Grupo dos CTs novos: <input id="bp" list="pl" value="${E(bp)}"></label></div>`:''}<textarea id="bk" rows="4" style="width:100%;margin-bottom:8px" placeholder="Ou cole aqui:&#10;Ana Souza&#9;1&#9;Eixos A&#9;01061031/01061008">${E(bk)}</textarea><button class="btn pr" data-a="prev">Pré-visualizar</button>${imp?prevHtml():''}`)}</div></div>`}
 
@@ -662,7 +681,18 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='clsca'){opnC={};ls.set('openC',opnC);render()}
  else if(a=='cflt'){cflt=+v;render()}
  else if(a=='opn'){opn[v]=!(sp()?opn[v]!==false:!!opn[v]);ls.set('open',opn);render()}
- else if(a=='omore'){oLim+=40;render()}
+ else if(a=='obt'){ls.set('openO',!obOpen());render()}
+ else if(a=='obm')pkOpen({mode:'bulk',sel:new Set(obk.ms)})
+ else if(a=='obmx'){obk.ms=[];render()}
+ else if(a=='osel'||a=='oall'||a=='oclr'||a=='omore'){if(a=='osel')obk.sel.has(v)?obk.sel.delete(v):obk.sel.add(v);else if(a=='oall')oRows().forEach(e=>obk.sel.add(e.id));else if(a=='oclr')obk.sel.clear();else oLim+=40;
+  const l=$('#ol');if(l)l.innerHTML=obList();if(a=='osel'){const b=document.querySelector('.or-c[data-v="'+v+'"]');if(b&&b.focus)b.focus()}}
+ else if(a=='obgo'){const ids=obk.ms.filter(i=>mac(i)),ps=[...obk.sel].map(emp).filter(e=>e&&orph(e));
+  if(!ids.length)return toast('Escolha as máquinas primeiro');if(!ps.length)return toast('Marque as pessoas');
+  const ss=new Set(ids.map(i=>mac(i).sec||'')),off=ps.filter(e=>e.sec&&!ss.has(e.sec)).length;
+  if(off&&!confirm((off==1?'1 pessoa marcada é':off+' pessoas marcadas são')+' de outra seção. As máquinas escolhidas são de '+([...ss].filter(Boolean).join(' e ')||'nenhuma seção')+'. Alocar mesmo assim?'))return;
+  const ad={};ps.forEach(e=>{const add=ids.filter(i=>!e.machines.includes(i));if(add.length){e.machines.push(...add);ad[e.id]=add}});
+  const n=Object.keys(ad).length;saveCfg();obk.sel.clear();obk.undo={added:ad,txt:n+' pessoa(s) receberam '+ids.length+' máquina(s).'};render();toast(n+' pessoa(s) alocada(s)')}
+ else if(a=='obundo'){const u=obk.undo;if(!u)return;let n=0;Object.entries(u.added).forEach(([id,ms])=>{const e=emp(id);if(e){e.machines=e.machines.filter(i=>!ms.includes(i));n++}});obk.undo=null;saveCfg();render();toast('Alocação desfeita para '+n+' pessoa(s)')}
  else if(a=='opne'){opnE[v]=!(sp()?opnE[v]!==false:!!opnE[v]);ls.set('openE',opnE);render()}
  else if(a=='opse'){opnSE[v]=!soE(v);ls.set('openSE',opnSE);render()}
  else if(a=='how'){how=!how;ls.set('how',how);render()}
@@ -702,7 +732,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='ctprev'){ctt=$('#ctk').value;ctr=ctRows(ctText(ctt));impO.ct=true;render()}
  else if(a=='ctcancel'){ctr=null;delete impO.ct;render()}
  else if(a=='ctapply'){let n=0,u=0;ctr.filter(r=>!r.err).forEach(r=>{const k=r.ct.toLowerCase(),m=cfg.machines.find(m=>(m.ct&&m.ct.toLowerCase()==k)||m.name.toLowerCase()==k);if(m){m.ct=r.ct;if(r.sec)m.sec=r.sec;m.proc=r.grp||m.proc;u++}else{cfg.machines.push({id:uid(),name:r.ct,ct:r.ct,sec:r.sec,proc:r.grp||'Outros',slots:1});n++}});saveCfg();ctr=null;ctt='';delete impO.ct;render();toast(n+' CT(s) novo(s), '+u+' atualizado(s)')}
- else if(a=='adde'){const n=g('#en')||ne.n.trim();if(!n)return toast('Informe o nome do colaborador');const sh=+($('#es').value||ne.s)||1;const ms=ne.ms.filter(i=>mac(i));cfg.employees.push({id:uid(),name:n,shift:sh,machines:ms,...(isU()&&me?{cb:me.uid,sec:me.sections[0]}:{})});saveCfg();ne={n:'',s:sh,ms:[]};render();toast(ms.length?n+' adicionado(a)':n+' adicionado(a) sem máquina (veja abaixo)')}
+ else if(a=='adde'){const n=g('#en')||ne.n.trim();if(!n)return toast('Informe o nome do colaborador');const sh=+($('#es').value||ne.s)||1;const ms=ne.ms.filter(i=>mac(i));cfg.employees.push({id:uid(),name:n,shift:sh,machines:ms,...(isU()&&me?{cb:me.uid,sec:me.sections[0]}:{})});saveCfg();ne={n:'',s:sh,ms:[]};render();toast(ms.length?n+' adicionado(a)':n+' adicionado(a) sem máquina (aba Colaboradores)')}
  else if(a=='pka'){if(emp(id))pkOpen({mode:'add',id})}
  else if(a=='pkn')pkOpen({mode:'new',sel:new Set(ne.ms)})
  else if(a=='pkf')pkOpen({mode:'flt'})
@@ -712,7 +742,8 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='pkclr'){if(pk){pk.sel.clear();pkUp()}}
  else if(a=='pkok'){if(!pk)return;const ids=[...pk.sel].map(mac).filter(Boolean).sort(mcmp).map(m=>m.id);
   if(pk.mode=='new'){ne.ms=ids;pkClose();render()}
-  else{const e=emp(pk.id);if(!e){pkClose();return toast('Esse colaborador não existe mais')}const was=orph(e),add=ids.filter(i=>!e.machines.includes(i));e.machines.push(...add);saveCfg();pkClose();render();toast(add.length+' máquina(s) adicionada(s) a '+e.name+(was&&!orph(e)?' · agora na aba Colaboradores':''))}}
+  else if(pk.mode=='bulk'){obk.ms=ids;pkClose();render()}
+  else{const e=emp(pk.id);if(!e){pkClose();return toast('Esse colaborador não existe mais')}const was=orph(e),add=ids.filter(i=>!e.machines.includes(i));e.machines.push(...add);if(was&&!orph(e)){delete opnC[e.id];ls.set('openC',opnC)}saveCfg();pkClose();render();toast(add.length+' máquina(s) adicionada(s) a '+e.name+(was&&!orph(e)?' · agora com máquina':''))}}
  else if(a=='pkf1'){const hs=secList().length>0;pkClose();
   if(!v){secF='';grpF='';ctF=''}
   else if(v[0]=='s'){secF=hs?v.slice(2)||SN:'';grpF='';ctF=''}
@@ -720,10 +751,10 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
   else{const m=mac(v.slice(2));if(m){secF=hs?m.sec||SN:'';grpF='';ctF=m.id}}
   ls.set('sec',secF);ls.set('grp',grpF);ls.set('ct',ctF);render()}
  else if(a=='clrf'){grpF='';ctF='';ls.set('grp',grpF);ls.set('ct',ctF);render()}
- else if(a=='rmg'){const e=emp(id);if(!e)return;const ms=eMs(e).filter(m=>gk(m)==v);if(!ms.length||!confirm('Remover '+ms.length+' máquina(s) do grupo "'+(ms[0].proc||'Outros')+'" de '+e.name+'?'))return;e.machines=e.machines.filter(i=>!ms.some(m=>m.id==i));saveCfg();render();if(orph(e))toast(e.name+' ficou sem máquina: passou para o Cadastro')}
+ else if(a=='rmg'){const e=emp(id);if(!e)return;const ms=eMs(e).filter(m=>gk(m)==v);if(!ms.length||!confirm('Remover '+ms.length+' máquina(s) do grupo "'+(ms[0].proc||'Outros')+'" de '+e.name+'?'))return;e.machines=e.machines.filter(i=>!ms.some(m=>m.id==i));saveCfg();render();if(orph(e))toast(e.name+' ficou sem máquina: veja em "Sem máquina", acima')}
  else if(a=='delm'){const m=mac(id);if(m&&!confirm('Remover o CT "'+(m.ct||m.name)+'"? Quem treina nele perde esse treinamento. Vale para todos os gestores.'))return;cfg.machines=cfg.machines.filter(m=>m.id!==id);cfg.employees.forEach(e=>e.machines=e.machines.filter(i=>i!==id));saveCfg();render()}
  else if(a=='dele'){const e=emp(id);if(e&&!confirm('Remover '+e.name+'? Some da escala e dos indicadores. Vale para todos os gestores.'))return;cfg.employees=cfg.employees.filter(e=>e.id!==id);saveCfg();render()}
- else if(a=='rm'){const e=emp(id);if(!e)return;e.machines=e.machines.filter(i=>i!==v);saveCfg();render();if(orph(e))toast(e.name+' ficou sem máquina: passou para o Cadastro')}
+ else if(a=='rm'){const e=emp(id);if(!e)return;e.machines=e.machines.filter(i=>i!==v);saveCfg();render();if(orph(e))toast(e.name+' ficou sem máquina: veja em "Sem máquina", acima')}
  else if(a=='ex'){bk='Nome\tTurno\tSeção\tCT\nAna Souza\t1\tEixos A\t01061031/01061008\nBruno Lima\tT2\tEixos A\t01061031\nCarlos Dias\tTurno 3\tEixos B\t';parse();impO.col=true;render()}
  else if(a=='prev'){bk=$('#bk').value;bp=(($('#bp')||{value:bp}).value||'').trim()||'Outros';parse();impO.col=true;render()}
  else if(a=='cancel'){imp=null;delete impO.col;render()}
@@ -740,14 +771,13 @@ document.addEventListener('change',ev=>{const t=ev.target,a=t.dataset.a,id=t.dat
   if(h){h.querySelector('.cl-n b').textContent=e.name;const x=h.querySelector('.cl-n .t');x.textContent='T'+e.shift;x.className='t t'+e.shift;const c=$('#cs');if(c)c.innerHTML=colSum();if(f=='shift'&&cflt){const l=$('#cl');if(l)l.innerHTML=colList()}}}}
  else if(a=='usec'&&usr.f){const v=t.dataset.v,l=usr.f.secs;if(t.checked){if(!l.includes(v))l.push(v)}else usr.f.secs=l.filter(x=>x!==v)}
  else if(t.id=='es')ne.s=+t.value
- else if(t.id=='os'){os=t.value;oLim=40;render()}
  else if(a=='mf'){const m=mac(id);if(m){const v=t.value.trim();if(f=='slots')m.slots=Math.max(1,+t.value||1);else if(f=='ct'){if(v){if(!m.ct||m.name===m.ct)m.name=v;m.ct=v}}else if(f=='sec')m.sec=v;else m[f]=v||m[f];saveCfg();soft()}}
  else if(a=='sec'){secF=t.value;grpF='';ctF='';ls.set('sec',secF);ls.set('grp','');ls.set('ct','');render()}
  else if(a=='ctfile'&&t.files[0]){fileText(t.files[0]).then(tx=>{ctt=tx;ctr=ctRows(ctText(ctt));impO.ct=true;render()}).catch(e=>toast('Não consegui ler o arquivo: '+(e.message||e)));t.value=''}
  else if(a=='file'&&t.files[0]){fileText(t.files[0]).then(tx=>{bk=tx;bp=($('#bp')||{}).value||bp;parse();impO.col=true;render()}).catch(e=>toast('Não consegui ler o arquivo: '+(e.message||e)));t.value=''}
 });
 document.addEventListener('keydown',ev=>{if(ev.key=='Escape'&&pk)pkClose()});
-document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='pkq'&&pk){pk.q=t.value;pkUp()}if(t.id=='cq'){colQ=t.value;const l=$('#cl');if(l)l.innerHTML=colList()}if(t.id=='mq'){mq=t.value;const l=$('#ml');if(l)l.innerHTML=machList()}if(t.id=='oq'){oq=t.value;oLim=40;const l=$('#ol');if(l)l.innerHTML=oList()}if(t.id=='en')ne.n=t.value;if(t.dataset.u&&usr.f)usr.f[t.dataset.u]=t.value;if(t.id=='bk')bk=t.value;if(t.id=='ctk')ctt=t.value;if(t.id=='bp')bp=t.value});
+document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='pkq'&&pk){pk.q=t.value;pkUp()}if(t.id=='cq'){colQ=t.value;oLim=40;const l=$('#cl');if(l)l.innerHTML=colList();const o=$('#ol');if(o)o.innerHTML=obList()}if(t.id=='mq'){mq=t.value;const l=$('#ml');if(l)l.innerHTML=machList()}if(t.id=='en')ne.n=t.value;if(t.dataset.u&&usr.f)usr.f[t.dataset.u]=t.value;if(t.id=='bk')bk=t.value;if(t.id=='ctk')ctt=t.value;if(t.id=='bp')bp=t.value});
 
 // ---- PWA: instalar como aplicativo e abrir sem internet
 let ip=null; // evento beforeinstallprompt (Chrome, Edge, Android)
