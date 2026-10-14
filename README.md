@@ -132,7 +132,7 @@ O seletor **Seção** mostra só as máquinas da seção e as pessoas treinadas 
 
 ## Escala: seção › grupo de máquinas › máquinas
 
-No alto, uma **linha de resumo** (escalados, por turno, máquinas com operador e, se houver, conflitos) e o link **Como usar**, que abre 3 linhas de ajuda. A tela de escalar segue 3 níveis, para continuar curta mesmo com 100 CTs ou mais:
+No alto, uma **linha de resumo** (escalados, por turno, máquinas com escala e, se houver, conflitos), uma dica quando o dia está vazio e o link **Como usar**, que abre 3 linhas de ajuda. A tela de escalar segue 3 níveis, para continuar curta mesmo com 100 CTs ou mais:
 
 1. **Seção** (por exemplo, Eixos D), aberta por padrão, com quantas pessoas estão escaladas.
 2. **Grupo de máquinas** (por exemplo, CHOQUE TÉRMICO), dentro da seção. Começa **fechado**; mostra ⚠ se houver conflito dentro dele.
@@ -140,7 +140,7 @@ No alto, uma **linha de resumo** (escalados, por turno, máquinas com operador e
 
 Cada nível aparece **recuado para a direita** do anterior, com uma linha-guia. **Expandir tudo** e **Recolher tudo** (links no alto) abrem e fecham tudo. O que está aberto fica lembrado só no navegador de cada pessoa e é independente do calendário e do Cadastro. O filtro **Seção** e os botões **Todos / T1 / T2 / T3** continuam valendo.
 
-**Nem toda máquina precisa de operador.** Máquina parada fica neutra, com gente escalada fica verde ("Com operador") e só o **conflito** (mais gente que vagas) aparece em vermelho e é contado no resumo.
+**Nem toda máquina precisa de operador.** Máquina parada fica neutra, com gente escalada fica verde ("Escalada", com "1 de 1 vaga") e só o **conflito** (mais gente que vagas, por exemplo "2 de 1 vaga") aparece em vermelho e é contado no resumo.
 
 ## Turnos no sábado e no domingo
 
@@ -148,17 +148,17 @@ Sábado e domingo funcionam como qualquer outro dia: podem ter **os três turnos
 
 ## Calendário: três jeitos de ver
 
-O Calendário abre no **Mês**, pensado para entender de relance. Os botões **Mês · Semana · Por máquina** trocam a visão (a escolha fica lembrada no navegador), e ◀ ▶ **Hoje** navegam.
+O Calendário abre no **Mês**, pensado para entender de relance. Os botões **Mês · Semana · Por máquina** trocam a visão (a escolha fica lembrada no navegador), e as setas **‹ ›** e **Hoje** navegam.
 
 - **Mês** (padrão): uma grade de calendário. Cada dia mostra o **número de pessoas escaladas**, os totais por turno (T1, T2, T3; no celular viram bolinhas coloridas) e **⚠** se houver conflito. Dia com gente fica verde, dia com conflito fica vermelho, hoje tem o número destacado. **Toque num dia** e, logo abaixo, aparece o **painel do dia**: quem trabalha em cada turno, em qual CT, presença (✓ presente, ✗ faltou) e o botão **Abrir escala** (ou **Montar escala**, se o dia está vazio).
 - **Semana**: sete cartões, um por dia, com os nomes de quem trabalha em cada turno. Toque no título do dia para abrir a escala dele.
-- **Por máquina**: a matriz detalhada, para quem quer ver CT por CT. Tem duas colunas fixas (**Seção** e **Grupo de Máq · CT**) que abrem nos mesmos três níveis da Escala (seção › grupo › CT, com ▾/▸), **7 dias** ou **Mês inteiro**, e **Expandir tudo / Recolher tudo**. Verde = tem operador, vermelho = conflito.
+- **Por máquina**: a matriz detalhada, para quem quer ver CT por CT. Tem duas colunas fixas (**Seção** e **Grupo de Máq · CT**) que abrem nos mesmos três níveis da Escala (seção › grupo › CT, com a seta que gira ao abrir), **7 dias** ou **Mês inteiro**, e **Expandir tudo / Recolher tudo**. Verde = tem operador, vermelho = conflito.
 
 O filtro **Seção** e o botão **Buscar máquina…** valem para as três visões. Na impressão, a visão **Por máquina** abre todas as seções e grupos.
 
 ## Colaboradores: lista enxuta que abre e fecha
 
-A aba **Colaboradores** mostra só quem **já tem máquina**, em uma linha por pessoa: nome, turno (T1/T2/T3), seção(ões) e quantas máquinas. Tudo começa **fechado**; clique no nome (▸) para abrir e ver/editar:
+A aba **Colaboradores** mostra só quem **já tem máquina**, em uma linha por pessoa: nome, turno (T1/T2/T3), seção(ões) e quantas máquinas. Tudo começa **fechado**; clique no nome para abrir e ver/editar:
 
 - **Nome** e **turno** (a linha se atualiza na hora);
 - as **máquinas em que a pessoa é treinada**, agrupadas por seção › grupo, com **×** para tirar uma máquina, "remover grupo" e **+ adicionar máquinas** (a mesma busca por seção, grupo ou CT; o ★ é o posto padrão na escala);
@@ -174,7 +174,7 @@ No alto da aba Colaboradores, o bloco **Sem máquina** (com o total ao lado do n
 
 1. **Máquinas**: clique em **Escolher máquinas** e marque na janela uma **seção inteira**, um **grupo inteiro** ou só os **CTs** (a mesma busca de sempre). As escolhidas aparecem como etiquetas; **Alterar** muda a escolha e **limpar** tira tudo.
 2. **Pessoas**: toque no nome para marcar (o ✓ aparece). Use a **busca**, os botões **T1/T2/T3** e o seletor **Seção** do alto da aba para achar quem interessa; **Marcar todas (N)** marca todas as que estão na lista filtrada e **Limpar marcação** desmarca. A marcação continua ao trocar a busca. **Editar**, na linha, abre nome, turno e remoção.
-3. **Adicionar N máq. a N pessoa(s)**: o botão fixo no rodapé do bloco dá as máquinas escolhidas a todas as pessoas marcadas, de uma vez, e salva.
+3. **Alocar N máquinas a N pessoas**: o botão fixo no rodapé do bloco dá as máquinas escolhidas a todas as pessoas marcadas, de uma vez, e salva.
 
 - Se alguma pessoa marcada tem **seção de origem diferente** da seção das máquinas escolhidas, o site pergunta antes ("Alocar mesmo assim?"). Quem não tem seção de origem não gera pergunta.
 - Logo depois de aplicar aparece uma faixa verde com **Desfazer**: ele tira **só as máquinas que esse lote acrescentou** (o que a pessoa ganhou depois, por outro caminho, fica).
@@ -206,9 +206,20 @@ Os gráficos se ajustam à largura da tela e, no celular, ficam em uma coluna.
 
 **Colaboradores removidos** do cadastro não aparecem nos Indicadores (nem nas tabelas, nem nos totais e gráficos), então os números batem com a Escala e o Calendário. Os registros de presença em si continuam guardados no banco; só deixam de ser mostrados.
 
+## Modo claro e escuro
+
+O botão no canto direito do cabeçalho (**Modo escuro** / **Modo claro**; no celular, só o ícone de lua/sol) troca o tema do site.
+
+- Enquanto você não escolher, o site **acompanha o aparelho** (se o celular ou o computador está no modo escuro, o site abre escuro).
+- Ao clicar, a escolha **fica guardada neste aparelho** e vale mais que o aparelho, mesmo depois de sair e entrar com outro usuário. Cada aparelho tem a sua.
+- A tela já abre no tema certo, sem piscar, e a barra do navegador/aplicativo instalado muda de cor junto.
+- **Imprimir** sempre sai claro (preto sobre branco), mesmo no modo escuro.
+- As cores dos textos, botões, abas e etiquetas foram conferidas nos dois temas, em todas as telas: contraste de leitura de pelo menos 4,5:1 (o mínimo recomendado).
+
 ## No celular e na impressão
 
-- **Presença** no celular vira uma lista de cartões, com os botões Presente e Faltou grandes e sem rolar para o lado.
+- **Menu de telas fixo embaixo**: no celular as 6 abas (Escala, Calendário, Presença, Indicadores, Colaboradores, Cadastro) ficam numa barra fixa no pé da tela, com ícone e nome, ao alcance do polegar. No computador, ficam no cabeçalho.
+- **Presença** no celular vira uma lista compacta: nome e máquina na primeira linha; refeição, **Presente** e **Faltou** na segunda, sem rolar para o lado.
 - **Imprimir** (Ctrl+P): a tela da Escala sai sem menu e botões, só com as máquinas que têm gente escalada e as pessoas de cada uma. Seções e grupos fechados na tela são abertos sozinhos só para a impressão (o Calendário também). A Presença imprime a tabela do dia, com os botões de check-in como caixas para marcar à mão.
 - **Remover** um CT ou uma pessoa do cadastro pede confirmação, porque a mudança vale para todos os gestores.
 - No Calendário, abrir ou fechar seções e grupos mantém a posição da rolagem.

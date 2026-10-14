@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="manifest" href="/manifest.json"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#1b2029" media="(prefers-color-scheme: dark)"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Escala HE"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Escala de hora extra por máquina, compartilhada entre os gestores."><title>Escala de Hora Extra</title>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="manifest" href="/manifest.json"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#1b2029" media="(prefers-color-scheme: dark)"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Escala HE"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Escala de hora extra por máquina, compartilhada entre os gestores."><title>Escala de Hora Extra</title><meta name="color-scheme" content="light dark">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('escalaHE:theme'));if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);var c=t==='dark'?'#171c26':'#ffffff',m=document.getElementsByName('theme-color');for(var i=0;i<m.length;i++)m[i].setAttribute('content',c)}}catch(e){}})()</script>
 <style>
-:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f7;--card:#fff;--tx:#1d2433;--mu:#667085;--bd:#e1e4ea;--pn:#aab2c0;--pr:#2457d6;--ok:#17803d;--okb:#e3f5ea;--wa:#b45309;--wab:#fdf0d9;--er:#c0262d;--erb:#fde6e6;--t1:#2457d6;--t2:#0e8f7e;--t3:#8a4fd6}
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f3f5f9;--card:#fff;--tx:#172033;--mu:#5b6779;--bd:#dfe3ea;--pn:#aab2c0;--pr:#2150d4;--prh:#1a41b0;--lk:#2150d4;--prs:#e9eefc;--ok:#157a3b;--okb:#e3f5ea;--wa:#a3480a;--wab:#fdf0d9;--er:#c0262d;--erb:#fde8e8;--t1:#2150d4;--t2:#0b6f60;--t3:#7a3fd0;--sh:0 1px 2px rgba(16,24,40,.06),0 1px 1px rgba(16,24,40,.03);--nav:60px}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pn:#5b6578;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}}
-:root[data-theme=dark]{color-scheme:dark;--bg:#12151c;--card:#1b2029;--tx:#e8ebf2;--mu:#98a2b3;--bd:#2c3340;--pn:#5b6578;--pr:#4d77e8;--ok:#5fd18a;--okb:#16301f;--wa:#f2b45c;--wab:#38290f;--er:#ff7b80;--erb:#3a1a1c;--t1:#8aa9ff;--t2:#4fd1bf;--t3:#b78bff}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#0e121a;--card:#171c26;--tx:#e9edf5;--mu:#9aa6ba;--bd:#283040;--pn:#566176;--pr:#3d68e3;--prh:#3459d0;--lk:#8fb0ff;--prs:#1e2a4d;--ok:#5fd18a;--okb:#133021;--wa:#f2b45c;--wab:#372a10;--er:#ff8a8f;--erb:#3a1a1e;--t1:#8fb0ff;--t2:#4fd1bf;--t3:#b992ff;--sh:none}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#0e121a;--card:#171c26;--tx:#e9edf5;--mu:#9aa6ba;--bd:#283040;--pn:#566176;--pr:#3d68e3;--prh:#3459d0;--lk:#8fb0ff;--prs:#1e2a4d;--ok:#5fd18a;--okb:#133021;--wa:#f2b45c;--wab:#372a10;--er:#ff8a8f;--erb:#3a1a1e;--t1:#8fb0ff;--t2:#4fd1bf;--t3:#b992ff;--sh:none}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 header{background:var(--card);border-bottom:1px solid var(--bd);padding:12px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
@@ -119,11 +120,11 @@ td input[type=checkbox]{width:auto;min-width:0}
  .cal .s1{position:static;min-width:76px;max-width:76px}.cal .s2,.cal.ns .s2{left:0;min-width:112px;max-width:120px}
  .sr .sv{width:auto;flex-basis:100%}
  .pt,.pt tbody{display:block}.pt tr.h{display:none}
- .pt tr{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--bd)}
+ .pt tr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 10px;align-items:center;padding:10px 2px;border-bottom:1px solid var(--bd)}
  .pt td{display:block;border:0;padding:0;white-space:normal}
- .pt td:nth-child(n+3){grid-column:1/-1}
- .pt td:nth-child(5){display:flex;gap:8px}.pt td:nth-child(5) .btn{flex:1}
- .pt td select{width:100%;min-width:0}
+ .pt td:nth-child(2){font-weight:600}.pt td:nth-child(3){grid-column:3;grid-row:1;text-align:right;color:var(--mu)}
+ .pt td:nth-child(4){grid-column:1/3;grid-row:2}.pt td:nth-child(5){grid-column:3;grid-row:2;display:flex;gap:6px}.pt td:nth-child(5) .btn{flex:none}
+ .pt td select{width:auto;min-width:0;max-width:140px}
  .rt,.rt tbody{display:block}.rt tr.h{display:none}
  .rt tr{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;align-items:end;padding:12px 2px;border-bottom:1px solid var(--bd)}
  .rt td{display:block;border:0;padding:0;white-space:normal;min-width:0}
@@ -187,15 +188,79 @@ main.nar{max-width:940px}
 .pills{display:flex;flex-wrap:wrap;gap:6px 8px;margin-bottom:12px}.pi{background:var(--card);border:1px solid var(--bd);border-radius:99px;padding:3px 12px;font-size:13px;color:var(--mu)}.pi b{font-size:15px;color:var(--tx)}
 .pi.t1 b{color:var(--t1)}.pi.t2 b{color:var(--t2)}.pi.t3 b{color:var(--t3)}.pi.ok{background:var(--okb);border-color:transparent}.pi.ok b{color:var(--ok)}.pi.cf{background:var(--erb);border-color:var(--er);color:var(--er)}.pi.cf b{color:var(--er)}
 .how{padding:8px 12px 8px 16px}.how ol{margin:0;padding-left:18px;font-size:13px;line-height:1.6}
-.pk.lg{width:min(380px,100%)}.lf{display:block;margin:8px 0 2px;font-size:13px;color:var(--mu)}.lf input{display:block;width:100%;margin-top:3px;font-size:16px;color:var(--tx)}#le{min-height:20px;margin:6px 0;font-size:13px}
+.pk.lgf{width:min(380px,100%)}.lf{display:block;margin:8px 0 2px;font-size:13px;color:var(--mu)}.lf input{display:block;width:100%;margin-top:3px;font-size:16px;color:var(--tx)}#le{min-height:20px;margin:6px 0;font-size:13px}
 body.lgo #app{visibility:hidden}
-@media(max-width:640px){.pk.lg{width:100%}}
+@media(max-width:640px){.pk.lgf{width:100%}}
 .ur{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;padding:8px 0;border-top:1px solid var(--bd)}.ur-n{flex:1 1 150px;min-width:0;overflow-wrap:anywhere}.ur-s{display:flex;flex-wrap:wrap;gap:4px}
 .uf{margin-top:12px;padding-top:4px;border-top:1px solid var(--bd)}.ur-p{display:flex;gap:10px;align-items:center}.ur-p input{flex:1;min-width:0}.us{display:flex;flex-wrap:wrap;gap:6px 14px;margin:4px 0 10px}.chk{display:flex;gap:6px;align-items:center;font-size:14px;color:var(--tx)}.chk input{width:auto}
 .ukey{background:var(--okb);border-color:var(--ok);margin:8px 0}
 @media(max-width:640px){.ur .btn{flex:1 1 40%}.ur-s{flex-basis:100%}}
 @media(pointer:coarse){.btn,.tab,.chip{min-height:42px}}
+/* ===== refino visual: tema claro/escuro, navegação e componentes ===== */
+body{font-size:14.5px;line-height:1.45;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1{font-size:17px;line-height:1.2;letter-spacing:-.01em}.mu{font-size:12.5px}.lk{color:var(--lk)}
+.tab.on,.btn.pr{color:#fff}.btn.pr:hover,.tab.on:hover{background:var(--prh);border-color:var(--prh)}
+.ic{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cv{width:15px;height:15px;flex:none;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s ease;vertical-align:-2px;margin-right:2px}.cv.o{transform:rotate(90deg)}
+.lk.gt{display:inline-flex;align-items:center;gap:5px}.gt .cv,.cl-v .cv,.ib-h .cv{color:var(--mu)}.cl-v{display:inline-flex}
+/* cabeçalho, abas e botão de tema */
+header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 16px;box-shadow:var(--sh)}
+.hd-l{flex:1 1 220px;min-width:0}
+header nav{order:2;display:flex;gap:4px;flex-wrap:nowrap}.th{order:3}
+.tab{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;font-weight:500;white-space:nowrap}.tab .ic{width:17px;height:17px}.tab.on{font-weight:600}
+.th{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:7px 12px;box-shadow:var(--sh);white-space:nowrap}.th:hover{background:var(--bg);border-color:var(--pn)}.th .ic{width:17px;height:17px}
+@media(max-width:1140px){header nav{order:4;flex:1 1 100%}header nav .tab{flex:1 1 auto;justify-content:center}.th .tx{display:none}.th{padding:7px 9px}}
+@media(min-width:641px) and (max-width:820px){header nav .tab .ic{display:none}header nav .tab{padding:7px 6px}}
+/* sem animação de cor na troca de tema; sem animações para quem prefere menos movimento */
+.nt *,.nt *::before,.nt *::after{transition:none!important}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+/* botões, campos e cartões */
+.tab,.btn{border-radius:10px;box-shadow:var(--sh);line-height:1.25;transition:background-color .12s,border-color .12s}
+.btn:not(.pr):not(.ok):not(.cf):not(:disabled):hover,.tab:not(.on):hover{background:var(--bg);border-color:var(--pn)}
+input,select,textarea{border-radius:10px;padding:8px 10px;min-height:38px}input[type=checkbox],input[type=radio]{min-height:0}
+input:focus,select:focus,textarea:focus{border-color:var(--pr)}
+.card,.kpi,.m,.cl,.pi{box-shadow:var(--sh)}.card,.kpi,.m{border-radius:12px}
+.ic-b{display:inline-flex;align-items:center;justify-content:center;padding:7px 10px}
+/* controle segmentado (turno, Mês/Semana/Por máquina) */
+.seg{display:inline-flex;gap:2px;padding:2px;background:var(--bg);border:1px solid var(--bd);border-radius:11px}
+.seg .btn{border:0;background:none;box-shadow:none;border-radius:9px;padding:5px 13px;min-height:0}.seg .btn:not(.pr):hover{background:var(--card)}
+.seg .btn.pr{background:var(--pr);color:#fff;box-shadow:var(--sh)}
+@media(pointer:coarse){.seg .btn{min-height:38px}}
+/* barra de data e filtros */
+.bd1{gap:8px}.bd1 input[type=date]{min-width:150px}.wdn{font-size:15px;margin-left:4px}.bd2{margin-top:-2px}
+/* Escala: dica, aviso e vagas */
+.tip{display:flex;gap:8px;align-items:flex-start;background:var(--prs);border-radius:10px;padding:9px 12px;margin:0 0 12px;font-size:13px}.tip .ic{color:var(--lk);margin-top:1px}
+.hw{display:inline-flex;align-items:center;gap:5px}.hw .ic{width:15px;height:15px}
+.cfa{border-color:var(--er);color:var(--er);background:var(--erb);font-weight:500}
+.vg{font-size:12.5px;color:var(--mu);margin-bottom:2px}.vg.cf{color:var(--er);font-weight:600}
+/* indicadores */
+.kpis{grid-template-columns:repeat(auto-fit,minmax(112px,1fr))}.lcw .sc{padding:6px 0}.lcw .ya{margin-top:6px}
+.who::before{content:' · '}.ib-h .cl-v{margin-top:2px}
+/* aviso rápido e janela de entrada */
+#toast{border-radius:10px;padding:10px 16px;box-shadow:0 8px 24px rgba(0,0,0,.28);max-width:min(92vw,440px);text-align:center;font-weight:500}
+.lg-b{font-size:11.5px;font-weight:700;color:var(--mu);letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}.pk.lgf h2{font-size:20px;margin:0 0 6px}.pk.lgf .bar{margin:10px 0 2px}
+/* celular: abas fixas embaixo, com ícones */
+@media(max-width:640px){
+ :root{padding-bottom:0}
+ header{flex-wrap:nowrap;padding:10px 14px;gap:10px}.hd-l{flex:1 1 auto}h1{font-size:16px}
+ .th{padding:0;width:42px;height:42px;justify-content:center;border-radius:12px;flex:none}
+ header nav{position:fixed;left:0;right:0;bottom:0;z-index:12;order:0;flex:none;background:var(--card);border-top:1px solid var(--bd);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px));gap:2px;justify-content:space-between;box-shadow:0 -2px 10px rgba(16,24,40,.07)}
+ header nav .tab{flex:1 1 auto;flex-direction:column;justify-content:center;gap:2px;border:0;background:none;box-shadow:none;padding:6px 2px 4px;font-size:10.5px;font-weight:500;color:var(--mu);min-width:0;min-height:50px}
+ header nav .tab .ic{width:22px;height:22px}
+ header nav .tab:hover{background:none;border-color:transparent}
+ header nav .tab.on,header nav .tab.on:hover{background:var(--prs);color:var(--lk);font-weight:600;border-color:transparent}
+ main{padding-bottom:calc(var(--nav) + 24px + env(safe-area-inset-bottom,0px))}
+ #toast{bottom:calc(var(--nav) + 14px + env(safe-area-inset-bottom,0px))}.ob-f{bottom:calc(var(--nav) + env(safe-area-inset-bottom,0px))}
+ .bd1 input[type=date]{flex:1 1 140px;min-width:0}.bd1 .wdn{flex:1 1 100%;order:5;margin:-2px 0 0 2px;font-size:13px;color:var(--mu)}
+ .seg.fl{display:flex;flex:1 1 100%}.seg.fl .btn{flex:1}
+ .who{display:block}.who::before{content:none}
+ .pills{gap:5px 6px;margin-bottom:10px}.pi{padding:2px 10px;font-size:12.5px}.pi b{font-size:14px}
+ #lg.pkw{padding:16px;align-items:center}#lg .pk{border-radius:14px}
+}
+@media(max-width:350px){header nav .tab{font-size:9.5px}}
 @media print{
+ :root:not([data-theme=light]),:root[data-theme=dark],:root{color-scheme:light;--bg:#fff;--card:#fff;--tx:#000;--mu:#444;--bd:#bbb;--pn:#999;--pr:#2150d4;--lk:#000;--prs:#fff;--ok:#157a3b;--okb:#e3f5ea;--wa:#a3480a;--wab:#fdf0d9;--er:#c0262d;--erb:#fde8e8;--t1:#2150d4;--t2:#0b6f60;--t3:#7a3fd0;--sh:none}
+  .tip,.th,.hw,.cv{display:none!important}header{box-shadow:none}main{padding-bottom:0!important}
  #cq,.cl-x,.cl-b button,.ob{display:none!important}.cl{break-inside:avoid}
  body{background:#fff;color:#000}
  nav,#sy,#toast,#pk,.bar button,.bar select,.bar label,button.chip:not(.on),.chip.alt{display:none!important}
@@ -208,6 +273,14 @@ body.lgo #app{visibility:hidden}
 }
 </style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div><div id="pk" class="pkw" hidden></div><div id="lg" class="pkw" hidden></div>
 <script>
+const IP={escala:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/>',cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',pres:'<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',ind:'<path d="M3 3v18h18"/><path d="M7 16v-5M12 16V7M17 16v-8"/>',col:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',cad:'<path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',moon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',l:'<path d="m15 18-6-6 6-6"/>',r:'<path d="m9 18 6-6-6-6"/>',info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>'};
+const ico=(n,c)=>`<svg class="ic ${c||''}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${IP[n]}</svg>`; // ícones de traço (24x24)
+const cv=o=>`<svg class="cv ${o?'o':''}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg>`; // seta de abrir/fechar: gira quando aberto
+// ---- Tema: claro, escuro, ou o do aparelho (enquanto a pessoa não escolher)
+const sysDark=()=>{try{return matchMedia('(prefers-color-scheme: dark)').matches}catch{return false}};
+const themeNow=()=>{const t=document.documentElement.getAttribute('data-theme');return t=='dark'||t=='light'?t:sysDark()?'dark':'light'};
+function applyTheme(t){const r=document.documentElement;r.classList.add('nt');setTimeout(()=>r.classList.remove('nt'),60);if(t=='dark'||t=='light'){r.setAttribute('data-theme',t);document.querySelectorAll('meta[name=theme-color]').forEach(m=>m.setAttribute('content',t=='dark'?'#171c26':'#ffffff'))}else r.removeAttribute('data-theme')}
+const thBtn=()=>{const d=themeNow()=='dark';return `<button class="th" data-a="theme" aria-label="${d?'Mudar para o modo claro':'Mudar para o modo escuro'}" title="${d?'Modo claro':'Modo escuro'}">${ico(d?'sun':'moon')}<span class="tx">${d?'Modo claro':'Modo escuro'}</span></button>`};
 const $=s=>document.querySelector(s),E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,8),iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),fmt=k=>k.split('-').reverse().join('/');
 let PR=false,cfg={machines:[],employees:[]},days={},db=null,tab='escala',date=iso(new Date()),flt=0,per=30;
@@ -225,7 +298,7 @@ async function call(body,q,path){const r=await fetch((path||'/api/state')+(q||''
 let lgP=null,lgAdm=false;
 function askLogin(){if(lgP)return lgP.p;let res;const p=new Promise(r=>res=r);lgP={p,res};lgAdm=!!ls.get('key');showLogin('');return p}
 function showLogin(err){const e=$('#lg');document.body.classList.add('lgo');
- e.innerHTML=`<div class="pk-bg"></div><form class="pk lg" role="dialog" aria-modal="true" aria-labelledby="lgt"><h2 id="lgt">Entrar</h2>${lgAdm?`<label class="lf">Código de administrador<input id="lc" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false"></label>`:`<label class="lf">Usuário<input id="lu" autocomplete="username" autocapitalize="none" spellcheck="false"></label><label class="lf">Senha<input id="lp" type="password" autocomplete="current-password"></label>`}<div class="er-t" id="le" role="alert">${E(err)}</div><div class="bar"><button class="btn pr" type="submit">Entrar</button><button type="button" class="btn" data-a="lgx">Agora não</button><span style="flex:1"></span><button type="button" class="lk" data-a="lgmode">${lgAdm?'Entrar com usuário e senha':'Sou administrador'}</button></div></form>`;
+ e.innerHTML=`<div class="pk-bg"></div><form class="pk lgf" role="dialog" aria-modal="true" aria-labelledby="lgt"><div class="lg-b">Escala de Hora Extra</div><h2 id="lgt">Entrar</h2>${lgAdm?`<label class="lf">Código de administrador<input id="lc" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false"></label>`:`<label class="lf">Usuário<input id="lu" autocomplete="username" autocapitalize="none" spellcheck="false"></label><label class="lf">Senha<input id="lp" type="password" autocomplete="current-password"></label>`}<div class="er-t" id="le" role="alert">${E(err)}</div><div class="bar"><button class="btn pr" type="submit">Entrar</button><button type="button" class="btn" data-a="lgx">Agora não</button><span style="flex:1"></span><button type="button" class="lk" data-a="lgmode">${lgAdm?'Entrar com usuário e senha':'Sou administrador'}</button></div></form>`;
  e.hidden=false;const f=$(lgAdm?'#lc':'#lu');if(f&&f.focus)f.focus()}
 function closeLogin(ok){const e=$('#lg');e.hidden=true;e.innerHTML='';document.body.classList.remove('lgo');const l=lgP;lgP=null;if(l)l.res(ok);if(ok){setSy();render()}}
 function wipe(){cfg={machines:[],employees:[]};days={};me=null;usr={list:null,ed:'',f:null,err:'',last:null,busy:false};pend={cfg:0,days:{}};ver='';secF='';grpF='';ctF='';imp=null;ctr=null;bk='';ctt='';edM='';addM=false;oLim=40;obk={ms:[],sel:new Set(),undo:null};pk=null;ne={n:'',s:1,ms:[]};['cfg','days','pend','sec','grp','ct','openC','openO','openE','openSE','open','openS','openM','openMS'].forEach(k=>ls.set(k,null))}
@@ -240,7 +313,7 @@ document.addEventListener('submit',async ev=>{const f=ev.target;if(!(f.closest&&
   if(r.ok&&j.ok)finishLogin(lgAdm,body.code,j);else er(r.status==429?'Muitas tentativas. Aguarde alguns minutos.':r.status==503?'O servidor não está pronto (banco de dados).':lgAdm?'Código incorreto.':'Usuário ou senha incorretos.')}
  catch{er('Sem conexão. Tente de novo.')}});
 function syl(){const x=sync,b=' <button class="lk" data-a="sync">'+(x.s=='ok'?'Atualizar':x.s=='e401'?'Entrar':'Tentar de novo')+'</button>'+ib();
- const w=isU()?` · <b>${E(me.name)}</b> <span class="mu">(${E(me.sections.join(', '))})</span> <button class="lk" data-a="logout">Sair</button>`:me&&me.canUsers&&ls.get('key')?' · Administrador <button class="lk" data-a="logout">Sair</button>':'';
+ const w=isU()?`<span class="who"><b>${E(me.name)}</b> <span class="mu">(${E(me.sections.join(', '))})</span> <button class="lk" data-a="logout">Sair</button></span>`:me&&me.canUsers&&ls.get('key')?'<span class="who">Administrador <button class="lk" data-a="logout">Sair</button></span>':'';
  if(x.s=='ok')return '<span style="color:var(--ok)">●</span> Sincronizado às '+x.t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+b+w;
  if(x.s=='wait')return 'Conectando…'+ib();
  const m={e503:'banco de dados não ligado',e404:'API não encontrada',e401:'entre para continuar',e429:'muitas tentativas, aguarde'}[x.s]||'sem conexão';
@@ -265,10 +338,10 @@ async function pull(manual){if(busy)return;if(manual===true)call.no=false;
  cfg=r.cfg||{machines:[],employees:[]};norm();days=r.days||{};ls.set('cfg',cfg);ls.set('days',days);rr();setSy()}
  catch(e){fail(e);setSy();if(e===401)render()}}
 function upd(d,fn){const x=JSON.parse(JSON.stringify(D(d)));fn(x);days[d]=x;saveDay(d);render()}
-const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
+const cap=t=>t.charAt(0).toUpperCase()+t.slice(1),pl=(n,u,m)=>n+' '+(n==1?u:m); // pl(2,'pessoa','pessoas') → "2 pessoas"
 const shiftDate=n=>{const x=new Date(date+'T12:00');x.setDate(x.getDate()+n);return iso(x)};
 
-function dbar(f){return `<div class="bar"><button class="btn" data-a="dd" data-v="-1" aria-label="Dia anterior">◀</button><input type="date" data-a="date" value="${date}" aria-label="Data"><button class="btn" data-a="dd" data-v="1" aria-label="Próximo dia">▶</button><button class="btn" data-a="today">Hoje</button><b>${cap(new Date(date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long'}))}</b>${secSel()}${f?`<span style="flex:1"></span>${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn ${flt==x[0]?'pr':''}" aria-pressed="${flt==x[0]}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}`:''}</div>`}
+function dbar(f){const ss=secSel();return `<div class="bar bd1"><button class="btn ic-b" data-a="dd" data-v="-1" aria-label="Dia anterior">${ico('l')}</button><input type="date" data-a="date" value="${date}" aria-label="Data"><button class="btn ic-b" data-a="dd" data-v="1" aria-label="Próximo dia">${ico('r')}</button><button class="btn" data-a="today">Hoje</button><b class="wdn">${cap(new Date(date+'T12:00').toLocaleDateString('pt-BR',{weekday:'long'}))}</b></div>${ss||f?`<div class="bar bd2">${ss}${f?`<span style="flex:1"></span><span class="seg fl" role="group" aria-label="Turno">${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn ${flt==x[0]?'pr':''}" aria-pressed="${flt==x[0]}" data-a="flt" data-v="${x[0]}">${x[1]}</button>`).join('')}</span>`:''}</div>`:''}`}
 function noData(){if(sync.s=='wait')return `<div class="card empty"><h2>Carregando…</h2></div>`;return `<div class="card empty"><h2>Comece pelo Cadastro</h2><p class="mu">Cadastre as máquinas e os colaboradores ${isU()?'da sua seção ':''}para montar a escala.</p><button class="btn pr" data-a="tab" data-v="cad">Ir para o Cadastro</button>${isU()?'':' <button class="btn" data-a="demo">Carregar exemplo</button>'}</div>`}
 
 const wk=(e,d)=>{const w=(d.w||{})[e.id];return e.machines.includes(w)?w:(e.machines[0]||'')};
@@ -306,21 +379,21 @@ function vEscala(){
  const sc=cfg.employees.filter(e=>S.has(e.id)&&(!s0||(wk(e,d)?ids.has(wk(e,d)):oIn(e))));
  const sh=[1,2,3].map(t=>sc.filter(e=>e.shift==t).length);
  const cf=ms0.filter(m=>st(m)=='cf').length,use=ms0.filter(m=>st(m)).length;
- const chip=(e,mid)=>{if((d.ox||[]).includes(e.id))return `<button class="chip alt" disabled title="Já escalada em outra seção"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">outra seção</span></button>`;const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return `<button class="chip ${here?'on':''} ${el?'alt':''}" aria-pressed="${here}" data-a="tog" data-id="${e.id}" data-v="${mid}"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
- const card=m=>{const s=st(m),es=cfg.employees.filter(e=>e.machines.includes(m.id)&&(!flt||e.shift==flt)).sort(bysh);return `<div class="m ${s}"><h4><span>${E(m.name)}${m.ct&&m.ct!==m.name?` <span class="mu">CT ${E(m.ct)}</span>`:''}</span>${s?`<span class="tag ${s}">${{cf:'Conflito',ok:'Com operador'}[s]}</span>`:''}</h4><div class="mu">Vagas: ${cnt[m.id]||0}/${m.slots||1}</div>${es.map(e=>chip(e,m.id)).join('')||`<div class="mu" style="margin-top:6px">Sem operadores</div>`}</div>`};
+ const chip=(e,mid)=>{if((d.ox||[]).includes(e.id))return `<button class="chip alt" disabled title="Já escalada em outra seção"><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">outra seção</span></button>`;const on=S.has(e.id),w=wk(e,d),here=on&&w==mid,el=on&&!here;return `<button class="chip ${here?'on':''} ${el?'alt':''}" aria-pressed="${here}" data-a="tog" data-id="${e.id}" data-v="${mid}"${e.machines.length>1?` title="Treinada em ${e.machines.length} máquinas"`:''}><span class="t t${e.shift}">T${e.shift}</span>${E(e.name)}<span style="margin-left:auto;font-size:11px;opacity:.85">${el?'→ '+E((mac(w)||{}).name):e.machines.length>1?e.machines.length+' máq.':''}</span></button>`};
+ const card=m=>{const s=st(m),es=cfg.employees.filter(e=>e.machines.includes(m.id)&&(!flt||e.shift==flt)).sort(bysh);return `<div class="m ${s}"><h4><span>${E(m.name)}${m.ct&&m.ct!==m.name?` <span class="mu">CT ${E(m.ct)}</span>`:''}</span>${s?`<span class="tag ${s}">${{cf:'Conflito',ok:'Escalada'}[s]}</span>`:''}</h4><div class="vg ${s}">${cnt[m.id]||0} de ${m.slots||1} ${(m.slots||1)==1?'vaga':'vagas'}</div>${es.map(e=>chip(e,m.id)).join('')||`<div class="mu" style="margin-top:6px">Sem operadores</div>`}</div>`};
  const sum=ms=>{const c=ms.filter(m=>st(m)=='cf').length,n=ms.reduce((a,m)=>a+(cnt[m.id]||0),0);return `${n?`<span class="tag n">${n} escalado${n==1?'':'s'}</span>`:''}${c?` <span class="tag cf">⚠ ${c} conflito${c==1?'':'s'}</span>`:''}`};
  const orphE=cfg.employees.filter(e=>!e.machines.some(i=>mac(i))&&(!flt||e.shift==flt)).sort(bysh),orBy=sec=>orphE.filter(e=>(e.sec||'')===sec),showO=sec=>!!sec&&!sp()&&(!s0||s0==sec);
  const secs=hasS?[...new Set([...ms0.map(m=>m.sec||''),...orphE.map(e=>e.sec||'').filter(showO)])].sort((a,b)=>!a?1:!b?-1:a.localeCompare(b,'pt-BR')):[''];
  const body=secs.map(sec=>{const sm=ms0.filter(m=>(m.sec||'')==sec),key=sec||SN,open=!hasS||soE(key)||PR,gs=[...new Set(sm.map(gk))];
-  const head=hasS?`<h2 class="sh"><button class="lk gt" data-a="opse" data-v="${E(key)}" aria-expanded="${open}" title="${open?'Recolher':'Expandir'} a seção">${open?'▾':'▸'} ${sec?E(sec):'(sem seção)'}</button> ${sum(sm)}</h2>`:'';
-  const groups=open?gs.map(g=>{const ms=sm.filter(m=>gk(m)==g),o=(sp()?opnE[g]!==false:!!opnE[g])||PR;return `<section class="proc"><h3 class="gh"><button class="lk gt" data-a="opne" data-v="${E(g)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} as máquinas">${o?'▾':'▸'} ${E(ms[0].proc||'Outros')}</button> ${sum(ms)}</h3>${o?`<div class="grid">${ms.map(card).join('')}</div>`:''}</section>`}).join(''):'';
-  const ol=open?orBy(sec):[],og=ol.length&&showO(sec)?(k=>{const o=!!opnE[k]||PR;return `<section class="proc"><h3 class="gh"><button class="lk gt" data-a="opne" data-v="${E(k)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} a lista">${o?'▾':'▸'} Sem máquina definida</button> <span class="tag vz">${ol.length}</span></h3>${o?`<div class="grid"><div class="m">${ol.map(e=>chip(e,'')).join('')}</div></div>`:''}</section>`})(sec+'|__orph'):'';
+  const head=hasS?`<h2 class="sh"><button class="lk gt" data-a="opse" data-v="${E(key)}" aria-expanded="${open}" title="${open?'Recolher':'Expandir'} a seção">${cv(open)} ${sec?E(sec):'(sem seção)'}</button> ${sum(sm)}</h2>`:'';
+  const groups=open?gs.map(g=>{const ms=sm.filter(m=>gk(m)==g),o=(sp()?opnE[g]!==false:!!opnE[g])||PR;return `<section class="proc"><h3 class="gh"><button class="lk gt" data-a="opne" data-v="${E(g)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} as máquinas">${cv(o)} ${E(ms[0].proc||'Outros')}</button> ${sum(ms)}</h3>${o?`<div class="grid">${ms.map(card).join('')}</div>`:''}</section>`}).join(''):'';
+  const ol=open?orBy(sec):[],og=ol.length&&showO(sec)?(k=>{const o=!!opnE[k]||PR;return `<section class="proc"><h3 class="gh"><button class="lk gt" data-a="opne" data-v="${E(k)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} a lista">${cv(o)} Sem máquina definida</button> <span class="tag vz">${ol.length}</span></h3>${o?`<div class="grid"><div class="m">${ol.map(e=>chip(e,'')).join('')}</div></div>`:''}</section>`})(sec+'|__orph'):'';
   return `<div class="sec ${hasS?'in':''}">${head}${groups}${og}</div>`}).join('');
  const orphan=orphE.filter(e=>!e.sec);
  const flb=s0?`<div class="mu" style="margin-bottom:8px">Filtro: ${s0=='*'?'':s0==SN?'sem seção':'<b>'+E(s0)+'</b>'}${fg()?(s0=='*'?'':' › ')+'<b>'+E(fg())+'</b>':''}${fc()?' › <b>'+E(mname(mac(fc())))+'</b>':''} · ${ms0.length} máq. · ${cfg.employees.filter(eIn).length} pessoas</div>`:'';
- return dbar(1)+`<div class="cl-x"><button class="lk" data-a="how" aria-expanded="${how}">${how?'Ocultar ajuda':'Como usar'}</button><span style="flex:1"></span><button class="lk" data-a="opene">Expandir tudo</button><button class="lk" data-a="closee">Recolher tudo</button></div>`+(how?`<div class="card how"><ol><li>Abra a seção e o grupo (▸) para ver as máquinas.</li><li>Toque no nome para escalar a pessoa; toque de novo para tirar.</li><li>Quem treina em mais de uma máquina aparece em todas: toque na máquina onde vai trabalhar.</li></ol></div>`:'')+flb+
- pills([[sc.length,'escalados'],...sh.map((n,i)=>[n,'T'+(i+1),'t'+(i+1)]),[use,'máq. com operador'],...(cf?[[cf,cf==1?'conflito':'conflitos','cf']]:[])])+
- (cf?`<div class="card" style="border-color:var(--er);color:var(--er)">⚠ Há máquina com mais gente do que vagas. Troque o posto de alguém.</div>`:'')+
+ return dbar(1)+`<div class="cl-x"><button class="lk hw" data-a="how" aria-expanded="${how}">${ico('info')}${how?'Ocultar ajuda':'Como usar'}</button><span style="flex:1"></span><button class="lk" data-a="opene">Expandir tudo</button><button class="lk" data-a="closee">Recolher tudo</button></div>`+(how?`<div class="card how"><ol><li>Abra a seção e o grupo (toque no nome) para ver as máquinas.</li><li>Toque no nome da pessoa para escalar; toque de novo para tirar.</li><li>Quem treina em mais de uma máquina aparece em todas: toque na máquina onde ela vai trabalhar.</li></ol></div>`:'')+flb+
+ pills([[sc.length,'escalados'],...sh.map((n,i)=>[n,'T'+(i+1),'t'+(i+1)]),[use,use==1?'máquina com escala':'máquinas com escala'],...(cf?[[cf,cf==1?'conflito':'conflitos','cf']]:[])])+
+ (!sc.length&&!how&&(ms0.length||orphE.length)?`<div class="tip">${ico('info')}<span>Ninguém escalado neste dia. Abra um grupo e toque no nome de quem vai trabalhar.</span></div>`:'')+(cf?`<div class="card cfa">⚠ ${cf==1?'Uma máquina está':cf+' máquinas estão'} com mais gente do que vagas. Passe alguém para outra máquina.</div>`:'')+
  body+
  ((!s0||s0==SN)&&orphan.length?`<section class="proc"><h3 class="gh">Sem máquina definida</h3><div class="grid"><div class="m">${orphan.map(e=>chip(e,'')).join('')}</div></div></section>`:'')}
 
@@ -328,7 +401,7 @@ function vPres(){
  const d=D(date),c=counts(d),s0=sf(),ids=new Set(cfg.machines.filter(mIn).map(m=>m.id)),l=d.s.map(emp).filter(Boolean).filter(e=>!s0||(wk(e,d)?ids.has(wk(e,d)):oIn(e))).sort((a,b)=>a.shift-b.shift||a.name.localeCompare(b.name));
  const p=l.filter(e=>d.a[e.id]=='p').length,f=l.filter(e=>d.a[e.id]=='f').length,r=l.filter(e=>d.m[e.id]).length;
  return dbar()+pills([[l.length,'escalados'],[p,p==1?'presente':'presentes','ok'],...(f?[[f,f==1?'falta':'faltas','cf']]:[]),[l.length-p-f,l.length-p-f==1?'pendente':'pendentes'],[r,r==1?'refeição':'refeições']])+
- (l.length?`<div class="card sc"><table class="pt"><tr class="h"><th>Turno</th><th>Colaborador</th><th>Máquina</th><th>Refeição</th><th>Presença</th></tr>${l.map(e=>{const a=d.a[e.id],w=wk(e,d),m=mac(w),cf=m&&c[w]>(m.slots||1);return `<tr><td><span class="t t${e.shift}">T${e.shift}</span></td><td>${E(e.name)}</td><td>${e.machines.length>1?`<select data-a="wk" data-id="${e.id}" aria-label="Máquina de ${E(e.name)}">${ogs(e.machines,w)}</select>`:m?E(m.name):'—'} ${cf?'<span class="tag cf">conflito</span>':''}</td><td><label><input type="checkbox" data-a="meal" data-id="${e.id}" ${d.m[e.id]?'checked':''}> Reservada</label></td><td><button class="btn ${a=='p'?'ok':''}" aria-pressed="${a=='p'}" data-a="att" data-v="p" data-id="${e.id}">Presente</button> <button class="btn ${a=='f'?'cf':''}" aria-pressed="${a=='f'}" data-a="att" data-v="f" data-id="${e.id}">Faltou</button></td></tr>`}).join('')}</table></div>`:`<div class="card empty mu">Ninguém escalado neste dia${s0?' (neste filtro)':''}. Monte a escala na aba Escala.</div>`)}
+ (l.length?`<div class="card sc"><table class="pt"><tr class="h"><th>Turno</th><th>Colaborador</th><th>Máquina</th><th>Refeição</th><th>Presença</th></tr>${l.map(e=>{const a=d.a[e.id],w=wk(e,d),m=mac(w),cf=m&&c[w]>(m.slots||1);return `<tr><td><span class="t t${e.shift}">T${e.shift}</span></td><td>${E(e.name)}</td><td>${e.machines.length>1?`<select data-a="wk" data-id="${e.id}" aria-label="Máquina de ${E(e.name)}">${ogs(e.machines,w)}</select>`:m?E(m.name):'—'} ${cf?'<span class="tag cf">conflito</span>':''}</td><td><label><input type="checkbox" data-a="meal" data-id="${e.id}" ${d.m[e.id]?'checked':''}> Reservada</label></td><td><button class="btn ${a=='p'?'ok':''}" aria-pressed="${a=='p'}" data-a="att" data-v="p" data-id="${e.id}">Presente</button> <button class="btn ${a=='f'?'cf':''}" aria-pressed="${a=='f'}" data-a="att" data-v="f" data-id="${e.id}">Faltou</button></td></tr>`}).join('')}</table></div>`:`<div class="card empty"><p class="mu">Ninguém escalado neste dia${s0?' (neste filtro)':''}.</p><button class="btn pr" data-a="goto" data-v="${date}">Montar a escala deste dia</button></div>`)}
 
 function vInd(){
  const z=()=>({e:0,p:0,f:0}),add=(o,v)=>{o.e++;if(v=='p')o.p++;if(v=='f')o.f++},pc=o=>o.p+o.f?Math.round(o.p/(o.p+o.f)*100)+'%':'—',pe=o=>o.e-o.p-o.f;
@@ -353,7 +426,7 @@ function vInd(){
  const daily=cols(CD.map(([k,o])=>[wdn(k)+' '+fmt(k)+' — '+tip('dia',o).slice(5),o,o.e,fd(k)]),mx,(x,i)=>{const k=CD[i][0];return dm(k)+(N<=14?'<br>'+wdn(k):'')},step,'Escalados por dia, de '+(N?fmt(CD[0][0])+' a '+fmt(CD[N-1][0]):'—'));
  // linha do % de comparecimento por dia
  const pts=CD.map(([k,o],i)=>o.p+o.f?[i,Math.round(o.p/(o.p+o.f)*100),k,o]:null).filter(Boolean),X=i=>((i+.5)/N*100).toFixed(2),Y=v=>(100-v).toFixed(1);
- const pct=pts.length?`<div class="cw"><div class="ya" style="height:110px"><span>100%</span><span>50%</span><span>0%</span></div><div class="sc"><div class="dw" style="min-width:${N*13}px"><div class="lc"><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Percentual de comparecimento por dia"><polyline points="${pts.map(p=>X(p[0])+','+Y(p[1])).join(' ')}" fill="none" stroke="var(--pr)" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>${N<=45?pts.map(p=>`<b class="dot" style="left:${X(p[0])}%;top:${Y(p[1])}%"></b>`).join(''):''}<div class="ov" style="--n:${N}">${CD.map(([k,o])=>`<span title="${E(wdn(k)+' '+fmt(k)+': '+(o.p+o.f?Math.round(o.p/(o.p+o.f)*100)+'% ('+o.p+' de '+(o.p+o.f)+')':'sem check-in'))}"></span>`).join('')}</div></div><div class="dl" style="--n:${N}">${CD.map((x,i)=>`<span class="${fd(x[0])?'fd':''}">${i%step==0?dm(x[0]):''}</span>`).join('')}</div></div></div></div><div class="mu">% = presentes ÷ (presentes + faltas).</div>`:'<div class="mu">Nenhuma presença marcada no período.</div>';
+ const pct=pts.length?`<div class="cw lcw"><div class="ya" style="height:110px"><span>100%</span><span>50%</span><span>0%</span></div><div class="sc"><div class="dw" style="min-width:${N*13}px"><div class="lc"><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Percentual de comparecimento por dia"><polyline points="${pts.map(p=>X(p[0])+','+Y(p[1])).join(' ')}" fill="none" stroke="var(--pr)" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>${N<=45?pts.map(p=>`<b class="dot" style="left:${X(p[0])}%;top:${Y(p[1])}%"></b>`).join(''):''}<div class="ov" style="--n:${N}">${CD.map(([k,o])=>`<span title="${E(wdn(k)+' '+fmt(k)+': '+(o.p+o.f?Math.round(o.p/(o.p+o.f)*100)+'% ('+o.p+' de '+(o.p+o.f)+')':'sem check-in'))}"></span>`).join('')}</div></div><div class="dl" style="--n:${N}">${CD.map((x,i)=>`<span class="${fd(x[0])?'fd':''}">${i%step==0?dm(x[0]):''}</span>`).join('')}</div></div></div></div><div class="mu">% = presentes ÷ (presentes + faltas).</div>`:'<div class="mu">Nenhuma presença marcada no período.</div>';
  // rosca
  const donut=(parts,tot,lbl)=>{const R=46,C=2*Math.PI*R;let off=0;return `<svg viewBox="0 0 120 120" width="132" height="132" role="img" aria-label="${E(lbl+': '+parts.map(p=>p[2]+' '+p[0]).join(', '))}"><circle cx="60" cy="60" r="${R}" fill="none" stroke="var(--bg)" stroke-width="16"/>${tot?parts.filter(p=>p[0]>0).map(([v,c])=>{const l=v/tot*C,s=`<circle cx="60" cy="60" r="${R}" fill="none" stroke="${c}" stroke-width="16" stroke-dasharray="${l.toFixed(2)} ${(C-l).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 60 60)"/>`;off+=l;return s}).join(''):''}<text x="60" y="60" text-anchor="middle" font-size="22" font-weight="700" fill="var(--tx)">${tot}</text><text x="60" y="76" text-anchor="middle" font-size="10" fill="var(--mu)">${lbl}</text></svg>`};
  const dleg=(parts,tot)=>`<div class="dg">${parts.map(([v,c,t])=>`<div><i class="sw" style="background:${c}"></i>${t} <b>${v}</b> <span class="mu">${tot?Math.round(v/tot*100):0}%</span></div>`).join('')}</div>`;
@@ -498,7 +571,7 @@ function pkList(){
  (total>shown?`<div class="mu" style="padding:10px">Mostrando ${shown} de ${total}. Refine a busca.</div>`:'')}
 function pkFoot(){const n=pk.sel?pk.sel.size:0;
  if(pk.mode=='flt')return `<span style="flex:1"></span><button class="btn" data-a="pkclose">Cancelar</button>`;
- return `<span class="mu">${n} selecionada(s)${n?` · <button class="lk" data-a="pkclr">limpar</button>`:''}</span><span style="flex:1"></span><button class="btn" data-a="pkclose">Cancelar</button><button class="btn pr" data-a="pkok" ${n?'':'disabled'}>${pk.mode=='add'?'Adicionar':'Usar'} ${n} máquina(s)</button>`}
+ return `<span class="mu">${n==1?'1 selecionada':n+' selecionadas'}${n?` · <button class="lk" data-a="pkclr">limpar</button>`:''}</span><span style="flex:1"></span><button class="btn" data-a="pkclose">Cancelar</button><button class="btn pr" data-a="pkok" ${n?'':'disabled'}>${pk.mode=='add'?'Adicionar':'Usar'} ${pl(n,'máquina','máquinas')}</button>`}
 function pkShell(){const e=pk.mode=='add'?emp(pk.id):null,ti=pk.mode=='add'?'Máquinas de '+E(e?e.name:''):pk.mode=='new'?'Máquinas do novo colaborador':pk.mode=='bulk'?'Máquinas para alocar':'Filtrar por máquina';
  return `<div class="pk-bg" data-a="pkclose"></div><div class="pk" role="dialog" aria-modal="true" aria-labelledby="pkt"><div class="pk-h"><h2 id="pkt">${ti}</h2><button class="btn" data-a="pkclose" aria-label="Fechar">×</button></div><input id="pkq" type="search" autocomplete="off" placeholder="Buscar seção, grupo ou CT…" aria-label="Buscar máquina" value="${E(pk.q)}"><div class="mu" style="margin:6px 0 2px">${pk.mode=='flt'?'Toque numa seção, grupo ou CT para ver só ele.':'Marque a seção, o grupo ou só os CTs.'}</div><div class="pk-l" id="pkl">${pkList()}</div><div class="pk-f" id="pkf">${pkFoot()}</div></div>`}
 function pkOpen(o){pk={q:'',sel:new Set(),...o};const e=$('#pk');e.innerHTML=pkShell();e.hidden=false;const q=$('#pkq');if(q&&q.focus)q.focus()}
@@ -524,7 +597,7 @@ const colSum=()=>{const all=cfg.employees.filter(e=>!orph(e)),no=cfg.employees.l
  return `<b>${all.length}</b> com máquina · T1 ${n(1)} · T2 ${n(2)} · T3 ${n(3)}${no?` · ${no} sem máquina`:''}`};
 const colBody=e=>`<div class="cl-b"><div class="cl-ed"><label class="nm">Nome<input data-a="ef" data-f="name" data-id="${e.id}" value="${E(e.name)}"${isU()&&e.shared?' disabled':''}></label><label>Turno<select data-a="ef" data-f="shift" data-id="${e.id}"${isU()&&e.shared?' disabled':''}>${shOpt(e.shift)}</select></label>${canDel(e)?`<button class="btn er" data-a="dele" data-id="${e.id}" aria-label="Remover ${E(e.name)}">Remover colaborador</button>`:''}</div>${isU()&&e.shared?`<div class="mu" style="margin-bottom:8px">Também treinada em outra seção: nome, turno e remoção só com o administrador.</div>`:''}${mcell(e)}</div>`;
 const colRow=e=>{const o=!!opnC[e.id]||PR,n=eMs(e).length;
- return `<div class="cl ${o?'open':''}"><button class="cl-h" data-a="opnc" data-v="${e.id}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'}"><span class="cl-v" aria-hidden="true">${o?'▾':'▸'}</span><span class="cl-n"><b>${E(e.name)}</b><span class="t t${e.shift}">T${e.shift}</span></span><span class="cl-s">${E(csum(e))}</span><span class="tag n">${n} máq.</span></button>${o?colBody(e):''}</div>`};
+ return `<div class="cl ${o?'open':''}"><button class="cl-h" data-a="opnc" data-v="${e.id}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'}"><span class="cl-v" aria-hidden="true">${cv(o)}</span><span class="cl-n"><b>${E(e.name)}</b><span class="t t${e.shift}">T${e.shift}</span></span><span class="cl-s">${E(csum(e))}</span><span class="tag n">${n} máq.</span></button>${o?colBody(e):''}</div>`};
 
 // ---- Colaboradores sem máquina: escolhe as máquinas uma vez, marca as pessoas e aplica a todas (com "Desfazer")
 const obMs=()=>obk.ms.map(mac).filter(Boolean);
@@ -535,12 +608,12 @@ function obList(){
  return `<div class="cl-x"><span class="mu">${rows.length} na lista</span><span style="flex:1"></span><button class="lk" data-a="oall">Marcar todas (${rows.length})</button><button class="lk" data-a="oclr">Limpar marcação</button></div>`+
   (l.map(e=>orow(e,mu)).join('')||'<div class="mu" style="padding:8px 2px">Ninguém encontrado.</div>')+
   (rows.length>l.length?`<button class="btn" data-a="omore" style="margin:6px 0">Mostrar mais (${rows.length-l.length} restantes)</button>`:'')+
-  `<div class="ob-f"><span class="mu">${n} marcada(s)</span><button class="btn pr" data-a="obgo" ${n&&ms.length?'':'disabled'}>${!ms.length?'Escolha as máquinas':!n?'Marque as pessoas':'Adicionar '+ms.length+' máq. a '+n+' pessoa(s)'}</button></div>`}
+  `<div class="ob-f"><span class="mu">${n==1?'1 marcada':n+' marcadas'}</span><button class="btn pr" data-a="obgo" ${n&&ms.length?'':'disabled'}>${!ms.length?'Escolha as máquinas':!n?'Marque as pessoas':'Alocar '+pl(ms.length,'máquina','máquinas')+' a '+pl(n,'pessoa','pessoas')}</button></div>`}
 function obBlock(){
  const all=cfg.employees.filter(orph),u=obk.undo?`<div class="ob-u"><span>${E(obk.undo.txt)}</span> <button class="lk" data-a="obundo">Desfazer</button></div>`:'';
  if(!all.length)return u?`<div class="card ob">${u}</div>`:'';
  const o=obOpen()||PR,ms=obMs(),ch=ms.length?`<span class="ob-ch">${ms.slice(0,8).map(m=>`<span class="tag ok">${E(mname(m))}</span>`).join('')}${ms.length>8?`<span class="mu">e mais ${ms.length-8}</span>`:''}</span>`:'<span class="mu">nenhuma escolhida</span>';
- return `<div class="card ib ob"><button class="ib-h" data-a="obt" aria-expanded="${o}"><span class="cl-v" aria-hidden="true">${o?'▾':'▸'}</span><span><b>Sem máquina <span class="tag vz">${all.length}</span></b><span class="mu">Escolha as máquinas e marque quem pode trabalhar nelas</span></span></button>${u}${o?`<div class="ib-b"><div class="ob-s"><b>1. Máquinas</b><button class="btn" data-a="obm">${ms.length?'Alterar':'Escolher máquinas'}</button>${ch}${ms.length?'<button class="lk" data-a="obmx">limpar</button>':''}</div><div class="ob-s"><b>2. Pessoas</b><span class="mu">Filtre com a busca, o turno e a seção acima. Toque no nome para marcar.</span></div><div id="ol">${obList()}</div></div>`:''}</div>`}
+ return `<div class="card ib ob"><button class="ib-h" data-a="obt" aria-expanded="${o}"><span class="cl-v" aria-hidden="true">${cv(o)}</span><span><b>Sem máquina <span class="tag vz">${all.length}</span></b><span class="mu">Escolha as máquinas e marque quem pode trabalhar nelas</span></span></button>${u}${o?`<div class="ib-b"><div class="ob-s"><b>1. Máquinas</b><button class="btn" data-a="obm">${ms.length?'Alterar':'Escolher máquinas'}</button>${ch}${ms.length?'<button class="lk" data-a="obmx">limpar</button>':''}</div><div class="ob-s"><b>2. Pessoas</b><span class="mu">Filtre com a busca, o turno e a seção acima. Toque no nome para marcar.</span></div><div id="ol">${obList()}</div></div>`:''}</div>`}
 function colList(){
  const all=cfg.employees.filter(e=>!orph(e));
  if(!all.length&&cfg.employees.length)return `<div class="mu" style="padding:14px 2px">Ninguém tem máquina ainda. Aloque pelo bloco "Sem máquina" acima.</div>`;
@@ -548,10 +621,10 @@ function colList(){
  const rows=colRows();
  if(!rows.length)return `<div class="mu" style="padding:14px 2px">Nada encontrado.</div>`;
  const f=colQ.trim()||cflt||sf();
- return `<div class="cl-x"><span class="mu">${f?rows.length+' de '+all.length:rows.length+' colaborador(es)'}</span><span style="flex:1"></span><button class="lk" data-a="opnca">Expandir tudo</button><button class="lk" data-a="clsca">Recolher tudo</button></div>${rows.slice(0,CMAX).map(colRow).join('')}${rows.length>CMAX?`<div class="mu" style="padding:8px 2px">Mostrando os ${CMAX} primeiros de ${rows.length}. Use a busca.</div>`:''}`}
+ return `<div class="cl-x"><span class="mu">${f?rows.length+' de '+all.length:pl(rows.length,'colaborador','colaboradores')}</span><span style="flex:1"></span><button class="lk" data-a="opnca">Expandir tudo</button><button class="lk" data-a="clsca">Recolher tudo</button></div>${rows.slice(0,CMAX).map(colRow).join('')}${rows.length>CMAX?`<div class="mu" style="padding:8px 2px">Mostrando os ${CMAX} primeiros de ${rows.length}. Use a busca.</div>`:''}`}
 function vCol(){
  if(!cfg.machines.length&&!cfg.employees.length)return noData();
- return `<div class="bar"><input id="cq" type="search" autocomplete="off" placeholder="Buscar nome, seção ou CT…" aria-label="Buscar colaborador" value="${E(colQ)}">${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn tb ${cflt==x[0]?'pr':''}" aria-pressed="${cflt==x[0]}" data-a="cflt" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>
+ return `<div class="bar"><input id="cq" type="search" autocomplete="off" placeholder="Buscar nome, seção ou CT…" aria-label="Buscar colaborador" value="${E(colQ)}"><span class="seg fl" role="group" aria-label="Turno">${[[0,'Todos'],[1,'T1'],[2,'T2'],[3,'T3']].map(x=>`<button class="btn tb ${cflt==x[0]?'pr':''}" aria-pressed="${cflt==x[0]}" data-a="cflt" data-v="${x[0]}">${x[1]}</button>`).join('')}</span></div>
  <div class="bar">${secSel()}</div>
  <div class="mu" id="cs" style="margin-bottom:10px">${colSum()}</div>${obBlock()}<div id="cl">${colList()}</div>`}
 // ---- Cadastro: máquinas numa lista que abre e fecha (seção › grupo › CT), colaboradores e importações recolhidas
@@ -584,11 +657,11 @@ function machList(){
  const ms=mRows(),q=mq.trim()!=='',hasS=secList().length>0;
  if(!ms.length)return '<div class="mu" style="padding:6px 2px">Nenhuma máquina encontrada.</div>';
  const grp=sm=>[...new Set(sm.map(gk))].map(g=>{const gm=sm.filter(m=>gk(m)==g),o=q||PR||!!opnM[g]||gm.some(m=>m.id==edM);
-  return `<div class="cl ${o?'open':''}"><button class="cl-h mh" data-a="opnm" data-v="${E(g)}" aria-expanded="${o}"><span class="cl-v" aria-hidden="true">${o?'▾':'▸'}</span><span class="cl-n"><b>${E(gm[0].proc||'Outros')}</b></span><span class="tag n">${gm.length} CT${gm.length>1?'s':''}</span></button>${o?`<div class="cl-b">${gm.map(mRow).join('')}</div>`:''}</div>`}).join('');
+  return `<div class="cl ${o?'open':''}"><button class="cl-h mh" data-a="opnm" data-v="${E(g)}" aria-expanded="${o}"><span class="cl-v" aria-hidden="true">${cv(o)}</span><span class="cl-n"><b>${E(gm[0].proc||'Outros')}</b></span><span class="tag n">${gm.length} CT${gm.length>1?'s':''}</span></button>${o?`<div class="cl-b">${gm.map(mRow).join('')}</div>`:''}</div>`}).join('');
  const body=hasS?[...new Set(ms.map(m=>m.sec||''))].map(sc=>{const sm=ms.filter(m=>(m.sec||'')==sc),k=sc||SN,o=q||PR||!!opnMS[k]||sm.some(m=>m.id==edM),ng=new Set(sm.map(gk)).size;
-  return `<div class="cl sx ${o?'open':''}"><button class="cl-h mh" data-a="opnms" data-v="${E(k)}" aria-expanded="${o}"><span class="cl-v" aria-hidden="true">${o?'▾':'▸'}</span><span class="cl-n"><b>${sc?E(sc):'(sem seção)'}</b></span><span class="mu">${ng} grupo${ng>1?'s':''} · ${sm.length} CT${sm.length>1?'s':''}</span></button>${o?`<div class="cl-b sb">${grp(sm)}</div>`:''}</div>`}).join(''):grp(ms);
- return `<div class="cl-x"><span class="mu">${q?ms.length+' de '+cfg.machines.length+' máquina(s)':cfg.machines.length+' máquina(s)'}</span><span style="flex:1"></span><button class="lk" data-a="opnma">Expandir tudo</button><button class="lk" data-a="clsma">Recolher tudo</button></div>${body}`}
-const impBox=(k,ti,sub,body)=>{const o=iOpen(k);return `<div class="card ib"><button class="ib-h" data-a="timp" data-v="${k}" aria-expanded="${o}"><span class="cl-v" aria-hidden="true">${o?'▾':'▸'}</span><span><b>${ti}</b><span class="mu">${sub}</span></span></button>${o?`<div class="ib-b">${body}</div>`:''}</div>`};
+  return `<div class="cl sx ${o?'open':''}"><button class="cl-h mh" data-a="opnms" data-v="${E(k)}" aria-expanded="${o}"><span class="cl-v" aria-hidden="true">${cv(o)}</span><span class="cl-n"><b>${sc?E(sc):'(sem seção)'}</b></span><span class="mu">${ng} grupo${ng>1?'s':''} · ${sm.length} CT${sm.length>1?'s':''}</span></button>${o?`<div class="cl-b sb">${grp(sm)}</div>`:''}</div>`}).join(''):grp(ms);
+ return `<div class="cl-x"><span class="mu">${q?ms.length+' de '+pl(cfg.machines.length,'máquina','máquinas'):pl(cfg.machines.length,'máquina','máquinas')}</span><span style="flex:1"></span><button class="lk" data-a="opnma">Expandir tudo</button><button class="lk" data-a="clsma">Recolher tudo</button></div>${body}`}
+const impBox=(k,ti,sub,body)=>{const o=iOpen(k);return `<div class="card ib"><button class="ib-h" data-a="timp" data-v="${k}" aria-expanded="${o}"><span class="cl-v" aria-hidden="true">${cv(o)}</span><span><b>${ti}</b><span class="mu">${sub}</span></span></button>${o?`<div class="ib-b">${body}</div>`:''}</div>`};
 function vCad(){
  const ms=cfg.machines,ps=[...new Set(ms.map(m=>m.proc))],orp=cfg.employees.filter(orph).sort(byNome),com=cfg.employees.length-orp.length;
  const mais=k=>`<button class="lk" data-a="imph" data-v="${k}">${impH[k]?'Menos':'Mais detalhes'}</button>`;
@@ -616,7 +689,7 @@ function dstat(k,F){const d=days[k]||{s:[],a:{},m:{},w:{}},by={},list=[],a=d.a||
  (d.s||[]).forEach(id=>{const e=emp(id);if(!e)return;const w=wk(e,d);if(F.s0&&!(w?F.ids.has(w):oIn(e)))return;list.push(e);(by[w]=by[w]||[]).push(e)});
  return {k,d,by,list,n:list.length,sh:[1,2,3].map(t=>list.filter(e=>e.shift==t).length),conf:Object.keys(by).filter(w=>{const m=mac(w);return m&&by[w].length>(m.slots||1)}).length,p:list.filter(e=>a[e.id]=='p').length,f:list.filter(e=>a[e.id]=='f').length}}
 function calDia(st){ // painel do dia: quem trabalha, por turno
- const head=`<div class="dp-h"><b>${dlong(st.k)}</b><span class="mu">${st.n?st.n+(st.n==1?' escalado':' escalados'):'ninguém escalado'}${st.p||st.f?' · ✓ '+st.p+' ✗ '+st.f:''}</span>${st.conf?`<span class="tag cf">⚠ ${st.conf} conflito(s)</span>`:''}<span style="flex:1"></span><button class="btn pr" data-a="goto" data-v="${st.k}">${st.n?'Abrir escala':'Montar escala'}</button></div>`;
+ const head=`<div class="dp-h"><b>${dlong(st.k)}</b><span class="mu">${st.n?st.n+(st.n==1?' escalado':' escalados'):'ninguém escalado'}${st.p||st.f?' · ✓ '+st.p+' ✗ '+st.f:''}</span>${st.conf?`<span class="tag cf">⚠ ${pl(st.conf,'conflito','conflitos')}</span>`:''}<span style="flex:1"></span><button class="btn pr" data-a="goto" data-v="${st.k}">${st.n?'Abrir escala':'Montar escala'}</button></div>`;
  if(!st.n)return `<div class="card dp">${head}</div>`;
  const at=st.d.a||{};
  return `<div class="card dp">${head}<div class="dp-g">${[1,2,3].map(t=>{const l=st.list.filter(e=>e.shift==t).sort(byNome);
@@ -626,18 +699,18 @@ function calMes(F,td){
  const r=wd(calRef),y=r.getFullYear(),mo=r.getMonth(),first=new Date(y,mo,1,12),lead=(first.getDay()+6)%7,len=new Date(y,mo+1,0).getDate(),total=Math.ceil((lead+len)/7)*7,start=cd(iso(first),-lead),inM=k=>k.slice(0,7)==calRef.slice(0,7);
  const sel=inM(calSel)?calSel:inM(td)?td:iso(first);let cells='';
  for(let i=0;i<total;i++){const k=cd(start,i),x=wd(k),st=dstat(k,F),cls='cgd'+(inM(k)?'':' out')+(k==td?' hoje':'')+(k==sel?' sel':'')+(x.getDay()%6==0?' fds':'')+(st.conf?' cf':st.n?' ok':'');
-  cells+=`<button class="${cls}" data-a="csel" data-v="${k}" aria-pressed="${k==sel}" aria-label="${x.getDate()} de ${x.toLocaleDateString('pt-BR',{month:'long'})}: ${st.n?st.n+' escalado(s)'+(st.conf?', '+st.conf+' em conflito':''):'ninguém escalado'}"><span class="gn">${x.getDate()}</span>${st.conf?'<span class="gw" title="Conflito" aria-hidden="true">⚠</span>':''}${st.n?`<span class="gt">${st.n}</span><span class="gs">${st.sh.map((n,j)=>n?`<span class="gp"><i class="t t${j+1}">T${j+1}</i><b>${n}</b></span>`:'').join('')}</span>`:''}</button>`}
+  cells+=`<button class="${cls}" data-a="csel" data-v="${k}" aria-pressed="${k==sel}" aria-label="${x.getDate()} de ${x.toLocaleDateString('pt-BR',{month:'long'})}: ${st.n?pl(st.n,'escalado','escalados')+(st.conf?', '+st.conf+' em conflito':''):'ninguém escalado'}"><span class="gn">${x.getDate()}</span>${st.conf?'<span class="gw" title="Conflito" aria-hidden="true">⚠</span>':''}${st.n?`<span class="gt">${st.n}</span><span class="gs">${st.sh.map((n,j)=>n?`<span class="gp"><i class="t t${j+1}">T${j+1}</i><b>${n}</b></span>`:'').join('')}</span>`:''}</button>`}
  return `<div class="cg7">${WK7.map(n=>`<div class="cgh">${n}</div>`).join('')}${cells}</div>${calDia(dstat(sel,F))}`}
 function calSem(F,td){
  const mon=cd(calRef,-((wd(calRef).getDay()+6)%7));
  return `<div class="wk7">${Array.from({length:7},(_,i)=>{const k=cd(mon,i),x=wd(k),st=dstat(k,F);
-  return `<section class="wkd${k==td?' hoje':''}${x.getDay()%6==0?' fds':''}${st.conf?' cf':st.n?' ok':''}"><button class="wkh" data-a="goto" data-v="${k}" title="Abrir a escala deste dia"><b>${WK7[i]} ${x.getDate()}</b><span class="mu">${st.n?st.n+' escalado(s)':'ninguém'}</span>${st.conf?`<span class="tag cf">⚠ ${st.conf}</span>`:''}</button>${[1,2,3].map(t=>{const l=st.list.filter(e=>e.shift==t).sort(byNome);
+  return `<section class="wkd${k==td?' hoje':''}${x.getDay()%6==0?' fds':''}${st.conf?' cf':st.n?' ok':''}"><button class="wkh" data-a="goto" data-v="${k}" title="Abrir a escala deste dia"><b>${WK7[i]} ${x.getDate()}</b><span class="mu">${st.n?pl(st.n,'escalado','escalados'):'ninguém'}</span>${st.conf?`<span class="tag cf">⚠ ${st.conf}</span>`:''}</button>${[1,2,3].map(t=>{const l=st.list.filter(e=>e.shift==t).sort(byNome);
    return l.length?`<div class="wkt"><span class="t t${t}">T${t}</span> ${l.slice(0,6).map(e=>E(short(e.name))).join(', ')}${l.length>6?` <button class="lk" data-a="goto" data-v="${k}">+${l.length-6}</button>`:''}</div>`:''}).join('')}</section>`}).join('')}</div>`}
 function vCal(){
  if(!cfg.machines.length)return noData();
  const td=iso(new Date()),F=calF(),mensal=calView=='mes'||(calView=='maq'&&calMode=='m');
  const lbl=mensal?cap(wd(calRef).toLocaleDateString('pt-BR',{month:'long',year:'numeric'})):(()=>{const m=cd(calRef,-((wd(calRef).getDay()+6)%7));return fmt(m).slice(0,5)+' – '+fmt(cd(m,6))})();
- return `<div class="bar"><button class="btn" data-a="cnav" data-v="-1" aria-label="${mensal?'Mês anterior':'Semana anterior'}">◀</button><button class="btn" data-a="cnav" data-v="1" aria-label="${mensal?'Próximo mês':'Próxima semana'}">▶</button><button class="btn" data-a="ctoday">Hoje</button><b class="cal-l">${lbl}</b><span style="flex:1"></span><span class="sg" role="group" aria-label="Ver por">${[['mes','Mês'],['sem','Semana'],['maq','Por máquina']].map(([v,t])=>`<button class="btn ${calView==v?'pr':''}" aria-pressed="${calView==v}" data-a="cview" data-v="${v}">${t}</button>`).join('')}</span></div>
+ return `<div class="bar"><button class="btn" data-a="cnav" data-v="-1" aria-label="${mensal?'Mês anterior':'Semana anterior'}">${ico('l')}</button><button class="btn" data-a="cnav" data-v="1" aria-label="${mensal?'Próximo mês':'Próxima semana'}">${ico('r')}</button><button class="btn" data-a="ctoday">Hoje</button><b class="cal-l">${lbl}</b><span style="flex:1"></span><span class="seg" role="group" aria-label="Ver por">${[['mes','Mês'],['sem','Semana'],['maq','Por máquina']].map(([v,t])=>`<button class="btn ${calView==v?'pr':''}" aria-pressed="${calView==v}" data-a="cview" data-v="${v}">${t}</button>`).join('')}</span></div>
  <div class="bar">${secSel()}${calView=='maq'?`<span style="flex:1"></span><button class="btn ${calMode=='w'?'pr':''}" data-a="cmode" data-v="w">7 dias</button><button class="btn ${calMode=='m'?'pr':''}" data-a="cmode" data-v="m">Mês inteiro</button><button class="lk" data-a="openall">Expandir tudo</button><button class="lk" data-a="closeall">Recolher tudo</button>`:''}</div>`+
  (calView=='mes'?calMes(F,td)+`<div class="mu">Número = escalados no dia · ⚠ conflito · toque num dia para ver quem trabalha.</div>`:calView=='sem'?calSem(F,td):calMaq())}
 function calMaq(){
@@ -655,24 +728,25 @@ function calMaq(){
  const ctl=m=>m.ct?`<b>${E(m.ct)}</b>${m.name&&m.name!==m.ct?` <span class="mu">${E(m.name)}</span>`:''}`:E(m.name);
  const body=secs.map(sc=>{
   const sm=MS.filter(m=>(m.sec||'')==sc),key=sc||SN,gs=[...new Set(sm.map(gk))],open=!hasS||so(key)||PR;
-  const srow=hasS?`<tr class="se"><td class="first s1"><button class="lk" data-a="ops" data-v="${E(key)}" aria-expanded="${open}" title="${open?'Recolher':'Expandir'} a seção">${open?'▾':'▸'} ${sc?E(sc):'(sem seção)'}</button></td><td class="first s2 mu" style="font-weight:400">${gs.length} grupo(s) · ${sm.length} CT(s)</td>${info.map(I=>sum(sm,I)).join('')}</tr>`:'';
+  const srow=hasS?`<tr class="se"><td class="first s1"><button class="lk" data-a="ops" data-v="${E(key)}" aria-expanded="${open}" title="${open?'Recolher':'Expandir'} a seção">${cv(open)} ${sc?E(sc):'(sem seção)'}</button></td><td class="first s2 mu" style="font-weight:400">${pl(gs.length,'grupo','grupos')} · ${pl(sm.length,'CT','CTs')}</td>${info.map(I=>sum(sm,I)).join('')}</tr>`:'';
   const grows=open?gs.map(g=>{const ms=sm.filter(m=>gk(m)==g),o=(sp()?opn[g]!==false:!!opn[g])||PR;
-   const prow=`<tr class="pr">${c1}<td class="first s2"><button class="lk" data-a="opn" data-v="${E(g)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} os CTs">${o?'▾':'▸'} ${E(ms[0].proc||'Outros')}</button><div class="mu" style="font-weight:400">${ms.length} CT(s)</div></td>${info.map(I=>sum(ms,I)).join('')}</tr>`;
-   const mrows=o?ms.map(m=>`<tr>${c1}<td class="first s2 sub">${ctl(m)}<span class="mu"> · ${m.slots||1} vaga(s)</span></td>${info.map(I=>{const l=(I.by[m.id]||[]).sort((a,b)=>a.shift-b.shift),s=st(m,I);return `<td class="c ${s}" data-a="goto" data-v="${I.k}">${l.map(e=>`<div class="cn" title="${E(e.name)}"><i class="t t${e.shift}">T${e.shift}</i> ${I.d.a[e.id]=='p'?'✓ ':I.d.a[e.id]=='f'?'✗ ':''}${E(short(e.name))}</div>`).join('')}</td>`}).join('')}</tr>`).join(''):'';
+   const prow=`<tr class="pr">${c1}<td class="first s2"><button class="lk" data-a="opn" data-v="${E(g)}" aria-expanded="${o}" title="${o?'Recolher':'Expandir'} o grupo e ${o?'esconder':'ver'} os CTs">${cv(o)} ${E(ms[0].proc||'Outros')}</button><div class="mu" style="font-weight:400">${ms.length} CT(s)</div></td>${info.map(I=>sum(ms,I)).join('')}</tr>`;
+   const mrows=o?ms.map(m=>`<tr>${c1}<td class="first s2 sub">${ctl(m)}<span class="mu"> · ${pl(m.slots||1,'vaga','vagas')}</span></td>${info.map(I=>{const l=(I.by[m.id]||[]).sort((a,b)=>a.shift-b.shift),s=st(m,I);return `<td class="c ${s}" data-a="goto" data-v="${I.k}">${l.map(e=>`<div class="cn" title="${E(e.name)}"><i class="t t${e.shift}">T${e.shift}</i> ${I.d.a[e.id]=='p'?'✓ ':I.d.a[e.id]=='f'?'✗ ':''}${E(short(e.name))}</div>`).join('')}</td>`}).join('')}</tr>`).join(''):'';
    return prow+mrows}).join(''):'';
   return srow+grows}).join('');
  return `<div class="card sc" data-sk="cal" style="padding:0"><table class="cal ${calMode=='m'?'mo':'wk'} ${hasS?'':'ns'}">${head}${tot}${body}</table></div>
- <div class="mu"><span class="tag ok">verde</span> com operador · <span class="tag cf">vermelho</span> conflito · ✓ presente · ✗ faltou</div>`}
+ <div class="mu"><span class="tag ok">verde</span> tem escalados · <span class="tag cf">vermelho</span> conflito · ✓ presente · ✗ faltou</div>`}
 
 const TABS=[['escala','Escala'],['cal','Calendário'],['pres','Presença'],['ind','Indicadores'],['col','Colaboradores'],['cad','Cadastro']],T0=TABS.map(t=>t[0]);
 function render(){const keep=render.t==tab?[...document.querySelectorAll('#app [data-sk]')].map(e=>[e.dataset.sk,e.scrollLeft,e.scrollTop]):[];render.t=tab;
  const T=TABS;
- $('#app').innerHTML=`<header><div><h1>Escala de Hora Extra</h1><div class="mu" id="sy">${syl()}</div></div><nav>${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" ${tab==t[0]?'aria-current="page"':''} data-a="tab" data-v="${t[0]}">${t[1]}</button>`).join('')}</nav></header><main class="${tab=='cad'?'wide':tab=='col'?'nar':''}">${sync.s=='e401'?`<div class="card empty"><h2>Entre para continuar</h2><button class="btn pr" data-a="sync">Entrar</button></div>`:({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,col:vCol,cad:vCad})[tab]()}</main>`;keep.forEach(([k,l,t])=>{const e=document.querySelector('#app [data-sk="'+k+'"]');if(e){e.scrollLeft=l;e.scrollTop=t}})}
+ $('#app').innerHTML=`<header><div class="hd-l"><h1>Escala de Hora Extra</h1><div class="mu" id="sy">${syl()}</div></div>${thBtn()}<nav aria-label="Telas">${T.map(t=>`<button class="tab ${tab==t[0]?'on':''}" ${tab==t[0]?'aria-current="page"':''} data-a="tab" data-v="${t[0]}">${ico(t[0])}${t[1]}</button>`).join('')}</nav></header><main class="${tab=='cad'?'wide':tab=='col'?'nar':''}">${sync.s=='e401'?`<div class="card empty"><h2>Entre para continuar</h2><button class="btn pr" data-a="sync">Entrar</button></div>`:({escala:vEscala,cal:vCal,pres:vPres,ind:vInd,col:vCol,cad:vCad})[tab]()}</main>`;keep.forEach(([k,l,t])=>{const e=document.querySelector('#app [data-sk="'+k+'"]');if(e){e.scrollLeft=l;e.scrollTop=t}})}
 const soft=()=>setTimeout(()=>{const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest&&a.closest('#app')))render()},0);
 function rr(){const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest('#app')&&!/date|checkbox/.test(a.type))return;render()}
 
 document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(!b||/INPUT|SELECT/.test(b.tagName))return;const a=b.dataset.a,id=b.dataset.id,v=b.dataset.v,g=i=>($(i).value||'').trim();
- if(a=='tab'){tab=v;render()}
+ if(a=='tab'){tab=v;render();window.scrollTo(0,0)}
+ else if(a=='theme'){const n=themeNow()=='dark'?'light':'dark';ls.set('theme',n);applyTheme(n);const t=$('.th');if(t)t.outerHTML=thBtn();const f=$('.th');if(f&&f.focus)f.focus()}
  else if(a=='tog'){if((D(date).ox||[]).includes(id))return toast('Essa pessoa já está escalada em outra seção');upd(date,x=>{x.w=x.w||{};const cur=wk(emp(id),x);if(!x.s.includes(id)){x.s.push(id);x.w[id]=v}else if(cur==v){x.s=x.s.filter(i=>i!=id);delete x.a[id];delete x.m[id];delete x.w[id]}else x.w[id]=v})}
  else if(a=='att')upd(date,x=>{if(x.a[id]==v)delete x.a[id];else x.a[id]=v})
  else if(a=='flt'){flt=+v;render()}
@@ -691,8 +765,8 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
   const ss=new Set(ids.map(i=>mac(i).sec||'')),off=ps.filter(e=>e.sec&&!ss.has(e.sec)).length;
   if(off&&!confirm((off==1?'1 pessoa marcada é':off+' pessoas marcadas são')+' de outra seção. As máquinas escolhidas são de '+([...ss].filter(Boolean).join(' e ')||'nenhuma seção')+'. Alocar mesmo assim?'))return;
   const ad={};ps.forEach(e=>{const add=ids.filter(i=>!e.machines.includes(i));if(add.length){e.machines.push(...add);ad[e.id]=add}});
-  const n=Object.keys(ad).length;saveCfg();obk.sel.clear();obk.undo={added:ad,txt:n+' pessoa(s) receberam '+ids.length+' máquina(s).'};render();toast(n+' pessoa(s) alocada(s)')}
- else if(a=='obundo'){const u=obk.undo;if(!u)return;let n=0;Object.entries(u.added).forEach(([id,ms])=>{const e=emp(id);if(e){e.machines=e.machines.filter(i=>!ms.includes(i));n++}});obk.undo=null;saveCfg();render();toast('Alocação desfeita para '+n+' pessoa(s)')}
+  const n=Object.keys(ad).length;saveCfg();obk.sel.clear();obk.undo={added:ad,txt:pl(n,'pessoa recebeu','pessoas receberam')+' '+pl(ids.length,'máquina','máquinas')+'.'};render();toast(n==1?'1 pessoa alocada':n+' pessoas alocadas')}
+ else if(a=='obundo'){const u=obk.undo;if(!u)return;let n=0;Object.entries(u.added).forEach(([id,ms])=>{const e=emp(id);if(e){e.machines=e.machines.filter(i=>!ms.includes(i));n++}});obk.undo=null;saveCfg();render();toast('Alocação desfeita para '+pl(n,'pessoa','pessoas'))}
  else if(a=='opne'){opnE[v]=!(sp()?opnE[v]!==false:!!opnE[v]);ls.set('openE',opnE);render()}
  else if(a=='opse'){opnSE[v]=!soE(v);ls.set('openSE',opnSE);render()}
  else if(a=='how'){how=!how;ls.set('how',how);render()}
@@ -743,7 +817,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
  else if(a=='pkok'){if(!pk)return;const ids=[...pk.sel].map(mac).filter(Boolean).sort(mcmp).map(m=>m.id);
   if(pk.mode=='new'){ne.ms=ids;pkClose();render()}
   else if(pk.mode=='bulk'){obk.ms=ids;pkClose();render()}
-  else{const e=emp(pk.id);if(!e){pkClose();return toast('Esse colaborador não existe mais')}const was=orph(e),add=ids.filter(i=>!e.machines.includes(i));e.machines.push(...add);if(was&&!orph(e)){delete opnC[e.id];ls.set('openC',opnC)}saveCfg();pkClose();render();toast(add.length+' máquina(s) adicionada(s) a '+e.name+(was&&!orph(e)?' · agora com máquina':''))}}
+  else{const e=emp(pk.id);if(!e){pkClose();return toast('Esse colaborador não existe mais')}const was=orph(e),add=ids.filter(i=>!e.machines.includes(i));e.machines.push(...add);if(was&&!orph(e)){delete opnC[e.id];ls.set('openC',opnC)}saveCfg();pkClose();render();toast((add.length==1?'1 máquina adicionada a ':add.length+' máquinas adicionadas a ')+e.name+(was&&!orph(e)?' · agora com máquina':''))}}
  else if(a=='pkf1'){const hs=secList().length>0;pkClose();
   if(!v){secF='';grpF='';ctF=''}
   else if(v[0]=='s'){secF=hs?v.slice(2)||SN:'';grpF='';ctF=''}
@@ -783,6 +857,7 @@ document.addEventListener('input',ev=>{const t=ev.target;if(t.id=='pkq'&&pk){pk.
 let ip=null; // evento beforeinstallprompt (Chrome, Edge, Android)
 const stand=()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch{return false}};
 const ios=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(!ls.get('theme')){applyTheme(null);const t=$('.th');if(t)t.outerHTML=thBtn()}})}catch{}
 const ib=()=>!stand()&&(ip||ios())?' <button class="lk" data-a="install">Instalar aplicativo</button>':'';
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();ip=e;setSy()});
 window.addEventListener('appinstalled',()=>{ip=null;setSy();toast('Aplicativo instalado')});
