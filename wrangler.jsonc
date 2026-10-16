@@ -1,6 +1,6 @@
 {
-  // O nome precisa ser igual ao do Worker no Cloudflare (testereal.SEU-SUBDOMINIO.workers.dev).
-  "name": "testereal",
+  // O nome precisa ser igual ao do Worker no Cloudflare (sistema.SEU-SUBDOMINIO.workers.dev).
+  "name": "sistema",
   "main": "src/worker.js",
   "compatibility_date": "2026-10-01",
 

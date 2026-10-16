@@ -33,7 +33,7 @@ O `binding` precisa continuar `DB`. O banco precisa estar declarado neste arquiv
 ## 3. Criar o projeto no Cloudflare
 
 1. **Workers & Pages → Create application → Import a repository** (ou *Connect to Git*), e escolha o repositório.
-2. O nome do projeto/Worker precisa ser igual ao campo `name` do `wrangler.jsonc` (aqui, `testereal`). Se for outro, altere o `name` no arquivo.
+2. O nome do projeto/Worker precisa ser igual ao campo `name` do `wrangler.jsonc` (aqui, `sistema`, que fica no endereço `sistema.SEU-SUBDOMINIO.workers.dev`). Se for outro, altere o `name` no arquivo.
 3. Deixe o comando de deploy padrão (`npx wrangler deploy`), sem comando de build e com a raiz do repositório como diretório.
 
 A cada `git push` no branch `main` o Cloudflare publica de novo.
